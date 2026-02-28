@@ -1,0 +1,19 @@
+# Render Blueprint for EqualTales Backend
+# https://render.com/docs/blueprint-spec
+
+services:
+  - type: web
+    name: equaltales-api
+    runtime: python
+    region: oregon
+    plan: free
+    buildCommand: pip install -r backend/requirements.txt
+    startCommand: cd backend && gunicorn app:app --bind 0.0.0.0:$PORT
+    envVars:
+      - key: PYTHON_VERSION
+        value: "3.11.0"
+      - key: OPENROUTER_API_KEY
+        sync: false  # Must be set manually in Render dashboard
+      - key: OPENAI_API_KEY
+        sync: false  # Must be set manually in Render dashboard
+    healthCheckPath: /api/health
