@@ -1,0 +1,1283 @@
+{
+  "women": [
+    {
+      "name": "Katherine Johnson",
+      "era": "1918-2020",
+      "category": [
+        "stem",
+        "math",
+        "space"
+      ],
+      "achievement": "Calculated the flight trajectories for NASA's first human spaceflights, including Apollo 11's trip to the moon",
+      "story_hook": "There was a woman who loved numbers so much that even NASA — the people who send rockets to space — needed HER to check their math before they'd let astronauts fly",
+      "counters_stereotypes": [
+        "girls_cant_do_math",
+        "math_is_for_boys",
+        "science_is_for_boys",
+        "girls_arent_smart_enough"
+      ],
+      "fairy_tale_moment": "When the giant computers made a mistake, everyone in the room turned to Katherine. 'If she says the numbers are right,' the astronaut said, 'then I'm ready to fly.'",
+      "age_adaptations": {
+        "young": "She was so good at counting that she helped rockets fly to the moon!",
+        "middle": "Katherine's math was so precise that astronauts trusted her calculations with their lives — even over the computers.",
+        "older": "In an era when women and Black Americans were excluded from science, Katherine Johnson's mathematical genius was so undeniable that NASA couldn't function without her."
+      }
+    },
+    {
+      "name": "Mae Jemison",
+      "era": "1956-present",
+      "category": [
+        "stem",
+        "space",
+        "medicine"
+      ],
+      "achievement": "First African American woman to travel in space, aboard the Space Shuttle Endeavour in 1992",
+      "story_hook": "A girl who loved dancing AND science grew up to fly among the stars — because she refused to choose just one thing to be",
+      "counters_stereotypes": [
+        "girls_cant_be_astronauts",
+        "science_is_for_boys",
+        "girls_cant_do_stem",
+        "pick_one_thing"
+      ],
+      "fairy_tale_moment": "As the shuttle roared into the sky, Mae looked down at the Earth getting smaller and smaller. She was a doctor, a dancer, an engineer, and now — a space traveler. She was ALL of those things at once.",
+      "age_adaptations": {
+        "young": "Mae loved stars AND dancing, and she got to visit space for real!",
+        "middle": "Mae became a doctor, learned to speak four languages, AND flew to space — proving you never have to choose just one dream.",
+        "older": "Mae Jemison was the first African American woman in space, but she was also a physician, chemical engineer, and dancer — embodying the idea that women don't have to fit into one box."
+      }
+    },
+    {
+      "name": "Ada Lovelace",
+      "era": "1815-1852",
+      "category": [
+        "stem",
+        "math",
+        "computing"
+      ],
+      "achievement": "Wrote the first computer program in history, over 100 years before modern computers existed",
+      "story_hook": "Long before anyone had ever seen a computer, a young woman imagined what machines could do — and wrote the very first set of instructions to make one think",
+      "counters_stereotypes": [
+        "girls_cant_code",
+        "tech_is_for_boys",
+        "girls_cant_do_math",
+        "computers_are_for_boys"
+      ],
+      "fairy_tale_moment": "Everyone else saw the machine as a giant calculator. But Ada saw something magical — she saw that it could create music, art, and ideas. She wrote the very first instructions, and computing was born.",
+      "age_adaptations": {
+        "young": "Ada taught a machine to follow her instructions — she invented computer programming!",
+        "middle": "Over 100 years before anyone had a laptop, Ada wrote the world's first computer program. She saw that machines could do more than just math.",
+        "older": "In 1843, Ada Lovelace published what is recognized as the first algorithm intended to be processed by a machine — essentially inventing computer programming a century before modern computers existed."
+      }
+    },
+    {
+      "name": "Hedy Lamarr",
+      "era": "1914-2000",
+      "category": [
+        "stem",
+        "invention",
+        "technology"
+      ],
+      "achievement": "Invented frequency-hopping technology that became the basis for WiFi, Bluetooth, and GPS",
+      "story_hook": "The world knew her as a movie star, but secretly she was an inventor — and the technology she created is in every phone and computer today",
+      "counters_stereotypes": [
+        "pretty_girls_arent_smart",
+        "girls_cant_invent",
+        "girls_cant_do_tech",
+        "beauty_and_brains_dont_mix"
+      ],
+      "fairy_tale_moment": "By day she was the most famous actress in the world. By night, she sat at her kitchen table, drawing blueprints for an invention that would one day connect billions of people.",
+      "age_adaptations": {
+        "young": "Hedy was a movie star who also invented something that helps your phone work!",
+        "middle": "While everyone only saw a beautiful actress, Hedy was secretly inventing technology that would become WiFi and Bluetooth.",
+        "older": "Hedy Lamarr co-invented spread-spectrum frequency-hopping technology during WWII. Dismissed because of her beauty, her invention wasn't recognized until decades later — yet it underpins every wireless device today."
+      }
+    },
+    {
+      "name": "Emily Warren Roebling",
+      "era": "1843-1903",
+      "category": [
+        "stem",
+        "engineering",
+        "construction"
+      ],
+      "achievement": "Oversaw the construction of the Brooklyn Bridge after her husband fell ill, becoming the first woman field engineer",
+      "story_hook": "When the chief engineer got sick, everyone said the great bridge would never be finished. But his wife Emily picked up the blueprints and said, 'I'll build it.'",
+      "counters_stereotypes": [
+        "girls_cant_build_things",
+        "engineering_is_for_boys",
+        "girls_arent_strong_enough",
+        "construction_is_mens_work"
+      ],
+      "fairy_tale_moment": "For fourteen years, Emily climbed the bridge towers, inspected the cables, and directed hundreds of workers. When it finally opened, she was the first person to cross it.",
+      "age_adaptations": {
+        "young": "Emily helped build the biggest bridge in the whole world!",
+        "middle": "When no one else could finish the Brooklyn Bridge, Emily taught herself engineering and led the construction for 14 years.",
+        "older": "Emily Warren Roebling essentially served as chief engineer of the Brooklyn Bridge for over a decade, mastering mathematics, bridge construction, and materials science — at a time when women weren't even allowed to attend engineering school."
+      }
+    },
+    {
+      "name": "Serena Williams",
+      "era": "1981-present",
+      "category": [
+        "sports",
+        "strength",
+        "competition"
+      ],
+      "achievement": "Won 23 Grand Slam singles titles, becoming one of the greatest athletes in any sport in history",
+      "story_hook": "Two sisters from a small town started hitting tennis balls on cracked public courts — and one of them became the most powerful player the sport had ever seen",
+      "counters_stereotypes": [
+        "girls_arent_strong",
+        "boys_are_better_at_sports",
+        "girls_cant_be_competitive",
+        "girls_should_be_gentle"
+      ],
+      "fairy_tale_moment": "Her serve was so powerful it broke records. Her spirit was so fierce that every time someone said she couldn't, she came back and won again.",
+      "age_adaptations": {
+        "young": "Serena could hit a tennis ball harder than almost anyone in the whole world!",
+        "middle": "Serena won 23 of the biggest tennis tournaments ever, and her serve was so powerful that many male players couldn't return it.",
+        "older": "Serena Williams dominated tennis for over two decades, winning 23 Grand Slam titles while challenging stereotypes about women's physical power, Black athletes, and what a champion 'should' look like."
+      }
+    },
+    {
+      "name": "Junko Tabei",
+      "era": "1939-2016",
+      "category": [
+        "adventure",
+        "sports",
+        "mountaineering"
+      ],
+      "achievement": "First woman to reach the summit of Mount Everest, the tallest mountain on Earth",
+      "story_hook": "Everyone told her that mountains were too dangerous for women. So she climbed the tallest one on the planet.",
+      "counters_stereotypes": [
+        "girls_arent_strong_enough",
+        "adventure_is_for_boys",
+        "girls_cant_do_dangerous_things",
+        "girls_should_stay_safe"
+      ],
+      "fairy_tale_moment": "The avalanche buried her tent. The cold bit her fingers. The air was so thin she could barely breathe. But Junko kept climbing, step by step, until she stood on top of the world.",
+      "age_adaptations": {
+        "young": "Junko climbed the tallest mountain in the whole world — taller than the clouds!",
+        "middle": "Junko survived an avalanche and kept climbing until she reached the top of Mount Everest — the first woman ever to do it.",
+        "older": "In 1975, Junko Tabei became the first woman to summit Everest, despite surviving an avalanche at 21,000 feet. She went on to climb the highest peak on every continent."
+      }
+    },
+    {
+      "name": "Nadia Comăneci",
+      "era": "1961-present",
+      "category": [
+        "sports",
+        "perfection",
+        "gymnastics"
+      ],
+      "achievement": "First gymnast in Olympic history to score a perfect 10, at age 14",
+      "story_hook": "The scoreboard wasn't even built to show her score — because no one had ever been that perfect before",
+      "counters_stereotypes": [
+        "girls_cant_be_the_best",
+        "perfection_is_impossible",
+        "girls_arent_disciplined_enough"
+      ],
+      "fairy_tale_moment": "The scoreboard flashed 1.00 — not because she scored low, but because it didn't have enough digits for a perfect 10. No one in Olympic history had ever achieved it. Nadia was 14 years old.",
+      "age_adaptations": {
+        "young": "Nadia did gymnastics so perfectly that the scoreboard couldn't even show her score!",
+        "middle": "At just 14 years old, Nadia scored the first perfect 10 in Olympic gymnastics history — the scoreboard literally couldn't display it.",
+        "older": "Nadia Comăneci's perfect 10 at the 1976 Olympics revolutionized gymnastics. She achieved it seven times at those Games, proving that perfection was possible — and that a 14-year-old girl could reach it."
+      }
+    },
+    {
+      "name": "Wangari Maathai",
+      "era": "1940-2011",
+      "category": [
+        "leadership",
+        "environment",
+        "activism"
+      ],
+      "achievement": "Founded the Green Belt Movement, planting over 51 million trees, and won the Nobel Peace Prize",
+      "story_hook": "One woman planted a tree. Then she taught other women to plant trees. Together, they planted fifty-one million.",
+      "counters_stereotypes": [
+        "girls_cant_change_the_world",
+        "one_person_cant_make_a_difference",
+        "science_is_for_boys",
+        "leadership_is_for_men"
+      ],
+      "fairy_tale_moment": "The first tree was small — just a tiny seedling in the red soil. But Wangari taught one woman, then ten, then thousands. And soon, forests were growing where deserts had been.",
+      "age_adaptations": {
+        "young": "Wangari planted so many trees that she turned dry land back into a forest!",
+        "middle": "Wangari started by planting one tree and built a movement of thousands of women who planted 51 million trees across Africa.",
+        "older": "Wangari Maathai's Green Belt Movement combined environmentalism, women's empowerment, and democratic activism. She was the first African woman to win the Nobel Peace Prize."
+      }
+    },
+    {
+      "name": "Rosa Parks",
+      "era": "1913-2005",
+      "category": [
+        "leadership",
+        "activism",
+        "courage"
+      ],
+      "achievement": "Sparked the Montgomery Bus Boycott by refusing to give up her bus seat, catalyzing the civil rights movement",
+      "story_hook": "Sometimes the bravest thing you can do is simply stay where you are",
+      "counters_stereotypes": [
+        "girls_should_do_what_theyre_told",
+        "girls_cant_be_brave",
+        "one_person_cant_change_anything"
+      ],
+      "fairy_tale_moment": "The bus driver told her to move. Everyone else had always moved. But Rosa stayed right where she was. And that one quiet 'no' changed an entire country.",
+      "age_adaptations": {
+        "young": "Rosa sat down on a bus and changed the world just by staying in her seat!",
+        "middle": "When Rosa was told to give up her seat because of the color of her skin, she quietly refused — and started a movement that changed America.",
+        "older": "Rosa Parks' act of civil disobedience in 1955 was not impulsive but deeply intentional. Her refusal catalyzed the 381-day Montgomery Bus Boycott and became a defining moment of the civil rights movement."
+      }
+    },
+    {
+      "name": "Frida Kahlo",
+      "era": "1907-1954",
+      "category": [
+        "art",
+        "creativity",
+        "resilience"
+      ],
+      "achievement": "Became one of the most celebrated painters in history, creating powerful self-portraits while living with chronic pain",
+      "story_hook": "She couldn't walk, so she painted. She couldn't travel, so she brought the whole world into her pictures.",
+      "counters_stereotypes": [
+        "girls_arent_creative",
+        "art_isnt_important",
+        "disability_means_you_cant",
+        "girls_cant_be_famous_artists"
+      ],
+      "fairy_tale_moment": "Lying in her bed, unable to move, Frida asked for paints and a mirror. She began painting what she saw — herself. And those paintings became some of the most famous art in the world.",
+      "age_adaptations": {
+        "young": "Even when Frida was sick in bed, she painted the most beautiful, colorful pictures!",
+        "middle": "After a terrible accident left her in pain, Frida turned her suffering into art — and her paintings are now in museums around the world.",
+        "older": "Frida Kahlo transformed personal trauma into revolutionary art. Her unflinching self-portraits challenged beauty standards, explored identity and pain, and made her one of the most influential artists of the 20th century."
+      }
+    },
+    {
+      "name": "Maya Angelou",
+      "era": "1928-2014",
+      "category": [
+        "art",
+        "writing",
+        "resilience"
+      ],
+      "achievement": "Became one of America's greatest writers and poets, after years of silence following childhood trauma",
+      "story_hook": "A girl who stopped speaking found her voice — and when she finally used it, her words moved millions",
+      "counters_stereotypes": [
+        "girls_should_be_quiet",
+        "girls_voices_dont_matter",
+        "past_defines_your_future"
+      ],
+      "fairy_tale_moment": "For five years, young Maya didn't speak a single word. But inside, she was listening to everything — collecting words like treasures. When she finally spoke again, she had so many words that she filled books with them.",
+      "age_adaptations": {
+        "young": "Maya was quiet for a long time, but when she started talking, she wrote the most beautiful words!",
+        "middle": "Maya stopped speaking for five years as a child. When she found her voice again, she became one of the greatest writers America has ever known.",
+        "older": "Maya Angelou's journey from selective mutism to becoming a Presidential Poet demonstrates that silence does not mean absence of power — and that our most difficult experiences can fuel our greatest contributions."
+      }
+    },
+    {
+      "name": "Zaha Hadid",
+      "era": "1950-2016",
+      "category": [
+        "art",
+        "architecture",
+        "design"
+      ],
+      "achievement": "First woman to win the Pritzker Architecture Prize; designed buildings that looked impossible",
+      "story_hook": "People said her buildings couldn't be built — that they broke the rules. She built them anyway.",
+      "counters_stereotypes": [
+        "girls_cant_build_things",
+        "girls_arent_creative",
+        "design_is_for_boys",
+        "girls_cant_do_spatial_thinking"
+      ],
+      "fairy_tale_moment": "Her designs had no straight lines — they flowed like rivers and curved like waves. 'Impossible,' they said for 15 years. Then the first building rose, and the world held its breath.",
+      "age_adaptations": {
+        "young": "Zaha designed buildings that looked like they came from a dream!",
+        "middle": "For 15 years, people said Zaha's curved, flowing buildings were impossible to construct. She proved every single one of them wrong.",
+        "older": "Zaha Hadid spent 15 years being called 'the architect who never built anything' before her radical designs were finally constructed. She became the first woman to win architecture's highest honor, the Pritzker Prize."
+      }
+    },
+    {
+      "name": "Amelia Earhart",
+      "era": "1897-1937",
+      "category": [
+        "adventure",
+        "aviation",
+        "exploration"
+      ],
+      "achievement": "First woman to fly solo across the Atlantic Ocean",
+      "story_hook": "When someone told her that flying was too dangerous for a woman, she climbed into the cockpit and flew across an ocean — alone",
+      "counters_stereotypes": [
+        "girls_cant_do_dangerous_things",
+        "adventure_is_for_boys",
+        "girls_should_stay_safe",
+        "girls_cant_be_pilots"
+      ],
+      "fairy_tale_moment": "Alone above the Atlantic Ocean, with nothing below her but dark water and nothing around her but clouds, Amelia flew through the night. When the sun rose, she could see land — she had done what no woman had done before.",
+      "age_adaptations": {
+        "young": "Amelia flew an airplane all by herself across a whole ocean!",
+        "middle": "Amelia was the first woman to fly solo across the Atlantic — 14 hours alone above the ocean with nothing but her courage and her plane.",
+        "older": "Amelia Earhart's 1932 transatlantic solo flight cemented her as an aviation icon. Beyond flying records, she was a bestselling author and activist who fought to open aviation to women."
+      }
+    },
+    {
+      "name": "Valentina Tereshkova",
+      "era": "1937-present",
+      "category": [
+        "space",
+        "adventure",
+        "pioneering"
+      ],
+      "achievement": "First woman in space, orbiting Earth 48 times aboard Vostok 6 in 1963",
+      "story_hook": "A factory worker who loved parachuting looked up at the stars and thought, 'Why not me?' — and then she went there",
+      "counters_stereotypes": [
+        "space_is_for_boys",
+        "girls_cant_be_astronauts",
+        "ordinary_girls_cant_do_extraordinary_things"
+      ],
+      "fairy_tale_moment": "She wasn't a scientist or a pilot — she worked in a factory and jumped out of planes for fun. But when they asked, 'Who wants to go to space?' Valentina raised her hand. And she orbited the Earth 48 times.",
+      "age_adaptations": {
+        "young": "Valentina flew all the way up to space and went around the Earth 48 times!",
+        "middle": "Valentina was a factory worker who loved skydiving. She became the first woman in space — orbiting Earth 48 times before any American woman even got the chance.",
+        "older": "In 1963, Valentina Tereshkova spent three days in space aboard Vostok 6 — more time than all American astronauts combined at that point. It would be 19 years before another woman followed her."
+      }
+    },
+    {
+      "name": "Sylvia Earle",
+      "era": "1935-present",
+      "category": [
+        "adventure",
+        "science",
+        "ocean"
+      ],
+      "achievement": "Set the world record for deepest untethered ocean walk and has spent over 7,000 hours underwater",
+      "story_hook": "While everyone else looked up at the stars, Sylvia looked down into the ocean — and discovered a world nobody had ever seen",
+      "counters_stereotypes": [
+        "girls_cant_do_dangerous_things",
+        "science_is_for_boys",
+        "exploration_is_for_men",
+        "girls_arent_adventurous"
+      ],
+      "fairy_tale_moment": "At 1,250 feet below the ocean surface, deeper than any human had ever walked alone, Sylvia looked around at creatures that had never seen a person before. She was their first visitor.",
+      "age_adaptations": {
+        "young": "Sylvia walked on the bottom of the ocean deeper than anyone else ever had!",
+        "middle": "Sylvia has spent over 7,000 hours underwater and once walked on the ocean floor deeper than any human in history — all alone.",
+        "older": "Sylvia Earle, nicknamed 'Her Deepness,' has led over 100 ocean expeditions. Her record-setting 1979 deep-ocean walk at 1,250 feet remains one of humanity's most remarkable exploration achievements."
+      }
+    },
+    {
+      "name": "Bessie Coleman",
+      "era": "1892-1926",
+      "category": [
+        "adventure",
+        "aviation",
+        "pioneering"
+      ],
+      "achievement": "First African American and first Native American woman to earn a pilot's license",
+      "story_hook": "Every flight school in America said no. So she learned a new language and traveled across the ocean to learn to fly.",
+      "counters_stereotypes": [
+        "girls_cant_be_pilots",
+        "some_girls_cant_follow_their_dreams",
+        "obstacles_mean_you_should_give_up"
+      ],
+      "fairy_tale_moment": "No school in America would teach her to fly — not because she couldn't learn, but because of the color of her skin. So Bessie learned French, sailed to Paris, and earned her wings where no one could stop her.",
+      "age_adaptations": {
+        "young": "When no one would teach Bessie to fly, she went all the way to France to learn!",
+        "middle": "Every flight school in America rejected Bessie because she was Black. She learned French, moved to Paris, and became the first Black woman pilot in the world.",
+        "older": "Bessie Coleman's refusal to accept American racism led her to France, where she earned her pilot's license in 1921. She became a celebrated stunt pilot and refused to perform anywhere that segregated its audience."
+      }
+    },
+    {
+      "name": "Simone Biles",
+      "era": "1997-present",
+      "category": [
+        "sports",
+        "mental_health",
+        "strength"
+      ],
+      "achievement": "Most decorated gymnast in history with 37 world and Olympic medals; pioneered four original skills",
+      "story_hook": "The greatest gymnast who ever lived showed the world something even more impressive than a gold medal — the courage to say 'I need to take care of myself'",
+      "counters_stereotypes": [
+        "emotions_are_weakness",
+        "girls_should_push_through_pain",
+        "asking_for_help_is_weak",
+        "girls_arent_strong"
+      ],
+      "fairy_tale_moment": "She could fly through the air like no one before her. But when her mind said stop, she listened — and in doing so, she taught the world that the bravest thing isn't always pushing forward.",
+      "age_adaptations": {
+        "young": "Simone can jump and flip higher than anyone, and she's also brave enough to say when she needs a rest!",
+        "middle": "Simone is the greatest gymnast ever, with moves named after her. But she showed even more courage when she paused to take care of her mental health at the Olympics.",
+        "older": "Simone Biles has four gymnastics skills named after her and 37 combined Olympic and World Championship medals. Her decision to withdraw from events at the 2020 Olympics to protect her mental health transformed the conversation about athletes and wellbeing."
+      }
+    },
+    {
+      "name": "Temple Grandin",
+      "era": "1947-present",
+      "category": [
+        "science",
+        "thinking_differently",
+        "animals"
+      ],
+      "achievement": "Revolutionized humane livestock handling; proved that thinking differently is a superpower, not a limitation",
+      "story_hook": "Everyone said her brain worked wrong. Turns out, it worked in a way that let her understand things nobody else could.",
+      "counters_stereotypes": [
+        "being_different_is_bad",
+        "girls_cant_do_science",
+        "neurodivergent_people_cant_succeed",
+        "girls_cant_work_with_animals"
+      ],
+      "fairy_tale_moment": "Other people thought in words. Temple thought in pictures — whole movies playing in her mind. And because she could SEE what animals felt, she designed kinder ways to care for them.",
+      "age_adaptations": {
+        "young": "Temple sees pictures in her head instead of words, and it helps her understand animals better than anyone!",
+        "middle": "Temple's autism lets her think in pictures, which helped her understand animals' feelings. She used this superpower to make life better for millions of animals.",
+        "older": "Temple Grandin's visual thinking, a result of her autism, allowed her to revolutionize livestock handling. Her work proved that neurodivergent minds aren't broken — they're specialized."
+      }
+    },
+    {
+      "name": "Helen Keller",
+      "era": "1880-1968",
+      "category": [
+        "resilience",
+        "education",
+        "communication"
+      ],
+      "achievement": "First deaf-blind person to earn a bachelor's degree; became a world-famous author and activist",
+      "story_hook": "She couldn't see. She couldn't hear. But she learned to speak, to write, and to change the world.",
+      "counters_stereotypes": [
+        "disability_means_you_cant",
+        "girls_cant_be_scholars",
+        "limitations_define_you"
+      ],
+      "fairy_tale_moment": "Water. That was the first word she understood — as her teacher spelled it into her hand while water flowed over the other. In that moment, a whole world of language opened up, and Helen never stopped learning.",
+      "age_adaptations": {
+        "young": "Helen couldn't see or hear, but she learned to read, write, and talk to people all over the world!",
+        "middle": "Helen Keller couldn't see or hear since she was a baby, but she learned to communicate, graduated from college, and wrote 14 books.",
+        "older": "Helen Keller earned her BA from Radcliffe College in 1904, making her the first deaf-blind person to complete a bachelor's degree. She became a prolific author, political activist, and global advocate for disability rights."
+      }
+    },
+    {
+      "name": "Madam C.J. Walker",
+      "era": "1867-1919",
+      "category": [
+        "business",
+        "entrepreneurship",
+        "pioneering"
+      ],
+      "achievement": "First female self-made millionaire in America, building a beauty empire from nothing",
+      "story_hook": "Born with nothing, she built an empire — not by waiting for someone to give her a chance, but by creating her own",
+      "counters_stereotypes": [
+        "girls_cant_run_businesses",
+        "money_is_a_boys_thing",
+        "girls_should_wait_for_opportunities"
+      ],
+      "fairy_tale_moment": "She started with $1.25 and a dream. She mixed her own products, sold them door to door, and built a company that employed thousands of women. When they called her lucky, she said, 'I got my start by giving myself a start.'",
+      "age_adaptations": {
+        "young": "Sarah started with almost no money and built the biggest business a woman had ever owned!",
+        "middle": "Born to formerly enslaved parents with just $1.25, Madam C.J. Walker built America's first female-led million-dollar company.",
+        "older": "Madam C.J. Walker went from being orphaned at 7 and widowed at 20 to becoming America's first female self-made millionaire. She employed 40,000 women and was a major philanthropist and civil rights activist."
+      }
+    },
+    {
+      "name": "Oprah Winfrey",
+      "era": "1954-present",
+      "category": [
+        "business",
+        "media",
+        "resilience"
+      ],
+      "achievement": "Built a media empire from poverty, becoming North America's first Black multi-billionaire",
+      "story_hook": "A girl who grew up with nothing became the most powerful voice on television — because she learned that her story was her strength",
+      "counters_stereotypes": [
+        "girls_cant_be_leaders",
+        "poverty_defines_you",
+        "girls_cant_be_powerful",
+        "girls_voices_dont_matter"
+      ],
+      "fairy_tale_moment": "She was told she was 'unfit for television.' But Oprah didn't want to be on just any show — she wanted her own. And the show she created was watched by millions of people, every single day, for 25 years.",
+      "age_adaptations": {
+        "young": "Oprah talked to people on TV and everyone loved listening to her!",
+        "middle": "After being told she wasn't right for TV, Oprah created her own show — it became the most-watched talk show in history for 25 years.",
+        "older": "From rural poverty in Mississippi to a net worth of over $2.5 billion, Oprah Winfrey built the most successful media empire in television history, proving that authenticity and empathy are business superpowers."
+      }
+    },
+    {
+      "name": "Sara Blakely",
+      "era": "1971-present",
+      "category": [
+        "business",
+        "invention",
+        "entrepreneurship"
+      ],
+      "achievement": "Founded Spanx with $5,000 in savings, becoming the youngest self-made female billionaire",
+      "story_hook": "She had $5,000 and an idea everyone laughed at. She turned it into a billion-dollar company.",
+      "counters_stereotypes": [
+        "girls_cant_run_businesses",
+        "girls_ideas_arent_good_enough",
+        "you_need_money_to_start_a_business"
+      ],
+      "fairy_tale_moment": "Every factory said no. Every investor laughed. But Sara kept knocking on doors with her $5,000 and her idea. When Oprah called it her 'favorite thing,' the phones didn't stop ringing.",
+      "age_adaptations": {
+        "young": "Sara had a great idea and didn't give up until she built a huge company!",
+        "middle": "With just $5,000, no business experience, and an idea everyone rejected, Sara built Spanx into a billion-dollar company.",
+        "older": "Sara Blakely taught herself patent law, convinced manufacturers to prototype her product, and grew Spanx from $5,000 in savings to a company valued at over $1 billion — all without outside investment."
+      }
+    },
+    {
+      "name": "Marie Curie",
+      "era": "1867-1934",
+      "category": [
+        "stem",
+        "science",
+        "pioneering"
+      ],
+      "achievement": "First woman to win a Nobel Prize, and the only person to win Nobel Prizes in two different sciences",
+      "story_hook": "She discovered invisible rays that could see inside your body — and she's still the only person ever to win the world's biggest science prize TWICE, in two different subjects",
+      "counters_stereotypes": [
+        "science_is_for_boys",
+        "girls_cant_do_math",
+        "girls_arent_smart_enough",
+        "girls_cant_make_discoveries"
+      ],
+      "fairy_tale_moment": "In a cold, leaky shed in Paris, Marie and Pierre worked late into the night. The jars on the shelves glowed blue in the dark. Marie had discovered something amazing — a new element that gave off its own light. She called it radium.",
+      "age_adaptations": {
+        "young": "Marie found a glowing, magical element that nobody had ever seen before!",
+        "middle": "Marie Curie discovered two new elements and won the Nobel Prize twice — once for physics and once for chemistry. No one else has ever done that.",
+        "older": "Marie Curie's discovery of radioactivity earned her two Nobel Prizes in different sciences. She overcame poverty, sexism, and xenophobia to become the most acclaimed scientist of her era."
+      }
+    },
+    {
+      "name": "Wilma Rudolph",
+      "era": "1940-1994",
+      "category": [
+        "sports",
+        "resilience",
+        "speed"
+      ],
+      "achievement": "Won three Olympic gold medals in track despite being unable to walk as a child due to polio",
+      "story_hook": "Doctors said she'd never walk again. She became the fastest woman on Earth.",
+      "counters_stereotypes": [
+        "girls_arent_fast",
+        "disability_means_you_cant",
+        "girls_arent_athletes",
+        "limitations_define_you"
+      ],
+      "fairy_tale_moment": "For years, she wore a metal brace on her leg. The doctors shook their heads. But Wilma took off the brace, took her first step, then her first run — and didn't stop running until she had three Olympic gold medals.",
+      "age_adaptations": {
+        "young": "Wilma couldn't walk when she was little, but she grew up to be the fastest runner in the world!",
+        "middle": "After childhood polio left her unable to walk, Wilma fought back to become the fastest woman alive, winning three gold medals at the 1960 Olympics.",
+        "older": "Wilma Rudolph overcame polio, pneumonia, and scarlet fever that left her unable to walk until age 12. She went on to win three gold medals at the 1960 Rome Olympics, becoming an icon of determination."
+      }
+    },
+    {
+      "name": "Jacinda Ardern",
+      "era": "1980-present",
+      "category": [
+        "leadership",
+        "politics",
+        "parenting"
+      ],
+      "achievement": "Became Prime Minister of New Zealand at 37, and the second world leader to give birth while in office",
+      "story_hook": "She ran a country AND had a baby — and when people said she couldn't do both, she brought her newborn to the United Nations",
+      "counters_stereotypes": [
+        "moms_cant_be_leaders",
+        "girls_cant_be_in_charge",
+        "having_a_baby_means_giving_up_your_career"
+      ],
+      "fairy_tale_moment": "She walked into the United Nations General Assembly — the room where world leaders gather — with her baby daughter in her arms. It was the first time that had ever happened. And nobody could say mothers couldn't lead anymore.",
+      "age_adaptations": {
+        "young": "Jacinda was in charge of a whole country and was a mommy at the same time!",
+        "middle": "Jacinda became Prime Minister of New Zealand and brought her baby to the United Nations — showing the world that mothers can be leaders too.",
+        "older": "Jacinda Ardern became PM at 37, gave birth in office, and brought her infant daughter to the UN General Assembly. Her leadership through crises demonstrated that empathy and strength are not opposites."
+      }
+    },
+    {
+      "name": "Misty Copeland",
+      "era": "1982-present",
+      "category": [
+        "art",
+        "dance",
+        "pioneering"
+      ],
+      "achievement": "First African American woman to become principal dancer at American Ballet Theatre",
+      "story_hook": "She started ballet at 13 — most dancers start at 3. They said she was too late, too different, too muscular. She became the star.",
+      "counters_stereotypes": [
+        "its_too_late_to_start",
+        "you_have_to_look_a_certain_way",
+        "girls_bodies_should_be_a_certain_type"
+      ],
+      "fairy_tale_moment": "Every other dancer had started as a tiny child. Misty was 13 and learning her first plié. They said her muscles were wrong, her body was wrong, she was too late. But when she danced, the whole theater went silent.",
+      "age_adaptations": {
+        "young": "Misty started dancing much later than everyone else but became the best dancer of all!",
+        "middle": "Misty didn't start ballet until 13 — a decade later than most dancers. She overcame every doubt to become the first Black principal dancer at American Ballet Theatre.",
+        "older": "Misty Copeland broke ballet's color barrier at ABT in 2015. Starting at 13 (most begin at 3), she challenged every convention about what a ballerina 'should' look like."
+      }
+    },
+    {
+      "name": "Mary Anning",
+      "era": "1799-1847",
+      "category": [
+        "stem",
+        "science",
+        "paleontology"
+      ],
+      "achievement": "Discovered the first complete ichthyosaur skeleton at age 12, revolutionizing our understanding of prehistoric life",
+      "story_hook": "A 12-year-old girl found a dragon in the cliffs — except it was real, and it had been hiding there for millions of years",
+      "counters_stereotypes": [
+        "girls_cant_do_science",
+        "kids_cant_make_discoveries",
+        "girls_arent_adventurous"
+      ],
+      "fairy_tale_moment": "The other scientists wore fancy coats and had grand laboratories. Mary wore muddy boots and searched the cliffs after storms. But it was Mary — not the professors — who found the creatures that changed everything we knew about the ancient world.",
+      "age_adaptations": {
+        "young": "When Mary was just 12, she found the bones of a giant sea creature that lived millions of years ago!",
+        "middle": "Mary Anning discovered complete dinosaur skeletons on the English coast, but because she was a woman, the male scientists took credit for years.",
+        "older": "Self-educated fossil hunter Mary Anning made some of paleontology's most significant discoveries, yet was systematically excluded from the scientific community because of her gender and class."
+      }
+    },
+    {
+      "name": "Chien-Shiung Wu",
+      "era": "1912-1997",
+      "category": [
+        "stem",
+        "physics",
+        "pioneering"
+      ],
+      "achievement": "Disproved a fundamental law of physics; her male colleagues won the Nobel Prize for her work",
+      "story_hook": "She proved that one of physics' most important rules was wrong — but when they gave out the prize, they only called the men's names",
+      "counters_stereotypes": [
+        "girls_cant_do_physics",
+        "science_is_for_boys",
+        "girls_arent_smart_enough"
+      ],
+      "fairy_tale_moment": "The experiment was hers. The proof was hers. When the results came in, they changed physics forever. But when the gold medal was awarded, they gave it to the two men who had asked her the question — not to the woman who answered it.",
+      "age_adaptations": {
+        "young": "Chien-Shiung was so smart that she proved all the other scientists were wrong about something really important!",
+        "middle": "Chien-Shiung Wu designed and ran the experiment that overturned a law of physics — but only her male colleagues received the Nobel Prize.",
+        "older": "Chien-Shiung Wu's 1956 experiment disproving the conservation of parity was one of physics' landmark moments. The Nobel Prize went to Lee and Yang, who proposed the theory — but it was Wu who proved it."
+      }
+    },
+    {
+      "name": "Rigoberta Menchú",
+      "era": "1959-present",
+      "category": [
+        "leadership",
+        "activism",
+        "indigenous_rights"
+      ],
+      "achievement": "Won the Nobel Peace Prize for her advocacy for indigenous rights and social justice in Guatemala",
+      "story_hook": "She couldn't read or write as a child, but she learned — and then she told the world a story that nobody wanted to hear, and everything changed",
+      "counters_stereotypes": [
+        "girls_cant_be_leaders",
+        "indigenous_girls_cant_change_things",
+        "you_need_education_to_matter"
+      ],
+      "fairy_tale_moment": "They burned her village and silenced her family. But Rigoberta learned Spanish, then French, then she wrote down everything that happened. Her words reached the whole world, and the world finally listened.",
+      "age_adaptations": {
+        "young": "Rigoberta told the truth about what happened to her people, and the whole world listened!",
+        "middle": "Rigoberta grew up without schooling but taught herself to read and tell her people's story — winning the Nobel Peace Prize for standing up for indigenous rights.",
+        "older": "Rigoberta Menchú's testimony about the Guatemalan Civil War's impact on indigenous communities earned her the 1992 Nobel Peace Prize and brought international attention to indigenous rights across Latin America."
+      }
+    },
+    {
+      "name": "Tu Youyou",
+      "era": "1930-present",
+      "category": [
+        "stem",
+        "medicine",
+        "pioneering"
+      ],
+      "achievement": "Discovered artemisinin, a treatment for malaria that has saved millions of lives, winning the Nobel Prize",
+      "story_hook": "She read an ancient book of remedies that was 1,600 years old — and found a cure that modern science had missed",
+      "counters_stereotypes": [
+        "girls_cant_do_science",
+        "girls_cant_save_lives",
+        "old_knowledge_isnt_valuable"
+      ],
+      "fairy_tale_moment": "For years, nothing worked. Then Tu Youyou opened a book written 1,600 years ago and found a clue about a humble plant called sweet wormwood. She tested it — and discovered the cure for one of the deadliest diseases on Earth.",
+      "age_adaptations": {
+        "young": "Tu Youyou found a special plant that cures a sickness and saves millions of people!",
+        "middle": "Tu Youyou read a 1,600-year-old Chinese medicine text and discovered artemisinin — a malaria treatment that has saved millions of lives worldwide.",
+        "older": "Tu Youyou's discovery of artemisinin combined traditional Chinese medicine with modern scientific methods. Without a doctorate, medical degree, or membership in any Chinese academy, she won the 2015 Nobel Prize in Medicine."
+      }
+    },
+    {
+      "name": "Malala Yousafzai",
+      "era": "1997-present",
+      "category": [
+        "leadership",
+        "education",
+        "youth"
+      ],
+      "achievement": "Youngest Nobel Peace Prize laureate for her fight for girls' right to education",
+      "story_hook": "They tried to silence her with a bullet. She answered with a book, a speech, and a Nobel Prize.",
+      "counters_stereotypes": [
+        "girls_should_be_quiet",
+        "girls_cant_change_the_world",
+        "kids_cant_make_a_difference"
+      ],
+      "fairy_tale_moment": "She woke up in a hospital far from home. They had tried to stop her from speaking. So she spoke louder — to the whole world. 'One child, one teacher, one book, one pen can change the world.'",
+      "age_adaptations": {
+        "young": "Malala loved school so much that she told the whole world every girl deserves to learn!",
+        "middle": "Even after being attacked for wanting to go to school, Malala spoke up louder than ever and won the Nobel Peace Prize at just 17 years old.",
+        "older": "Malala Yousafzai survived an assassination attempt at 15, became the youngest Nobel Peace Prize laureate at 17, and has since funded education for millions of girls through the Malala Fund."
+      }
+    },
+    {
+      "name": "Grace Hopper",
+      "era": "1906-1992",
+      "category": [
+        "stem",
+        "computing",
+        "military"
+      ],
+      "achievement": "Invented the first compiler for a computer programming language and popularized the term 'debugging'",
+      "story_hook": "She found an actual bug stuck in a computer and invented a word that programmers still use today — and oh, she also helped invent modern programming",
+      "counters_stereotypes": [
+        "computers_are_for_boys",
+        "girls_cant_code",
+        "old_people_cant_learn_new_things",
+        "military_is_for_men"
+      ],
+      "fairy_tale_moment": "They told Grace that what she wanted to do was impossible — you couldn't write instructions for a computer in English words. She did it anyway. And that invention meant that anyone, not just mathematicians, could talk to computers.",
+      "age_adaptations": {
+        "young": "Grace taught computers to understand words, not just numbers!",
+        "middle": "Grace Hopper invented the first program that translated English into computer code — making it possible for regular people to use computers.",
+        "older": "Rear Admiral Grace Hopper created the first compiler, pioneered COBOL, and served in the Navy until age 79. Her work made computer programming accessible beyond pure mathematics."
+      }
+    },
+    {
+      "name": "Rosalind Franklin",
+      "era": "1920-1958",
+      "category": [
+        "stem",
+        "science",
+        "biology"
+      ],
+      "achievement": "Created the X-ray photograph that revealed DNA's double helix structure — the secret of life itself",
+      "story_hook": "She took a photograph of something invisible — the building blocks of life — and unlocked the greatest secret in science",
+      "counters_stereotypes": [
+        "science_is_for_boys",
+        "girls_cant_make_discoveries",
+        "girls_cant_do_complex_science"
+      ],
+      "fairy_tale_moment": "Photo 51 — that's what they called it. One photograph, taken by Rosalind, that showed for the first time what the code of life looked like. Others took the credit and the prize. But the discovery was hers.",
+      "age_adaptations": {
+        "young": "Rosalind took a special photograph that showed what makes YOU, you!",
+        "middle": "Rosalind's X-ray photograph revealed the shape of DNA — the code inside every living thing. Others used her work to win the Nobel Prize without giving her credit.",
+        "older": "Rosalind Franklin's Photo 51 was the critical evidence for DNA's double helix structure. Watson and Crick used her data without permission; she received no Nobel Prize and died at 37, her contribution uncredited for decades."
+      }
+    },
+    {
+      "name": "Shirley Chisholm",
+      "era": "1924-2005",
+      "category": [
+        "leadership",
+        "politics",
+        "pioneering"
+      ],
+      "achievement": "First Black woman elected to US Congress, first woman and African American to seek a major party presidential nomination",
+      "story_hook": "When they said the seat wasn't for her, she ran anyway. When they said the presidency wasn't for her, she ran for that too.",
+      "counters_stereotypes": [
+        "girls_cant_be_president",
+        "politics_is_for_men",
+        "girls_should_wait_their_turn"
+      ],
+      "fairy_tale_moment": "They didn't invite her to the debate. So Shirley took them to court — and won. She walked onto that stage because she believed that if you want a seat at the table, sometimes you have to pull up your own chair.",
+      "age_adaptations": {
+        "young": "Shirley wanted to help make the rules for everyone, and she didn't let anyone stop her!",
+        "middle": "Shirley Chisholm was the first Black woman in Congress and ran for President. Her motto: 'If they don't give you a seat at the table, bring a folding chair.'",
+        "older": "Shirley Chisholm's 1972 presidential campaign shattered barriers. 'I am not the candidate of Black America or the candidate of the women's movement,' she said. 'I am the candidate of the people.'"
+      }
+    },
+    {
+      "name": "Jane Goodall",
+      "era": "1934-present",
+      "category": [
+        "science",
+        "animals",
+        "adventure"
+      ],
+      "achievement": "Revolutionized our understanding of primates by living among chimpanzees, proving animals use tools",
+      "story_hook": "A young woman with no degree walked into the jungle — and what she found there changed everything we knew about being human",
+      "counters_stereotypes": [
+        "girls_cant_do_science",
+        "girls_cant_be_adventurous",
+        "you_need_a_degree_to_be_a_scientist"
+      ],
+      "fairy_tale_moment": "The other scientists said only humans used tools. Jane sat quietly in the forest for months, and one day she watched a chimpanzee pick up a stick and use it to fish for termites. In that moment, she changed the definition of what it means to be human.",
+      "age_adaptations": {
+        "young": "Jane lived with chimpanzees in the jungle and discovered they're much smarter than anyone thought!",
+        "middle": "Without a college degree, Jane went to Tanzania and discovered that chimps use tools — overturning what all the scientists believed.",
+        "older": "Jane Goodall's pioneering field research at Gombe, begun without a university degree, fundamentally changed primatology. Her mentor Louis Leakey said her discovery of tool use in chimps was 'the single most significant achievement of the century in behavioral science.'"
+      }
+    },
+    {
+      "name": "Augusta Savage",
+      "era": "1892-1962",
+      "category": [
+        "art",
+        "sculpture",
+        "activism"
+      ],
+      "achievement": "Became one of the most influential sculptors of the Harlem Renaissance despite being denied opportunities due to race",
+      "story_hook": "She made her first sculptures from the red clay behind her house — because she couldn't afford marble, and nobody would sell it to her anyway",
+      "counters_stereotypes": [
+        "girls_cant_be_artists",
+        "art_is_a_luxury",
+        "poverty_limits_creativity"
+      ],
+      "fairy_tale_moment": "A school in Paris wouldn't accept her because of the color of her skin. But Augusta kept sculpting — with whatever she could find. And her artwork became so powerful that it now stands in some of the greatest museums in the world.",
+      "age_adaptations": {
+        "young": "Augusta made beautiful statues out of mud when she was little, and she never stopped creating!",
+        "middle": "Denied art school because of her race, Augusta taught herself sculpture and became one of the most important artists of the Harlem Renaissance.",
+        "older": "Augusta Savage overcame racial exclusion from art institutions to become a leading Harlem Renaissance sculptor. She mentored an entire generation of Black artists while fighting systemic racism in the art world."
+      }
+    },
+    {
+      "name": "Stephanie Kwolek",
+      "era": "1923-2014",
+      "category": [
+        "stem",
+        "invention",
+        "chemistry"
+      ],
+      "achievement": "Invented Kevlar, a material five times stronger than steel that has saved thousands of lives",
+      "story_hook": "She created a material stronger than steel from a liquid everyone else wanted to throw away",
+      "counters_stereotypes": [
+        "girls_cant_invent",
+        "science_is_for_boys",
+        "girls_cant_build_things"
+      ],
+      "fairy_tale_moment": "The other scientists looked at the cloudy liquid and said, 'Throw it out — it's a failure.' But Stephanie said, 'Let me test it.' That 'failure' turned out to be five times stronger than steel.",
+      "age_adaptations": {
+        "young": "Stephanie made a special material that is stronger than steel and protects people!",
+        "middle": "When everyone else wanted to throw away a failed experiment, Stephanie tested it anyway — and discovered Kevlar, which has saved thousands of lives.",
+        "older": "Stephanie Kwolek's accidental discovery of Kevlar in 1965 created one of the most important synthetic materials ever made. Used in bulletproof vests, it has saved an estimated 3,000+ lives."
+      }
+    },
+    {
+      "name": "Toni Morrison",
+      "era": "1931-2019",
+      "category": [
+        "art",
+        "writing",
+        "pioneering"
+      ],
+      "achievement": "First African American woman to win the Nobel Prize in Literature",
+      "story_hook": "She wrote the stories that nobody else would tell — and her words were so powerful they changed what literature could be",
+      "counters_stereotypes": [
+        "girls_voices_dont_matter",
+        "girls_cant_be_the_best",
+        "girls_should_be_quiet"
+      ],
+      "fairy_tale_moment": "The stories she wanted to read didn't exist. So Toni sat down and wrote them herself. Her words were so beautiful that she won the greatest prize in all of literature.",
+      "age_adaptations": {
+        "young": "Toni wrote the most amazing stories and won the biggest prize for writing in the whole world!",
+        "middle": "When Toni couldn't find books that told stories like hers, she wrote them herself — and became the first Black woman to win the Nobel Prize in Literature.",
+        "older": "Toni Morrison redefined American literature with novels like 'Beloved.' Her 1993 Nobel Prize recognized her as one of the most important writers of the 20th century."
+      }
+    },
+    {
+      "name": "Ellen Johnson Sirleaf",
+      "era": "1938-present",
+      "category": [
+        "leadership",
+        "politics",
+        "pioneering"
+      ],
+      "achievement": "First democratically elected female head of state in Africa, serving as President of Liberia",
+      "story_hook": "She was imprisoned, exiled, and threatened — but she kept coming back until she became the first woman to lead an African country",
+      "counters_stereotypes": [
+        "girls_cant_be_leaders",
+        "girls_cant_be_president",
+        "girls_should_give_up_when_its_hard"
+      ],
+      "fairy_tale_moment": "They threw her in prison. She came back. They sent her away. She came back again. They threatened her life. She came back one more time — and this time, the people chose her to lead them.",
+      "age_adaptations": {
+        "young": "Ellen became the leader of a whole country in Africa — the first woman ever to do that!",
+        "middle": "After being imprisoned and exiled multiple times, Ellen Johnson Sirleaf became Africa's first elected woman president and won the Nobel Peace Prize.",
+        "older": "Ellen Johnson Sirleaf survived imprisonment, exile, and civil war to become Liberia's president in 2006. She won the Nobel Peace Prize in 2011 for her work advancing women's safety and rights."
+      }
+    },
+    {
+      "name": "Indra Nooyi",
+      "era": "1955-present",
+      "category": [
+        "business",
+        "leadership",
+        "parenting"
+      ],
+      "achievement": "Led PepsiCo as CEO for 12 years while raising two daughters, transforming it into a healthier food company",
+      "story_hook": "She ran one of the world's biggest companies and still made it home for bedtime stories — because she refused to believe mothers had to choose",
+      "counters_stereotypes": [
+        "moms_cant_be_leaders",
+        "girls_cant_run_businesses",
+        "having_a_baby_means_giving_up_your_career"
+      ],
+      "fairy_tale_moment": "Some nights she flew across the world for meetings. Other nights she helped with homework. People asked, 'How can you do both?' Indra answered by doing both — brilliantly — for twelve years.",
+      "age_adaptations": {
+        "young": "Indra was the boss of a huge company AND a great mommy at the same time!",
+        "middle": "Indra Nooyi led PepsiCo — one of the world's biggest companies — for 12 years while raising two daughters. She proved mothers can lead at every level.",
+        "older": "As PepsiCo's CEO from 2006-2018, Indra Nooyi grew revenue by 80% while openly discussing the challenges of balancing motherhood and leadership — normalizing that conversation for women in business."
+      }
+    },
+    {
+      "name": "Wang Zhenyi",
+      "era": "1768-1797",
+      "category": [
+        "stem",
+        "astronomy",
+        "math"
+      ],
+      "achievement": "Explained lunar eclipses and made advanced mathematics accessible to everyone in 18th-century China",
+      "story_hook": "In a time when girls were told to stay inside, she went out at night to study the stars — and figured out why the moon disappears",
+      "counters_stereotypes": [
+        "girls_cant_do_math",
+        "science_is_for_boys",
+        "girls_cant_do_complex_science"
+      ],
+      "fairy_tale_moment": "She set up a round table as the Earth, a mirror on the ceiling as the moon, and a lamp as the sun. Right there in her room, she recreated a lunar eclipse — and proved she understood the heavens better than the scholars who mocked her.",
+      "age_adaptations": {
+        "young": "Wang Zhenyi figured out why the moon sometimes disappears from the sky!",
+        "middle": "In 1700s China, when girls weren't supposed to study, Wang Zhenyi taught herself astronomy and used a model in her room to explain how lunar eclipses work.",
+        "older": "Wang Zhenyi was a self-taught astronomer in Qing dynasty China who correctly explained lunar eclipses and wrote poetry about gender equality — dying at just 29, but leaving behind work that influenced Chinese science for generations."
+      }
+    },
+    {
+      "name": "Katia Krafft",
+      "era": "1942-1991",
+      "category": [
+        "science",
+        "adventure",
+        "geology"
+      ],
+      "achievement": "One of the world's foremost volcanologists, documenting eruptions closer than anyone had dared",
+      "story_hook": "While everyone else ran away from exploding volcanoes, Katia ran toward them — with a camera in her hand",
+      "counters_stereotypes": [
+        "girls_cant_do_dangerous_things",
+        "science_is_for_boys",
+        "girls_arent_adventurous"
+      ],
+      "fairy_tale_moment": "The ground shook. The mountain roared. Rivers of fire flowed down the slopes. And there was Katia, standing closer than anyone had ever stood, taking photographs of the Earth's power — so the world could understand it.",
+      "age_adaptations": {
+        "young": "Katia loved volcanoes so much that she went right up close to see them erupt!",
+        "middle": "Katia Krafft filmed and photographed erupting volcanoes from closer than anyone ever had, creating footage that has saved thousands of lives by teaching people about volcanic danger.",
+        "older": "Katia Krafft and her husband Maurice documented over 150 volcanic eruptions. Their footage, used by scientists to predict eruptions, has saved an estimated 20,000+ lives. They died doing what they loved — at Mount Unzen in 1991."
+      }
+    },
+    {
+      "name": "Rani Lakshmibai",
+      "era": "1828-1858",
+      "category": [
+        "leadership",
+        "strength",
+        "warfare"
+      ],
+      "achievement": "Queen of Jhansi who led her army into battle against the British Empire, fighting for India's independence",
+      "story_hook": "When they tried to take her kingdom, she put on armor, picked up a sword, and rode into battle with her baby on her back",
+      "counters_stereotypes": [
+        "girls_arent_strong",
+        "girls_cant_be_leaders",
+        "girls_cant_fight",
+        "moms_cant_be_leaders"
+      ],
+      "fairy_tale_moment": "The British army surrounded her city. 'Surrender,' they said. Rani tied her son to her back, mounted her horse, and charged through the enemy lines. Even her enemies called her 'the bravest of them all.'",
+      "age_adaptations": {
+        "young": "Rani was a queen who rode a horse and protected her people with a sword — even while carrying her baby!",
+        "middle": "When the British tried to take her kingdom, Rani Lakshmibai learned sword fighting, trained an army of women, and rode into battle — becoming one of India's greatest heroes.",
+        "older": "Rani Lakshmibai of Jhansi became a symbol of India's independence struggle. At 29, she led cavalry charges against British forces, and even her enemies wrote of her extraordinary courage and military skill."
+      }
+    },
+    {
+      "name": "Raha Moharrak",
+      "era": "1986-present",
+      "category": [
+        "adventure",
+        "sports",
+        "pioneering"
+      ],
+      "achievement": "First Saudi woman to climb Mount Everest, challenging cultural expectations about what women can do",
+      "story_hook": "Everyone in her world said mountains weren't for girls. She climbed the biggest one on Earth.",
+      "counters_stereotypes": [
+        "girls_cant_be_adventurous",
+        "girls_arent_strong_enough",
+        "girls_should_stay_safe",
+        "culture_says_girls_cant"
+      ],
+      "fairy_tale_moment": "Her family didn't understand. Her society said no. But Raha trained in secret, found her courage, and climbed to the top of the world — then looked down and saw how small all those 'no's' really were.",
+      "age_adaptations": {
+        "young": "Raha climbed the tallest mountain in the world even though people said she couldn't!",
+        "middle": "Raha Moharrak became the first Saudi woman to summit Everest, inspiring girls across the Middle East to pursue their own impossible dreams.",
+        "older": "In 2013, Raha Moharrak became the youngest Arab and first Saudi woman to climb Everest. She has since used her platform to challenge cultural barriers and inspire young women across the Arab world."
+      }
+    },
+    {
+      "name": "Sonia Sotomayor",
+      "era": "1954-present",
+      "category": [
+        "leadership",
+        "law",
+        "pioneering"
+      ],
+      "achievement": "First Hispanic and Latina justice on the United States Supreme Court",
+      "story_hook": "A girl from a tiny apartment in the Bronx read a book about a detective — and decided she would spend her life fighting for justice, all the way to the highest court",
+      "counters_stereotypes": [
+        "girls_cant_be_leaders",
+        "poverty_defines_you",
+        "girls_cant_be_judges"
+      ],
+      "fairy_tale_moment": "She grew up in public housing. She was told her accent was wrong, her background was wrong. But Sonia studied harder than anyone, and one day she put on the black robe of a Supreme Court Justice — the first Latina ever to wear it.",
+      "age_adaptations": {
+        "young": "Sonia became one of the most important judges in the whole country!",
+        "middle": "Growing up in public housing in the Bronx, Sonia dreamed of justice. She became the first Hispanic person on the Supreme Court — the highest court in America.",
+        "older": "Sonia Sotomayor was raised in Bronx public housing by her widowed mother. Diagnosed with diabetes at 7, she graduated top of her class at Princeton and Yale Law before becoming the first Latina Supreme Court Justice in 2009."
+      }
+    },
+    {
+      "name": "Waris Dirie",
+      "era": "1965-present",
+      "category": [
+        "activism",
+        "modeling",
+        "courage"
+      ],
+      "achievement": "Became an international supermodel and UN Special Ambassador, using her platform to fight for girls' rights",
+      "story_hook": "The world saw a beautiful model on magazine covers — but she was carrying a secret, and when she finally told it, she changed millions of lives",
+      "counters_stereotypes": [
+        "pretty_girls_arent_smart",
+        "beauty_and_brains_dont_mix",
+        "girls_cant_change_the_world"
+      ],
+      "fairy_tale_moment": "She walked the runways of the world's greatest fashion houses. But behind the glamour, Waris carried a painful truth. When she finally shared her story, she didn't just speak for herself — she spoke for 200 million girls.",
+      "age_adaptations": {
+        "young": "Waris was a famous model who used her voice to help girls all over the world!",
+        "middle": "Waris Dirie became one of the world's top models, then used her fame to speak up for girls' rights — becoming a UN Special Ambassador.",
+        "older": "Waris Dirie fled Somalia at 13 and became a top international model. She then leveraged her celebrity to become a UN Ambassador, campaigning globally against female genital mutilation and advocating for girls' rights."
+      }
+    },
+    {
+      "name": "Maryam Mirzakhani",
+      "era": "1977-2017",
+      "category": [
+        "stem",
+        "math",
+        "pioneering"
+      ],
+      "achievement": "First woman and first Iranian to win the Fields Medal, the highest honor in mathematics",
+      "story_hook": "She drew pictures of shapes that most people couldn't even imagine — and won the biggest prize in all of mathematics",
+      "counters_stereotypes": [
+        "girls_cant_do_math",
+        "math_is_for_boys",
+        "girls_cant_be_the_best"
+      ],
+      "fairy_tale_moment": "The Fields Medal — the biggest prize in mathematics, given every four years — had never been won by a woman. Then Maryam's drawings of impossible shapes changed that, forever.",
+      "age_adaptations": {
+        "young": "Maryam loved drawing shapes so much that she won the biggest math prize in the world!",
+        "middle": "Maryam Mirzakhani was the first woman ever to win the Fields Medal — the biggest prize in mathematics. She drew beautiful pictures of shapes that helped solve problems no one else could.",
+        "older": "Maryam Mirzakhani's groundbreaking work on the dynamics and geometry of Riemann surfaces earned her the 2014 Fields Medal — the first woman in the award's 78-year history. She died of cancer at 40, a profound loss to mathematics."
+      }
+    },
+    {
+      "name": "Mama Cax",
+      "era": "1992-2019",
+      "category": [
+        "modeling",
+        "disability",
+        "resilience"
+      ],
+      "achievement": "Became a boundary-breaking fashion model and disability advocate after losing her leg to cancer",
+      "story_hook": "She lost her leg to cancer, and the fashion world said she couldn't be a model. She walked the runway anyway — and changed what beauty looks like",
+      "counters_stereotypes": [
+        "disability_means_you_cant",
+        "you_have_to_look_a_certain_way",
+        "beauty_means_being_perfect"
+      ],
+      "fairy_tale_moment": "The spotlight hit her as she walked the runway — prosthetic leg gleaming. The audience didn't clap because they felt sorry for her. They clapped because she was magnificent.",
+      "age_adaptations": {
+        "young": "Mama Cax showed everyone that being different makes you beautiful, not less!",
+        "middle": "After losing her leg to cancer, Mama Cax became a fashion model who walked runways for major designers — proving that beauty comes in every form.",
+        "older": "Mama Cax (Cacsmy Brutus) survived bone cancer and walked runways for brands that had never featured amputee models. Her advocacy reshaped fashion's definition of beauty before her untimely death at 27."
+      }
+    },
+    {
+      "name": "Grandma Moses",
+      "era": "1860-1961",
+      "category": [
+        "art",
+        "painting",
+        "late_starter"
+      ],
+      "achievement": "Began painting at age 78 and became one of America's most beloved artists",
+      "story_hook": "She didn't pick up a paintbrush until she was 78 years old — and then she became one of America's most famous artists",
+      "counters_stereotypes": [
+        "its_too_late_to_start",
+        "you_missed_your_chance",
+        "art_is_only_for_young_people"
+      ],
+      "fairy_tale_moment": "At 78, her hands were too stiff for embroidery. So she picked up a paintbrush instead. By 80, her paintings hung in museums. By 90, presidents came to visit her. It turns out, she'd been saving the best part of her life for last.",
+      "age_adaptations": {
+        "young": "Grandma Moses started painting when she was a great-grandma, and everyone loved her pictures!",
+        "middle": "Anna Mary Moses didn't start painting until she was 78 — and became so famous that her artwork hung in museums around the world and presidents celebrated her birthdays.",
+        "older": "Grandma Moses began painting at 78 when arthritis made embroidery impossible. She produced over 1,500 works, had her art displayed at the Metropolitan Museum, and became a cultural icon — proof that creativity has no expiration date."
+      }
+    }
+  ],
+  "stereotype_categories": {
+    "girls_cant_do_math": {
+      "label": "Girls can't do math",
+      "counter_message": "Math has no gender — some of history's greatest mathematical minds were women",
+      "suggested_women": [
+        "Katherine Johnson",
+        "Ada Lovelace",
+        "Marie Curie",
+        "Chien-Shiung Wu",
+        "Maryam Mirzakhani",
+        "Wang Zhenyi"
+      ]
+    },
+    "science_is_for_boys": {
+      "label": "Science is for boys",
+      "counter_message": "Women have made some of science's most important discoveries",
+      "suggested_women": [
+        "Marie Curie",
+        "Rosalind Franklin",
+        "Jane Goodall",
+        "Tu Youyou",
+        "Mary Anning",
+        "Katia Krafft"
+      ]
+    },
+    "girls_arent_strong": {
+      "label": "Girls aren't strong",
+      "counter_message": "Strength comes in many forms — physical, mental, and emotional",
+      "suggested_women": [
+        "Serena Williams",
+        "Junko Tabei",
+        "Wilma Rudolph",
+        "Simone Biles",
+        "Rani Lakshmibai",
+        "Nadia Comăneci"
+      ]
+    },
+    "girls_cant_be_leaders": {
+      "label": "Girls can't be leaders",
+      "counter_message": "Women have led countries, movements, and revolutions throughout history",
+      "suggested_women": [
+        "Malala Yousafzai",
+        "Jacinda Ardern",
+        "Shirley Chisholm",
+        "Wangari Maathai",
+        "Ellen Johnson Sirleaf",
+        "Sonia Sotomayor",
+        "Rigoberta Menchú"
+      ]
+    },
+    "girls_should_be_quiet": {
+      "label": "Girls should be quiet",
+      "counter_message": "The most powerful voices in history include women who refused to be silenced",
+      "suggested_women": [
+        "Malala Yousafzai",
+        "Maya Angelou",
+        "Rosa Parks",
+        "Shirley Chisholm",
+        "Toni Morrison",
+        "Rigoberta Menchú"
+      ]
+    },
+    "girls_cant_build_things": {
+      "label": "Girls can't build things",
+      "counter_message": "Women have built bridges, buildings, computers, and entire companies",
+      "suggested_women": [
+        "Emily Warren Roebling",
+        "Zaha Hadid",
+        "Ada Lovelace",
+        "Grace Hopper",
+        "Stephanie Kwolek"
+      ]
+    },
+    "girls_cant_be_adventurous": {
+      "label": "Girls can't be adventurous",
+      "counter_message": "Women have explored the deepest oceans, highest mountains, and outer space",
+      "suggested_women": [
+        "Amelia Earhart",
+        "Sylvia Earle",
+        "Junko Tabei",
+        "Valentina Tereshkova",
+        "Raha Moharrak",
+        "Katia Krafft",
+        "Bessie Coleman"
+      ]
+    },
+    "girls_cant_run_businesses": {
+      "label": "Girls can't run businesses",
+      "counter_message": "Women have built some of history's most successful companies from nothing",
+      "suggested_women": [
+        "Madam C.J. Walker",
+        "Oprah Winfrey",
+        "Sara Blakely",
+        "Indra Nooyi"
+      ]
+    },
+    "pretty_girls_arent_smart": {
+      "label": "Pretty girls aren't smart / beauty and brains don't mix",
+      "counter_message": "Intelligence has nothing to do with appearance — many brilliant women were also celebrated for their beauty, and vice versa",
+      "suggested_women": [
+        "Hedy Lamarr",
+        "Mae Jemison",
+        "Misty Copeland",
+        "Waris Dirie",
+        "Augusta Savage"
+      ]
+    },
+    "emotions_are_weakness": {
+      "label": "Showing emotions means you're weak",
+      "counter_message": "Emotional awareness is a form of courage and strength",
+      "suggested_women": [
+        "Simone Biles",
+        "Frida Kahlo",
+        "Maya Angelou"
+      ]
+    },
+    "disability_means_you_cant": {
+      "label": "Having a disability means you can't do things",
+      "counter_message": "Some of history's greatest achievers turned their differences into superpowers",
+      "suggested_women": [
+        "Helen Keller",
+        "Frida Kahlo",
+        "Temple Grandin",
+        "Wilma Rudolph",
+        "Mama Cax"
+      ]
+    },
+    "its_too_late_to_start": {
+      "label": "It's too late to start / you missed your chance",
+      "counter_message": "It's never too late — some of the greatest achievements came from people who started 'late'",
+      "suggested_women": [
+        "Misty Copeland",
+        "Valentina Tereshkova",
+        "Madam C.J. Walker",
+        "Grandma Moses"
+      ]
+    },
+    "girls_cant_do_tech": {
+      "label": "Technology/computers are for boys",
+      "counter_message": "Women literally invented computer programming and the technology behind your phone",
+      "suggested_women": [
+        "Ada Lovelace",
+        "Grace Hopper",
+        "Hedy Lamarr",
+        "Katherine Johnson"
+      ]
+    },
+    "moms_cant_be_leaders": {
+      "label": "Being a mom means giving up your career/dreams",
+      "counter_message": "Motherhood and ambition are not opposites — many leaders did both brilliantly",
+      "suggested_women": [
+        "Jacinda Ardern",
+        "Marie Curie",
+        "Serena Williams",
+        "Indra Nooyi",
+        "Rani Lakshmibai"
+      ]
+    }
+  }
+}
