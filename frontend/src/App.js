@@ -59,11 +59,24 @@ function LandingPage({ onStart }) {
 /* ============================================================
    INPUT FORM
    ============================================================ */
+const FALLBACK_EXAMPLES = [
+  { text: "Girls can't do math", emoji: "🔢" },
+  { text: "Science is for boys", emoji: "🔬" },
+  { text: "Girls aren't strong enough", emoji: "💪" },
+  { text: "Boys are better at sports", emoji: "⚽" },
+  { text: "Girls should be quiet and polite", emoji: "🤫" },
+  { text: "Girls can't be leaders", emoji: "👑" },
+  { text: "Technology is for boys", emoji: "💻" },
+  { text: "Girls can't build things", emoji: "🏗️" },
+  { text: "Being a mom means giving up your dreams", emoji: "👩‍👧" },
+  { text: "It's too late to start something new", emoji: "⏰" },
+];
+
 function InputForm({ onGenerate, onBack }) {
   const [stereotype, setStereotype] = useState('');
   const [childName, setChildName] = useState('');
   const [childAge, setChildAge] = useState(6);
-  const [examples, setExamples] = useState([]);
+  const [examples, setExamples] = useState(FALLBACK_EXAMPLES);
   const [visible, setVisible] = useState(false);
 
   useEffect(() => {
@@ -73,21 +86,17 @@ function InputForm({ onGenerate, onBack }) {
 
   useEffect(() => {
     fetch(`${API_BASE}/api/examples`)
-      .then(r => r.json())
-      .then(setExamples)
+      .then(r => {
+        if (!r.ok) throw new Error('Failed to fetch');
+        return r.json();
+      })
+      .then(data => {
+        if (Array.isArray(data) && data.length > 0) {
+          setExamples(data);
+        }
+      })
       .catch(() => {
-        setExamples([
-          { text: "Girls can't do math", emoji: "🔢" },
-          { text: "Science is for boys", emoji: "🔬" },
-          { text: "Girls aren't strong enough", emoji: "💪" },
-          { text: "Boys are better at sports", emoji: "⚽" },
-          { text: "Girls should be quiet and polite", emoji: "🤫" },
-          { text: "Girls can't be leaders", emoji: "👑" },
-          { text: "Technology is for boys", emoji: "💻" },
-          { text: "Girls can't build things", emoji: "🏗️" },
-          { text: "Being a mom means giving up your dreams", emoji: "👩‍👧" },
-          { text: "It's too late to start something new", emoji: "⏰" },
-        ]);
+        // Keep the fallback examples that were set as initial state
       });
   }, []);
 
