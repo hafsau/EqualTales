@@ -59,7 +59,7 @@ function LandingPage({ onStart }) {
 /* ============================================================
    INPUT FORM
    ============================================================ */
-function InputForm({ onGenerate }) {
+function InputForm({ onGenerate, onBack }) {
   const [stereotype, setStereotype] = useState('');
   const [childName, setChildName] = useState('');
   const [childAge, setChildAge] = useState(6);
@@ -103,7 +103,7 @@ function InputForm({ onGenerate }) {
 
   return (
     <div className={`input-form-container ${visible ? 'visible' : ''}`}>
-      <button className="back-btn" onClick={() => window.location.reload()}>
+      <button className="back-btn" onClick={onBack}>
         ← Back
       </button>
       <div className="input-form-header">
@@ -130,10 +130,16 @@ function InputForm({ onGenerate }) {
           <textarea
             id="stereotype"
             value={stereotype}
-            onChange={(e) => setStereotype(e.target.value)}
+            onChange={(e) => setStereotype(e.target.value.slice(0, 500))}
             placeholder='e.g., "My daughter thinks only boys can be engineers"'
             rows={3}
+            maxLength={500}
           />
+          <div className="char-counter">
+            <span className={stereotype.length > 450 ? 'warning' : ''}>
+              {stereotype.length}/500
+            </span>
+          </div>
         </div>
 
         <div className="form-row">
@@ -246,23 +252,37 @@ function TypewriterText({ text, speed = 20, onComplete }) {
   const [displayedText, setDisplayedText] = useState('');
   const [isComplete, setIsComplete] = useState(false);
   const onCompleteRef = useRef(onComplete);
+  const timeoutRef = useRef(null);
   onCompleteRef.current = onComplete;
 
   useEffect(() => {
     setDisplayedText('');
     setIsComplete(false);
     let i = 0;
-    const interval = setInterval(() => {
+
+    const getDelay = (char) => {
+      if (['.', '!', '?'].includes(char)) return speed * 8;
+      if ([',', ';', ':'].includes(char)) return speed * 4;
+      if (char === '—' || char === '–') return speed * 6;
+      return speed;
+    };
+
+    const typeNext = () => {
       if (i < text.length) {
         setDisplayedText(text.slice(0, i + 1));
+        const delay = getDelay(text[i]);
         i++;
+        timeoutRef.current = setTimeout(typeNext, delay);
       } else {
-        clearInterval(interval);
         setIsComplete(true);
         if (onCompleteRef.current) onCompleteRef.current();
       }
-    }, speed);
-    return () => clearInterval(interval);
+    };
+
+    timeoutRef.current = setTimeout(typeNext, speed);
+    return () => {
+      if (timeoutRef.current) clearTimeout(timeoutRef.current);
+    };
   }, [text, speed]);
 
   return (
@@ -308,8 +328,8 @@ function StorybookViewer({ storyData, illustrations, qaResult, realWoman, onRese
       setSeenPages(prev => new Set([...prev, newPage]));
       setShowTypewriter(!seenPages.has(newPage));
       setPageTransition(`enter-${direction}`);
-      setTimeout(() => setPageTransition(''), 400);
-    }, 300);
+      setTimeout(() => setPageTransition(''), 500);
+    }, 200);
   };
 
   const goNext = () => {
@@ -608,7 +628,7 @@ function App() {
       )}
 
       {screen === 'input' && (
-        <InputForm onGenerate={handleGenerate} />
+        <InputForm onGenerate={handleGenerate} onBack={() => setScreen('landing')} />
       )}
 
       {screen === 'generating' && (
