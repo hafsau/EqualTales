@@ -225,7 +225,19 @@ def match_real_woman(primary_category: str, secondary_categories: str = "[]") ->
         top = candidates[: min(3, len(candidates))]
         selected = random.choice(top)[0]
     else:
-        selected = random.choice(KNOWLEDGE_BASE["women"])
+        # Fallback: pick from suggested_women for the primary category
+        cat_data = KNOWLEDGE_BASE["stereotype_categories"].get(primary_category, {})
+        suggested = cat_data.get("suggested_women", [])
+        selected = None
+        if suggested:
+            # Find the woman object by name from suggested list
+            for woman in KNOWLEDGE_BASE["women"]:
+                if woman["name"] in suggested:
+                    selected = woman
+                    break
+        # If still no match, pick randomly (last resort)
+        if not selected:
+            selected = random.choice(KNOWLEDGE_BASE["women"])
 
     # Also include the counter message from the category
     cat_data = KNOWLEDGE_BASE["stereotype_categories"].get(primary_category, {})
@@ -337,7 +349,7 @@ Return ONLY valid JSON."""
 
     response = client.chat.completions.create(
         model="anthropic/claude-opus-4.6",
-        max_tokens=4096,
+        max_tokens=2500,  # Reduced from 4096 - story is ~2000 tokens
         messages=[{"role": "user", "content": prompt}],
     )
 
@@ -384,7 +396,7 @@ def verify_story(story_pages_json: str, stereotype_text: str) -> str:
 
     response = client.chat.completions.create(
         model="anthropic/claude-sonnet-4.5",
-        max_tokens=1024,
+        max_tokens=512,  # Reduced from 1024 - QA result is ~200 tokens
         messages=[
             {
                 "role": "user",

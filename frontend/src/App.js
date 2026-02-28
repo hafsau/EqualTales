@@ -416,6 +416,9 @@ function StorybookViewer({ storyData, illustrations, qaResult, realWoman, onRese
   return (
     <div className="storybook">
       <div className="storybook-header">
+        <button className="exit-btn" onClick={onReset} aria-label="Exit story">
+          ✕
+        </button>
         <h1 className="story-title">{storyData.title}</h1>
         <div className="page-indicator">
           {pages.map((_, i) => (
