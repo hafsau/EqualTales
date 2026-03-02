@@ -4,6 +4,139 @@ import './App.css';
 const API_BASE = process.env.REACT_APP_API_URL || 'http://localhost:5001';
 
 /* ============================================================
+   SOUND EFFECTS
+   ============================================================ */
+const SoundContext = React.createContext({ play: () => {}, muted: true });
+
+function useSounds() {
+  return React.useContext(SoundContext);
+}
+
+function SoundProvider({ children }) {
+  const [muted, setMuted] = useState(() => {
+    const saved = localStorage.getItem('soundMuted');
+    return saved === null ? false : saved === 'true';
+  });
+  const audioContextRef = useRef(null);
+
+  const getContext = () => {
+    if (!audioContextRef.current) {
+      audioContextRef.current = new (window.AudioContext || window.webkitAudioContext)();
+    }
+    return audioContextRef.current;
+  };
+
+  const play = useCallback((type) => {
+    if (muted) return;
+    try {
+      const ctx = getContext();
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+
+      switch (type) {
+        case 'click':
+          osc.frequency.value = 600;
+          osc.type = 'sine';
+          gain.gain.setValueAtTime(0.1, ctx.currentTime);
+          gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.1);
+          osc.start(ctx.currentTime);
+          osc.stop(ctx.currentTime + 0.1);
+          break;
+        case 'page':
+          osc.frequency.value = 200;
+          osc.type = 'triangle';
+          gain.gain.setValueAtTime(0.08, ctx.currentTime);
+          gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.15);
+          osc.start(ctx.currentTime);
+          osc.stop(ctx.currentTime + 0.15);
+          break;
+        case 'complete':
+          // Play a little melody
+          const notes = [523, 659, 784]; // C5, E5, G5
+          notes.forEach((freq, i) => {
+            const o = ctx.createOscillator();
+            const g = ctx.createGain();
+            o.connect(g);
+            g.connect(ctx.destination);
+            o.frequency.value = freq;
+            o.type = 'sine';
+            g.gain.setValueAtTime(0.1, ctx.currentTime + i * 0.15);
+            g.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + i * 0.15 + 0.3);
+            o.start(ctx.currentTime + i * 0.15);
+            o.stop(ctx.currentTime + i * 0.15 + 0.3);
+          });
+          break;
+        default:
+          break;
+      }
+    } catch (e) {
+      // Audio not supported
+    }
+  }, [muted]);
+
+  const toggleMute = () => {
+    setMuted(prev => {
+      localStorage.setItem('soundMuted', String(!prev));
+      return !prev;
+    });
+  };
+
+  return (
+    <SoundContext.Provider value={{ play, muted, toggleMute }}>
+      {children}
+    </SoundContext.Provider>
+  );
+}
+
+function SoundToggle() {
+  const { muted, toggleMute } = useSounds();
+
+  return (
+    <button
+      className="sound-toggle"
+      onClick={toggleMute}
+      aria-label={muted ? 'Unmute sounds' : 'Mute sounds'}
+    >
+      <span className="sound-icon">{muted ? '🔇' : '🔊'}</span>
+    </button>
+  );
+}
+
+/* ============================================================
+   THEME TOGGLE
+   ============================================================ */
+function ThemeToggle() {
+  const [theme, setTheme] = useState(() => {
+    const saved = localStorage.getItem('theme');
+    if (saved) return saved;
+    return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+  });
+
+  useEffect(() => {
+    document.documentElement.setAttribute('data-theme', theme);
+    localStorage.setItem('theme', theme);
+  }, [theme]);
+
+  const toggleTheme = () => {
+    setTheme(prev => prev === 'light' ? 'dark' : 'light');
+  };
+
+  return (
+    <button
+      className="theme-toggle"
+      onClick={toggleTheme}
+      aria-label={`Switch to ${theme === 'light' ? 'dark' : 'light'} mode`}
+    >
+      <span className={`theme-icon ${theme === 'light' ? 'sun' : 'moon'}`}>
+        {theme === 'light' ? '☀️' : '🌙'}
+      </span>
+    </button>
+  );
+}
+
+/* ============================================================
    LANDING PAGE
    ============================================================ */
 function LandingPage({ onStart }) {
@@ -190,7 +323,31 @@ function InputForm({ onGenerate, onBack }) {
 /* ============================================================
    GENERATION PROGRESS
    ============================================================ */
+const WAIT_TIPS = [
+  "Did you know? Stories help children develop empathy and emotional intelligence.",
+  "Research shows representation in stories shapes children's aspirations.",
+  "Reading together strengthens the parent-child bond.",
+  "Children who see diverse role models dream bigger dreams.",
+  "A single story can change how a child sees their potential.",
+  "The best time to counter stereotypes is before age 7.",
+];
+
 function GenerationProgress({ status, storyData, illustrations, qaResult, realWoman, elapsedTime }) {
+  const [tipIndex, setTipIndex] = useState(0);
+  const [tipVisible, setTipVisible] = useState(true);
+
+  useEffect(() => {
+    if (elapsedTime < 10) return; // Don't show tips until 10s in
+    const interval = setInterval(() => {
+      setTipVisible(false);
+      setTimeout(() => {
+        setTipIndex(prev => (prev + 1) % WAIT_TIPS.length);
+        setTipVisible(true);
+      }, 300);
+    }, 8000);
+    return () => clearInterval(interval);
+  }, [elapsedTime]);
+
   const steps = [
     { key: 'classify', label: 'Understanding the stereotype', icon: '🔍' },
     { key: 'woman', label: 'Finding an inspiring woman', icon: '✨' },
@@ -248,6 +405,13 @@ function GenerationProgress({ status, storyData, illustrations, qaResult, realWo
           <span className="woman-reveal-label">Featuring</span>
           <strong>{realWoman.name}</strong>
           <span className="woman-reveal-achievement">{realWoman.achievement}</span>
+        </div>
+      )}
+
+      {elapsedTime >= 10 && (
+        <div className={`wait-tip ${tipVisible ? 'visible' : ''}`}>
+          <span className="tip-icon">💡</span>
+          <p>{WAIT_TIPS[tipIndex]}</p>
         </div>
       )}
     </div>
@@ -311,6 +475,9 @@ function StorybookViewer({ storyData, illustrations, qaResult, realWoman, onRese
   const [pageTransition, setPageTransition] = useState('');
   const [showTypewriter, setShowTypewriter] = useState(true);
   const [seenPages, setSeenPages] = useState(new Set([0]));
+  const [swipeOffset, setSwipeOffset] = useState(0);
+  const touchStartRef = useRef(null);
+  const { play } = useSounds();
 
   const pages = storyData?.pages || [];
   const totalPages = pages.length;
@@ -330,7 +497,34 @@ function StorybookViewer({ storyData, illustrations, qaResult, realWoman, onRese
     return () => window.removeEventListener('keydown', handleKeyDown);
   });
 
+  // Touch/swipe handlers
+  const handleTouchStart = (e) => {
+    touchStartRef.current = e.touches[0].clientX;
+  };
+
+  const handleTouchMove = (e) => {
+    if (!touchStartRef.current) return;
+    const diff = e.touches[0].clientX - touchStartRef.current;
+    // Limit swipe feedback to ±60px
+    setSwipeOffset(Math.max(-60, Math.min(60, diff * 0.3)));
+  };
+
+  const handleTouchEnd = (e) => {
+    if (!touchStartRef.current) return;
+    const diff = e.changedTouches[0].clientX - touchStartRef.current;
+    setSwipeOffset(0);
+
+    // Threshold of 50px for swipe
+    if (diff > 50) {
+      goPrev();
+    } else if (diff < -50) {
+      goNext();
+    }
+    touchStartRef.current = null;
+  };
+
   const navigateToPage = (newPage, direction) => {
+    play('page');
     setPageTransition(`exit-${direction}`);
     setTimeout(() => {
       setCurrentPage(newPage);
@@ -346,6 +540,7 @@ function StorybookViewer({ storyData, illustrations, qaResult, realWoman, onRese
     if (currentPage < totalPages - 1) {
       navigateToPage(currentPage + 1, 'left');
     } else {
+      play('complete');
       setShowCompanion(true);
     }
   };
@@ -434,7 +629,13 @@ function StorybookViewer({ storyData, illustrations, qaResult, realWoman, onRese
         </div>
       </div>
 
-      <div className={`storybook-page ${pageTransition}`}>
+      <div
+        className={`storybook-page ${pageTransition}`}
+        onTouchStart={handleTouchStart}
+        onTouchMove={handleTouchMove}
+        onTouchEnd={handleTouchEnd}
+        style={swipeOffset ? { transform: `translateX(${swipeOffset}px) rotateY(${swipeOffset * 0.05}deg)` } : {}}
+      >
         <div className="page-illustration">
           {illustration ? (
             <img
@@ -623,7 +824,13 @@ function App() {
   };
 
   return (
+    <SoundProvider>
     <div className="app">
+      <div className="app-controls">
+        <SoundToggle />
+        <ThemeToggle />
+      </div>
+
       {error && (
         <div className="error-banner">
           <p>{error}</p>
@@ -664,6 +871,7 @@ function App() {
         />
       )}
     </div>
+    </SoundProvider>
   );
 }
 
