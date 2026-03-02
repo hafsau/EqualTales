@@ -111,7 +111,13 @@ function ThemeToggle() {
   const [theme, setTheme] = useState(() => {
     const saved = localStorage.getItem('theme');
     if (saved) return saved;
-    return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+    // Defensive check for test environments
+    try {
+      const mq = window.matchMedia?.('(prefers-color-scheme: dark)');
+      return mq?.matches ? 'dark' : 'light';
+    } catch {
+      return 'light';
+    }
   });
 
   useEffect(() => {
