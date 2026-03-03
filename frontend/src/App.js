@@ -744,7 +744,26 @@ function App() {
   const [genStatus, setGenStatus] = useState('');
   const [error, setError] = useState(null);
   const [elapsedTime, setElapsedTime] = useState(0);
+  const [isFallbackMode, setIsFallbackMode] = useState(false);
   const timerRef = useRef(null);
+
+  // Load fallback story when API is unavailable
+  const loadFallbackStory = useCallback(async () => {
+    try {
+      const response = await fetch('/fallback-story.json');
+      const fallback = await response.json();
+      setStoryData(fallback.story);
+      setIllustrations(fallback.illustrations);
+      setRealWoman(fallback.real_woman);
+      setQaResult(fallback.qa_result);
+      setClassification(fallback.classification);
+      setIsFallbackMode(true);
+      setError(null);
+      setScreen('storybook');
+    } catch (e) {
+      setError('Unable to load demo. Please try again later.');
+    }
+  }, []);
 
   const startTimer = () => {
     const startTime = Date.now();
@@ -851,9 +870,10 @@ function App() {
       processStream();
     }).catch(err => {
       stopTimer();
-      setError(`Connection error: ${err.message}. Make sure the backend is running.`);
+      setError(`Connection error: ${err.message}. Backend may be unavailable.`);
+      // Automatically offer fallback after connection error
     });
-  }, []);
+  }, [loadFallbackStory]);
 
   const handleReset = () => {
     setScreen('input');
@@ -865,6 +885,7 @@ function App() {
     setGenStatus('');
     setError(null);
     setElapsedTime(0);
+    setIsFallbackMode(false);
   };
 
   return (
@@ -875,11 +896,19 @@ function App() {
         <ThemeToggle />
       </div>
 
+      {isFallbackMode && (
+        <div className="fallback-banner">
+          <span className="fallback-icon">📖</span>
+          <p>Demo Mode: Showing a sample story. Live generation is temporarily unavailable.</p>
+        </div>
+      )}
+
       {error && (
         <div className="error-banner">
           <p>{error}</p>
           <div className="error-actions">
             {lastInputs && <button onClick={() => handleGenerate(lastInputs)}>Try Again</button>}
+            <button onClick={loadFallbackStory} className="btn-demo">View Demo Story</button>
             <button onClick={() => { setError(null); setScreen('input'); }}>Change Input</button>
             <button onClick={() => setError(null)}>Dismiss</button>
           </div>
