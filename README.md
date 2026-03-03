@@ -214,6 +214,15 @@ Key technical choices and tradeoffs:
 
 ---
 
+## Demo Fallback
+
+If the live demo is unavailable, see [Demo Fallback Documentation](docs/DEMO_FALLBACK.md) for:
+- Video walkthrough (60s)
+- Step-by-step screenshots of full user journey
+- Sample generated story
+
+---
+
 ## Known Issues & Next Steps
 
 ### Known Issues
