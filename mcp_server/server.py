@@ -147,7 +147,7 @@ def classify_stereotype(stereotype_text: str) -> str:
     client = get_openrouter_client()
 
     response = client.chat.completions.create(
-        model="anthropic/claude-sonnet-4",
+        model="anthropic/claude-sonnet-4.5",
         max_tokens=1024,
         messages=[
             {
@@ -395,7 +395,7 @@ def verify_story(story_pages_json: str, stereotype_text: str) -> str:
     client = get_openrouter_client()
 
     response = client.chat.completions.create(
-        model="anthropic/claude-sonnet-4",
+        model="anthropic/claude-sonnet-4.5",
         max_tokens=512,  # Reduced from 1024 - QA result is ~200 tokens
         messages=[
             {
@@ -457,10 +457,7 @@ def generate_illustration(
     """
     logger.info(f"Generating illustration for page {page_number}")
 
-    # Create fresh client per call to enable true parallel execution
-    # (shared client may serialize requests)
-    from openai import OpenAI
-    client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
+    client = get_openai_client()
 
     character_note = ""
     if character_description:
