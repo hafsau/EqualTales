@@ -46,34 +46,31 @@ function SoundProvider({ children }) {
           break;
         }
         case 'page': {
-          // Paper flip sound using filtered noise
-          const bufferSize = ctx.sampleRate * 0.15; // 150ms
-          const buffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
-          const data = buffer.getChannelData(0);
-
-          // Generate noise with envelope
-          for (let i = 0; i < bufferSize; i++) {
-            const t = i / bufferSize;
-            // Quick attack, longer decay envelope
-            const envelope = t < 0.1 ? t * 10 : Math.pow(1 - t, 2);
-            data[i] = (Math.random() * 2 - 1) * envelope;
-          }
-
-          const source = ctx.createBufferSource();
-          source.buffer = buffer;
-
-          // Low-pass filter for softer sound
-          const filter = ctx.createBiquadFilter();
-          filter.type = 'lowpass';
-          filter.frequency.value = 2000;
-
+          // Page flip sound - quick snap with frequency sweep
+          const osc = ctx.createOscillator();
           const gain = ctx.createGain();
-          gain.gain.value = 0.12;
+          const filter = ctx.createBiquadFilter();
 
-          source.connect(filter);
+          osc.connect(filter);
           filter.connect(gain);
           gain.connect(ctx.destination);
-          source.start(ctx.currentTime);
+
+          // Start high, sweep down quickly (like paper flicking)
+          osc.frequency.setValueAtTime(1200, ctx.currentTime);
+          osc.frequency.exponentialRampToValueAtTime(150, ctx.currentTime + 0.08);
+          osc.type = 'square';
+
+          // Bandpass filter for papery quality
+          filter.type = 'bandpass';
+          filter.frequency.value = 800;
+          filter.Q.value = 1;
+
+          // Quick attack, quick decay
+          gain.gain.setValueAtTime(0.08, ctx.currentTime);
+          gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.1);
+
+          osc.start(ctx.currentTime);
+          osc.stop(ctx.currentTime + 0.1);
           break;
         }
         case 'complete': {
