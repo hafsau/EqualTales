@@ -136,10 +136,6 @@
   background: var(--surface);
 }
 
-[data-theme="dark"] .progress-steps::before {
-  opacity: 0.15;
-}
-
 [data-theme="dark"] .storybook-page {
   background: var(--surface);
 }
@@ -985,20 +981,6 @@ body {
   flex-direction: column;
   gap: 10px;
   margin-bottom: 32px;
-  position: relative;
-}
-
-/* Connecting line between steps */
-.progress-steps::before {
-  content: '';
-  position: absolute;
-  left: 39px;
-  top: 24px;
-  bottom: 24px;
-  width: 2px;
-  background: linear-gradient(to bottom, var(--coral), var(--gold), var(--sage));
-  opacity: 0.3;
-  border-radius: 2px;
 }
 
 .progress-step {
