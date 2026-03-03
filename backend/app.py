@@ -428,13 +428,8 @@ def generate_stream():
 
             futures[pool.submit(_run_qa)] = "qa"
 
-            # Generate illustrations for pages 1, 3, 5 only (indices 0, 2, 4)
-            # This reduces DALL-E calls from 5 to 3, cutting ~20 seconds
-            ILLUSTRATED_PAGES = [0, 2, 4]
+            # Generate all 5 illustrations in parallel
             for i, page in enumerate(story_data["pages"]):
-                if i not in ILLUSTRATED_PAGES:
-                    continue
-
                 def _gen_illust(page_idx, page_data):
                     try:
                         img_json = tools["illustrate"](
@@ -456,7 +451,7 @@ def generate_stream():
                 elif result[0] == "illustration":
                     illust_done += 1
                     yield _sse({"type": "illustration", "page": result[1], "url": result[2].get("url")})
-                    yield _sse({"type": "status", "message": f"Painting illustrations ({illust_done}/3)..."})
+                    yield _sse({"type": "status", "message": f"Painting illustrations ({illust_done}/5)..."})
 
             pool.shutdown(wait=False)
 
