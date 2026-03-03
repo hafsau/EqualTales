@@ -202,51 +202,66 @@ def _parse_json_response(text):
 def _extract_completed_pages(accumulated_text):
     """Extract any fully completed pages from accumulated streaming text.
 
-    Returns (list of completed pages, remaining text to continue accumulating).
-    Looks for complete page objects in the pages array.
+    Returns list of completed page objects.
+    Uses string-aware parsing to correctly handle braces inside text content.
     """
     completed_pages = []
 
     # Try to find the pages array start
     pages_match = accumulated_text.find('"pages"')
     if pages_match == -1:
-        return completed_pages, accumulated_text
+        return completed_pages
 
     # Find the opening bracket of pages array
     bracket_start = accumulated_text.find('[', pages_match)
     if bracket_start == -1:
-        return completed_pages, accumulated_text
+        return completed_pages
 
-    # Try to parse page objects one by one
+    # Parse with string awareness - track when we're inside a JSON string
     search_start = bracket_start + 1
     brace_count = 0
     page_start = -1
+    in_string = False
+    escape_next = False
 
     i = search_start
     while i < len(accumulated_text):
         char = accumulated_text[i]
 
-        if char == '{':
-            if brace_count == 0:
-                page_start = i
-            brace_count += 1
-        elif char == '}':
-            brace_count -= 1
-            if brace_count == 0 and page_start != -1:
-                # Found a complete page object
-                page_text = accumulated_text[page_start:i+1]
-                try:
-                    page_obj = json.loads(page_text)
-                    # Check if it has the required fields
-                    if "illustration_description" in page_obj and "text" in page_obj:
-                        completed_pages.append(page_obj)
-                except json.JSONDecodeError:
-                    pass  # Not valid JSON yet, keep accumulating
-                page_start = -1
+        if escape_next:
+            escape_next = False
+            i += 1
+            continue
+
+        if char == '\\' and in_string:
+            escape_next = True
+            i += 1
+            continue
+
+        if char == '"':
+            in_string = not in_string
+        elif not in_string:
+            if char == '{':
+                if brace_count == 0:
+                    page_start = i
+                brace_count += 1
+            elif char == '}':
+                brace_count -= 1
+                if brace_count == 0 and page_start != -1:
+                    # Found a complete page object
+                    page_text = accumulated_text[page_start:i+1]
+                    try:
+                        page_obj = json.loads(page_text)
+                        # Check if it has the required fields for an illustration
+                        if "illustration_description" in page_obj:
+                            completed_pages.append(page_obj)
+                    except json.JSONDecodeError:
+                        pass  # Not valid JSON yet
+                    page_start = -1
 
         i += 1
 
-    return completed_pages, accumulated_text
+    return completed_pages
 
 
 # ============================================================
@@ -401,7 +416,7 @@ def generate_stream():
                     accumulated_text += chunk.choices[0].delta.content
 
                     # Try to extract completed pages and spawn illustrations
-                    completed_pages, _ = _extract_completed_pages(accumulated_text)
+                    completed_pages = _extract_completed_pages(accumulated_text)
 
                     for page in completed_pages:
                         page_num = page.get("page_number", len(pages_spawned) + 1)
