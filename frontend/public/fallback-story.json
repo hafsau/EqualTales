@@ -1,0 +1,62 @@
+{
+  "story": {
+    "title": "Lily and the Mathematician Who Reached the Stars",
+    "pages": [
+      {
+        "page_title": "The Belief",
+        "text": "Lily loved looking up at the stars every night. She dreamed of counting them all and maybe even visiting them someday. But one day at school, a boy laughed and said, \"Girls can't do the math to go to space.\" Lily felt her heart sink like a stone.",
+        "illustration_description": "A young girl with curly hair looking sad while other children play in the background"
+      },
+      {
+        "page_title": "The Question",
+        "text": "That night, Lily didn't want to look at the stars anymore. Her mom noticed and sat beside her. \"What's wrong, stargazer?\" she asked gently. Lily whispered, \"Is it true that girls can't do space math?\"",
+        "illustration_description": "A mother and daughter sitting together by a window at night, stars visible outside"
+      },
+      {
+        "page_title": "The Discovery",
+        "text": "Her mom smiled. \"Let me tell you about Katherine Johnson. She was a mathematician at NASA who calculated the path for astronauts to fly to the moon and back! The astronauts trusted her math more than the computers.\"",
+        "illustration_description": "An African American woman working at a chalkboard full of mathematical equations, looking confident"
+      },
+      {
+        "page_title": "The Inspiration",
+        "text": "\"Katherine's numbers were so perfect,\" Mom continued, \"that astronaut John Glenn refused to fly unless she checked the computer's math. She helped put humans on the moon — with her brilliant mind and her love of numbers.\"",
+        "illustration_description": "A rocket launching into space with mathematical equations floating around it"
+      },
+      {
+        "page_title": "The New Belief",
+        "text": "Lily looked up at the moon with new eyes. \"If Katherine could send people to space with her math,\" she whispered, \"then maybe I can too.\" That night, she counted every star she could see — and dreamed of all the ones she would discover.",
+        "illustration_description": "A young girl looking up at the night sky with wonder, arms spread wide"
+      }
+    ],
+    "discussion_prompts": [
+      "What do you think made Katherine so good at math?",
+      "How do you think Katherine felt when people doubted her?",
+      "What's something you love doing that you want to get even better at?"
+    ],
+    "activity_suggestion": "Try a fun math game together! Count the stars you can see from your window, or practice adding and subtracting with toys or snacks."
+  },
+  "real_woman": {
+    "name": "Katherine Johnson",
+    "era": "1918-2020",
+    "achievement": "NASA mathematician whose calculations were critical to the success of the first U.S. crewed spaceflights, including Apollo 11 moon landing"
+  },
+  "classification": {
+    "primary_category": "girls_cant_do_math",
+    "emotional_tone": "discouraging"
+  },
+  "qa_result": {
+    "passed": true,
+    "score": 9,
+    "issues": [],
+    "strengths": ["Features verified historical figure", "Age-appropriate language", "Empowering message"]
+  },
+  "illustrations": [
+    "/fallback-images/page1.png",
+    "/fallback-images/page2.png",
+    "/fallback-images/page3.png",
+    "/fallback-images/page4.png",
+    "/fallback-images/page5.png"
+  ],
+  "is_fallback": true,
+  "fallback_message": "Demo Mode: Showing a sample story. Live generation is temporarily unavailable."
+}

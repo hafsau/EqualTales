@@ -1651,6 +1651,54 @@ body {
    ERROR BANNER
    ============================================================ */
 
+/* Fallback demo mode banner */
+.fallback-banner {
+  position: fixed;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  max-width: 600px;
+  width: calc(100% - 40px);
+  background: linear-gradient(135deg, var(--purple-deep), var(--purple));
+  color: white;
+  padding: 14px 24px;
+  border-radius: var(--r-lg);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  z-index: 999;
+  box-shadow: var(--shadow-md);
+  animation: slideDown 0.4s ease-out;
+}
+
+.fallback-banner .fallback-icon {
+  font-size: 1.4rem;
+}
+
+.fallback-banner p {
+  margin: 0;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.95rem;
+  font-weight: 500;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateX(-50%) translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+}
+
+/* Demo button highlight */
+.btn-demo {
+  background: rgba(255,255,255,0.4) !important;
+  font-weight: 700 !important;
+}
+
 .error-banner {
   position: fixed;
   top: 20px;
