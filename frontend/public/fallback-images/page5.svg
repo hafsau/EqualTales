@@ -1,0 +1,102 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300">
+  <defs>
+    <linearGradient id="nightsky5" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#0f0f30"/>
+      <stop offset="100%" style="stop-color:#252560"/>
+    </linearGradient>
+    <linearGradient id="grass5" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#2d5a3e"/>
+      <stop offset="100%" style="stop-color:#1a3d28"/>
+    </linearGradient>
+    <radialGradient id="moonglow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" style="stop-color:#FFFACD"/>
+      <stop offset="100%" style="stop-color:#FFFACD;stop-opacity:0"/>
+    </radialGradient>
+  </defs>
+
+  <!-- Night sky -->
+  <rect width="400" height="300" fill="url(#nightsky5)"/>
+
+  <!-- Moon with glow -->
+  <circle cx="320" cy="60" r="50" fill="url(#moonglow)" opacity="0.3"/>
+  <circle cx="320" cy="60" r="30" fill="#FFFACD"/>
+  <circle cx="310" cy="52" r="5" fill="#E8E8D0" opacity="0.4"/>
+  <circle cx="330" cy="68" r="8" fill="#E8E8D0" opacity="0.3"/>
+
+  <!-- Many stars - more than before, showing wonder -->
+  <g fill="#E8B44C">
+    <text x="30" y="40" font-size="16">★</text>
+    <text x="80" y="80" font-size="12">★</text>
+    <text x="50" y="120" font-size="8">★</text>
+    <text x="120" y="50" font-size="14">★</text>
+    <text x="180" y="30" font-size="10">★</text>
+    <text x="220" y="70" font-size="18">★</text>
+    <text x="150" y="100" font-size="8">★</text>
+    <text x="380" y="100" font-size="12">★</text>
+    <text x="360" y="140" font-size="10">★</text>
+    <text x="100" y="160" font-size="6">★</text>
+    <text x="200" y="120" font-size="8">★</text>
+    <text x="60" y="60" font-size="6">★</text>
+    <text x="270" y="40" font-size="8">★</text>
+    <text x="140" y="140" font-size="10">★</text>
+  </g>
+
+  <!-- Twinkling effect stars -->
+  <g fill="white" opacity="0.8">
+    <text x="45" y="95" font-size="4">✦</text>
+    <text x="175" y="75" font-size="4">✦</text>
+    <text x="250" y="55" font-size="4">✦</text>
+    <text x="90" y="45" font-size="4">✦</text>
+  </g>
+
+  <!-- Ground/hill -->
+  <ellipse cx="200" cy="340" rx="280" ry="100" fill="url(#grass5)"/>
+
+  <!-- Lily standing with arms spread wide - joyful -->
+  <g transform="translate(200, 200)">
+    <!-- Dress -->
+    <path d="M0,30 Q-25,60 -30,90 L30,90 Q25,60 0,30" fill="#E07A6A"/>
+    <!-- Head -->
+    <circle cx="0" cy="10" r="24" fill="#DEB887"/>
+    <!-- Hair blowing slightly -->
+    <path d="M-22,0 Q-26,-18 -8,-28 Q0,-32 8,-28 Q26,-18 22,0 Q16,-8 0,-5 Q-16,-8 -22,0" fill="#4A3728"/>
+    <path d="M-18,5 Q-24,20 -20,40" stroke="#4A3728" stroke-width="4" fill="none"/>
+    <path d="M18,5 Q24,20 20,40" stroke="#4A3728" stroke-width="4" fill="none"/>
+    <!-- Happy face - big smile -->
+    <circle cx="-7" cy="8" r="3" fill="#4A3728"/>
+    <circle cx="7" cy="8" r="3" fill="#4A3728"/>
+    <!-- Big happy smile -->
+    <path d="M-10,20 Q0,30 10,20" stroke="#4A3728" stroke-width="2.5" fill="none"/>
+    <!-- Rosy cheeks -->
+    <circle cx="-14" cy="15" r="5" fill="#E07A6A" opacity="0.4"/>
+    <circle cx="14" cy="15" r="5" fill="#E07A6A" opacity="0.4"/>
+    <!-- Arms spread wide with joy -->
+    <path d="M-15,40 Q-50,25 -70,35" stroke="#DEB887" stroke-width="8" fill="none" stroke-linecap="round"/>
+    <path d="M15,40 Q50,25 70,35" stroke="#DEB887" stroke-width="8" fill="none" stroke-linecap="round"/>
+    <!-- Hands -->
+    <circle cx="-70" cy="35" r="6" fill="#DEB887"/>
+    <circle cx="70" cy="35" r="6" fill="#DEB887"/>
+  </g>
+
+  <!-- Sparkles of magic/wonder around Lily -->
+  <g fill="#E8B44C">
+    <text x="130" y="180" font-size="14">✨</text>
+    <text x="260" y="175" font-size="12">✨</text>
+    <text x="150" y="220" font-size="10">✨</text>
+    <text x="240" y="225" font-size="10">✨</text>
+  </g>
+
+  <!-- Constellation hint - connecting some stars -->
+  <path d="M30,40 L80,80 L120,50 L180,30" fill="none" stroke="#E8B44C" stroke-width="1" opacity="0.3"/>
+
+  <!-- Thought bubble with rocket -->
+  <g transform="translate(280, 180)">
+    <ellipse cx="0" cy="0" rx="35" ry="25" fill="white" opacity="0.9"/>
+    <circle cx="-25" cy="20" r="6" fill="white" opacity="0.8"/>
+    <circle cx="-35" cy="30" r="4" fill="white" opacity="0.7"/>
+    <!-- Mini rocket in thought -->
+    <path d="M0,-15 L-8,10 L8,10 Z" fill="#d0d0d0"/>
+    <path d="M0,-15 L-5,-5 L5,-5 Z" fill="#C4594B"/>
+    <path d="M-4,10 L0,18 L4,10" fill="#E8B44C"/>
+  </g>
+</svg>

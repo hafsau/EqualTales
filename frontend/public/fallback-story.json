@@ -51,11 +51,11 @@
     "strengths": ["Features verified historical figure", "Age-appropriate language", "Empowering message"]
   },
   "illustrations": [
-    "/fallback-images/page1.png",
-    "/fallback-images/page2.png",
-    "/fallback-images/page3.png",
-    "/fallback-images/page4.png",
-    "/fallback-images/page5.png"
+    "/fallback-images/page1.svg",
+    "/fallback-images/page2.svg",
+    "/fallback-images/page3.svg",
+    "/fallback-images/page4.svg",
+    "/fallback-images/page5.svg"
   ],
   "is_fallback": true,
   "fallback_message": "Demo Mode: Showing a sample story. Live generation is temporarily unavailable."
