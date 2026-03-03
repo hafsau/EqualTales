@@ -405,7 +405,7 @@ def generate_stream():
             # Stream the story generation
             accumulated_text = ""
             response = client.chat.completions.create(
-                model="anthropic/claude-opus-4.6",
+                model="anthropic/claude-sonnet-4",
                 max_tokens=2500,
                 messages=[{"role": "user", "content": prompt}],
                 stream=True,
