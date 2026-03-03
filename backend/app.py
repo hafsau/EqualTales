@@ -406,7 +406,7 @@ def generate_stream():
             accumulated_text = ""
             response = client.chat.completions.create(
                 model="anthropic/claude-sonnet-4",
-                max_tokens=4000,
+                max_tokens=8000,
                 messages=[{"role": "user", "content": prompt}],
                 stream=True,
             )
