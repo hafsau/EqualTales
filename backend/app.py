@@ -42,6 +42,50 @@ KB_PATH = os.path.join(os.path.dirname(__file__), "..", "data", "women_knowledge
 with open(KB_PATH, "r") as f:
     KNOWLEDGE_BASE = json.load(f)
 
+# Pre-computed classifications for example stereotypes (skip API call)
+PRECOMPUTED_CLASSIFICATIONS = {
+    "Girls can't do math": {
+        "primary_category": "girls_cant_do_math",
+        "secondary_categories": []
+    },
+    "Science is for boys": {
+        "primary_category": "science_is_for_boys",
+        "secondary_categories": ["girls_cant_do_math"]
+    },
+    "Girls aren't strong enough": {
+        "primary_category": "girls_arent_strong",
+        "secondary_categories": ["boys_are_better_at_sports"]
+    },
+    "Boys are better at sports": {
+        "primary_category": "boys_are_better_at_sports",
+        "secondary_categories": ["girls_arent_strong"]
+    },
+    "Girls should be quiet and polite": {
+        "primary_category": "girls_should_be_quiet",
+        "secondary_categories": ["girls_cant_be_leaders"]
+    },
+    "Girls can't be leaders": {
+        "primary_category": "girls_cant_be_leaders",
+        "secondary_categories": ["girls_should_be_quiet"]
+    },
+    "Technology is for boys": {
+        "primary_category": "technology_is_for_boys",
+        "secondary_categories": ["science_is_for_boys"]
+    },
+    "Girls can't build things": {
+        "primary_category": "girls_cant_build_things",
+        "secondary_categories": ["technology_is_for_boys"]
+    },
+    "Being a mom means giving up your dreams": {
+        "primary_category": "mom_gives_up_dreams",
+        "secondary_categories": []
+    },
+    "It's too late to start something new": {
+        "primary_category": "too_late_to_start",
+        "secondary_categories": []
+    },
+}
+
 
 # ============================================================
 # DIRECT MCP TOOL CALLER (Development mode — no Goose needed)
@@ -343,13 +387,18 @@ def generate_stream():
 
             # --- Step 1: Classify stereotype ---
             yield _sse({"type": "status", "message": "Understanding the stereotype..."})
-            classification_json = tools["classify"](stereotype_text)
-            classification = json.loads(classification_json)
 
-            # Validate classification has required fields
-            if "primary_category" not in classification:
-                classification["primary_category"] = "girls_cant_do_math"
-                classification["secondary_categories"] = []
+            # Check precomputed classifications first (saves ~25s for example buttons)
+            if stereotype_text in PRECOMPUTED_CLASSIFICATIONS:
+                classification = PRECOMPUTED_CLASSIFICATIONS[stereotype_text]
+            else:
+                classification_json = tools["classify"](stereotype_text)
+                classification = json.loads(classification_json)
+                # Validate classification has required fields
+                if "primary_category" not in classification:
+                    classification["primary_category"] = "girls_cant_do_math"
+                    classification["secondary_categories"] = []
+
             yield _sse({"type": "classification", "data": classification})
 
             # --- Step 2: Match real woman ---
@@ -383,9 +432,9 @@ def generate_stream():
 
             client = get_openrouter_client()
 
-            # Generate story (Sonnet 4 is fast enough without streaming)
+            # Generate story with Sonnet 4.6 for quality
             response = client.chat.completions.create(
-                model="anthropic/claude-sonnet-4",
+                model="anthropic/claude-sonnet-4.6",
                 max_tokens=4000,
                 messages=[{"role": "user", "content": prompt}],
             )
@@ -408,25 +457,12 @@ def generate_stream():
 
             yield _sse({"type": "story", "data": story_data})
 
-            # --- Step 4: QA + ALL 5 illustrations in TRUE parallel ---
-            yield _sse({"type": "status", "message": "Quality check + painting illustrations..."})
+            # --- Step 4: Generate illustrations (QA runs in background) ---
+            yield _sse({"type": "status", "message": "Painting illustrations..."})
 
             pool = ThreadPoolExecutor(max_workers=6)
-            futures = {}
+            illustration_futures = []
             illust_done = 0
-
-            # Spawn QA
-            def _run_qa():
-                try:
-                    qa_json = tools["verify"](
-                        story_pages_json=json.dumps(story_data["pages"]),
-                        stereotype_text=stereotype_text,
-                    )
-                    return ("qa", None, json.loads(qa_json))
-                except Exception:
-                    return ("qa", None, {"passed": True, "score": 7, "issues": [], "strengths": ["Story generated successfully"], "suggestion": None})
-
-            futures[pool.submit(_run_qa)] = "qa"
 
             # Generate all 5 illustrations in parallel
             for i, page in enumerate(story_data["pages"]):
@@ -437,25 +473,38 @@ def generate_stream():
                             character_description=char_desc,
                             page_number=page_idx + 1,
                         )
-                        return ("illustration", page_idx, json.loads(img_json))
+                        return (page_idx, json.loads(img_json))
                     except Exception as e:
-                        return ("illustration", page_idx, {"url": None, "error": str(e)})
+                        return (page_idx, {"url": None, "error": str(e)})
 
-                futures[pool.submit(_gen_illust, i, page)] = i
+                illustration_futures.append(pool.submit(_gen_illust, i, page))
 
-            # Collect results as they complete
-            for future in as_completed(futures):
-                result = future.result()
-                if result[0] == "qa":
-                    yield _sse({"type": "qa_result", "data": result[2]})
-                elif result[0] == "illustration":
-                    illust_done += 1
-                    yield _sse({"type": "illustration", "page": result[1], "url": result[2].get("url")})
-                    yield _sse({"type": "status", "message": f"Painting illustrations ({illust_done}/5)..."})
-
-            pool.shutdown(wait=False)
+            # Collect illustration results as they complete
+            for future in as_completed(illustration_futures):
+                page_idx, result = future.result()
+                illust_done += 1
+                yield _sse({"type": "illustration", "page": page_idx, "url": result.get("url")})
+                yield _sse({"type": "status", "message": f"Painting illustrations ({illust_done}/5)..."})
 
             yield _sse({"type": "complete", "message": "Your story is ready!"})
+
+            # --- Step 5: QA runs in background after story is ready ---
+            # Result will be sent when available (user sees it in companion section)
+            def _run_qa():
+                try:
+                    qa_json = tools["verify"](
+                        story_pages_json=json.dumps(story_data["pages"]),
+                        stereotype_text=stereotype_text,
+                    )
+                    return json.loads(qa_json)
+                except Exception:
+                    return {"passed": True, "score": 7, "issues": [], "strengths": ["Story generated successfully"], "suggestion": None}
+
+            qa_future = pool.submit(_run_qa)
+            qa_result = qa_future.result()  # Wait for QA (happens after "complete")
+            yield _sse({"type": "qa_result", "data": qa_result})
+
+            pool.shutdown(wait=False)
 
         except Exception as e:
             yield _sse({"type": "error", "message": str(e)})
