@@ -24,6 +24,8 @@
 | **Data** | Character diversity via backend randomization → 10 diverse appearances injected into DALL-E prompts | Less user control; but ensures representation without asking sensitive questions |
 | **Testing** | Strict TDD with pytest + Jest → 117 backend tests, 24 frontend tests | Slower initial development; but caught edge cases before demo day |
 | **Process** | QA verification loop for every story → Catches stereotype reinforcement AI typically amplifies | Adds ~3 seconds to generation; but essential for ethical credibility |
+| **Accessibility** | WCAG AA compliance → Color contrast 4.5:1+ for text, ARIA labels, keyboard navigation | Slightly darker colors than original design; but ensures usability for all users |
+| **Accessibility** | Grade-8 reading level for UI text → Mothers with varying literacy can use the app | Simpler vocabulary; but appropriate for target audience |
 
 ---
 

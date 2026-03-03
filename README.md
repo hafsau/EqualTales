@@ -172,6 +172,7 @@ Key technical choices and tradeoffs:
 | **AI hallucinating facts** | Major | 50 women manually verified against Wikipedia/Britannica | ✅ Fixed |
 | **Character inconsistency** | Major | Detailed character description injected into every DALL-E prompt | ✅ Fixed |
 | **Privacy concerns** | Minor | No database, no login, no cookies — session-only data | ✅ Fixed |
+| **WCAG AA compliance** | Minor | Color contrast 4.5:1+ (#6B605A text, #C4594B buttons); ARIA labels; keyboard nav | ✅ Fixed |
 | **DALL-E URLs expire** | Minor | Acceptable for demo; would need S3/Cloudinary for production | Documented |
 
 [Full Risk Log →](docs/RISK_LOG.md)
