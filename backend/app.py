@@ -375,7 +375,7 @@ def generate_stream():
 
             yield _sse({"type": "status", "message": f"Writing a story about {child_name} and {woman['name']}..."})
 
-            # Get story prompt and call OpenRouter with streaming
+            # Get story prompt and generate with Sonnet (fast, non-streaming)
             prompt = _get_story_prompt(
                 stereotype_text, child_name, child_age,
                 woman, woman_adaptation, counter_message
@@ -383,54 +383,15 @@ def generate_stream():
 
             client = get_openrouter_client()
 
-            # Track illustration jobs spawned during streaming
-            illustration_futures = {}
-            pages_spawned = set()
-            illust_done = 0
-
-            # Use ThreadPoolExecutor for background illustration generation
-            pool = ThreadPoolExecutor(max_workers=6)
-
-            def _generate_illustration_async(page_index, page_data):
-                try:
-                    img_json = tools["illustrate"](
-                        scene_description=page_data["illustration_description"],
-                        character_description=char_desc,
-                        page_number=page_index + 1,
-                    )
-                    return ("illustration", page_index, json.loads(img_json))
-                except Exception as e:
-                    return ("illustration", page_index, {"url": None, "error": str(e)})
-
-            # Stream the story generation
-            accumulated_text = ""
+            # Generate story (Sonnet 4 is fast enough without streaming)
             response = client.chat.completions.create(
                 model="anthropic/claude-sonnet-4",
-                max_tokens=8000,
+                max_tokens=4000,
                 messages=[{"role": "user", "content": prompt}],
-                stream=True,
             )
 
-            for chunk in response:
-                if chunk.choices and chunk.choices[0].delta.content:
-                    accumulated_text += chunk.choices[0].delta.content
-
-                    # Try to extract completed pages and spawn illustrations
-                    completed_pages = _extract_completed_pages(accumulated_text)
-
-                    for page in completed_pages:
-                        page_num = page.get("page_number", len(pages_spawned) + 1)
-                        page_idx = page_num - 1
-
-                        if page_idx not in pages_spawned and "illustration_description" in page:
-                            pages_spawned.add(page_idx)
-                            # Spawn illustration generation immediately
-                            future = pool.submit(_generate_illustration_async, page_idx, page)
-                            illustration_futures[future] = page_idx
-                            yield _sse({"type": "status", "message": f"Writing story... Starting illustration {page_num}/5"})
-
-            # Parse the complete story
-            story_data = _parse_json_response(accumulated_text)
+            story_text = response.choices[0].message.content
+            story_data = _parse_json_response(story_text)
 
             # Validate story has pages
             if not story_data.get("pages") or len(story_data["pages"]) < 1:
@@ -445,15 +406,16 @@ def generate_stream():
                 if "page_title" not in page:
                     page["page_title"] = ["The Belief", "The Question", "The Discovery", "The Inspiration", "The New Belief"][min(i, 4)]
 
-                # Spawn any illustrations not yet started (fallback)
-                if i not in pages_spawned:
-                    pages_spawned.add(i)
-                    future = pool.submit(_generate_illustration_async, i, page)
-                    illustration_futures[future] = i
-
             yield _sse({"type": "story", "data": story_data})
 
-            # --- Step 4: QA verification (can start now that story is complete) ---
+            # --- Step 4: QA + ALL 5 illustrations in TRUE parallel ---
+            yield _sse({"type": "status", "message": "Quality check + painting illustrations..."})
+
+            pool = ThreadPoolExecutor(max_workers=6)
+            futures = {}
+            illust_done = 0
+
+            # Spawn QA
             def _run_qa():
                 try:
                     qa_json = tools["verify"](
@@ -464,13 +426,25 @@ def generate_stream():
                 except Exception:
                     return ("qa", None, {"passed": True, "score": 7, "issues": [], "strengths": ["Story generated successfully"], "suggestion": None})
 
-            qa_future = pool.submit(_run_qa)
-            illustration_futures[qa_future] = "qa"
+            futures[pool.submit(_run_qa)] = "qa"
 
-            yield _sse({"type": "status", "message": "Quality check + finishing illustrations..."})
+            # Spawn ALL 5 illustrations at once
+            for i, page in enumerate(story_data["pages"]):
+                def _gen_illust(page_idx, page_data):
+                    try:
+                        img_json = tools["illustrate"](
+                            scene_description=page_data["illustration_description"],
+                            character_description=char_desc,
+                            page_number=page_idx + 1,
+                        )
+                        return ("illustration", page_idx, json.loads(img_json))
+                    except Exception as e:
+                        return ("illustration", page_idx, {"url": None, "error": str(e)})
 
-            # Collect all results (illustrations that started during streaming + QA)
-            for future in as_completed(illustration_futures):
+                futures[pool.submit(_gen_illust, i, page)] = i
+
+            # Collect results as they complete
+            for future in as_completed(futures):
                 result = future.result()
                 if result[0] == "qa":
                     yield _sse({"type": "qa_result", "data": result[2]})
