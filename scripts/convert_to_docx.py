@@ -140,7 +140,7 @@ def create_decision_log_doc():
         ('Feature Scope', '5-page narrative arc (Belief→Question→Discovery→Inspiration→New Belief) → Proven storytelling structure', 'Less flexibility for edge cases; but ensures consistent emotional journey'),
         ('Feature Scope', '50-woman curated knowledge base → Quality over quantity; verified historical accuracy', 'Limited coverage; but ensures every woman\'s story is accurate and age-appropriate'),
         ('Data', 'Character diversity via backend randomization → 10 diverse appearances injected into DALL-E prompts', 'Less user control; but ensures representation without asking sensitive questions'),
-        ('Testing', 'Strict TDD with pytest + Jest → 117 backend tests, 24 frontend tests', 'Slower initial development; but caught edge cases before demo day'),
+        ('Testing', 'Strict TDD with pytest + Jest → 151 backend tests, 49 frontend tests', 'Slower initial development; but caught edge cases before demo day'),
         ('Process', 'QA verification loop for every story → Catches stereotype reinforcement AI typically amplifies', 'Adds ~3 seconds to generation; but essential for ethical credibility'),
     ]
 
@@ -460,7 +460,7 @@ def create_ai_trace_log_doc():
             'response': 'Complete test suite: conftest.py with fixtures, test_app.py (60+ tests), test_mcp_server.py (40+ tests), App.test.js (50+ tests)',
             'kept': 'Test structure, mock patterns, edge case coverage (Unicode, special characters, missing fields)',
             'changed': 'Fixed mock data to include required category field; simplified SSE streaming tests (complex to mock in Jest); adjusted assertions for Flask\'s charset inclusion',
-            'verification': 'Ran full test suite: 117 backend tests passing, 24 frontend tests passing; verified coverage of all API routes and MCP tools'
+            'verification': 'Ran full test suite: 151 backend tests, 24 frontend tests passing; verified coverage of all API routes and MCP tools'
         },
         {
             'title': 'Trace 6: QA Agent Script',
@@ -758,7 +758,7 @@ def create_readme_doc():
     doc.add_heading('Testing & Known Issues', level=1)
 
     doc.add_heading('Test Results', level=2)
-    doc.add_paragraph('Backend (pytest): 117 passed in 0.63s')
+    doc.add_paragraph('Backend (pytest): 151 tests (unit + integration)')
     doc.add_paragraph('Frontend (Jest): 24 passed, 25 skipped (SSE mocking complexity)')
 
     doc.add_heading('Known Issues', level=2)
