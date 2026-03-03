@@ -32,7 +32,7 @@
   /* Text hierarchy */
   --text-ink: #2C2421;
   --text-body: #4A3F3A;
-  --text-muted: #8A7E76;
+  --text-muted: #6B605A;
   --text-whisper: #B5AAA1;
 
   /* Depth & shadow — warmer tones */
@@ -317,7 +317,7 @@ body {
    ============================================================ */
 
 .btn-primary {
-  background: var(--coral);
+  background: var(--coral-dark);
   color: white;
   border: none;
   padding: 14px 34px;
@@ -333,9 +333,9 @@ body {
 }
 
 .btn-primary:hover {
-  background: var(--coral-dark);
+  background: #A8453A;
   transform: translateY(-3px);
-  box-shadow: var(--shadow-md), 0 3px 0 rgba(196, 89, 75, 0.5);
+  box-shadow: var(--shadow-md), 0 3px 0 rgba(168, 69, 58, 0.5);
 }
 
 .btn-primary:active {
@@ -344,7 +344,7 @@ body {
 
 .btn-primary:active:not(:disabled) {
   transform: translateY(0) scaleY(0.95) scaleX(1.02);
-  box-shadow: var(--shadow-soft), 0 1px 0 var(--coral-dark);
+  box-shadow: var(--shadow-soft), 0 1px 0 #A8453A;
   transition: transform 0.1s ease, box-shadow 0.1s ease;
 }
 
