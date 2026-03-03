@@ -80,6 +80,88 @@
   --shadow-lg: 0 8px 40px rgba(0, 0, 0, 0.5);
   --shadow-book: 0 12px 48px rgba(0, 0, 0, 0.6), 0 2px 8px rgba(0, 0, 0, 0.3);
   --shadow-glow: 0 0 40px rgba(232, 149, 138, 0.15);
+
+  /* Dark mode surface colors */
+  --surface: #252220;
+  --surface-elevated: #2D2A27;
+  --border-color: #3D3835;
+}
+
+/* Dark mode component overrides */
+[data-theme="dark"] .example-btn {
+  background: var(--surface);
+  border-color: var(--border-color);
+  color: var(--text-body);
+}
+
+[data-theme="dark"] .example-btn:hover {
+  background: var(--surface-elevated);
+  border-color: var(--coral);
+}
+
+[data-theme="dark"] .example-btn.active {
+  background: var(--coral-light);
+  border-color: var(--coral);
+}
+
+[data-theme="dark"] .story-form {
+  background: var(--surface);
+  border-color: var(--border-color);
+}
+
+[data-theme="dark"] .form-group textarea,
+[data-theme="dark"] .form-group input[type="text"] {
+  background: var(--surface-elevated);
+  border-color: var(--border-color);
+  color: var(--text-ink);
+}
+
+[data-theme="dark"] .form-group textarea:focus,
+[data-theme="dark"] .form-group input[type="text"]:focus {
+  background: var(--surface-elevated);
+  border-color: var(--coral);
+}
+
+[data-theme="dark"] .form-group textarea::placeholder,
+[data-theme="dark"] .form-group input[type="text"]::placeholder {
+  color: var(--text-whisper);
+}
+
+[data-theme="dark"] .btn-primary:disabled {
+  background: var(--warm-gray);
+  color: var(--text-whisper);
+}
+
+[data-theme="dark"] .progress-step {
+  background: var(--surface);
+}
+
+[data-theme="dark"] .progress-steps::before {
+  opacity: 0.15;
+}
+
+[data-theme="dark"] .storybook-page {
+  background: var(--surface);
+}
+
+[data-theme="dark"] .companion-card {
+  background: var(--surface);
+}
+
+[data-theme="dark"] .nav-prev {
+  background: var(--surface);
+  border-color: var(--border-color);
+  color: var(--text-muted);
+}
+
+[data-theme="dark"] .nav-prev:hover:not(:disabled) {
+  border-color: var(--coral);
+  color: var(--coral);
+}
+
+[data-theme="dark"] .btn-secondary {
+  background: var(--surface);
+  border-color: var(--coral);
 }
 
 /* System preference detection */
@@ -113,6 +195,84 @@
     --shadow-lg: 0 8px 40px rgba(0, 0, 0, 0.5);
     --shadow-book: 0 12px 48px rgba(0, 0, 0, 0.6), 0 2px 8px rgba(0, 0, 0, 0.3);
     --shadow-glow: 0 0 40px rgba(232, 149, 138, 0.15);
+
+    /* Dark mode surface colors */
+    --surface: #252220;
+    --surface-elevated: #2D2A27;
+    --border-color: #3D3835;
+  }
+
+  /* Component overrides for system dark mode */
+  :root:not([data-theme="light"]) .example-btn {
+    background: var(--surface);
+    border-color: var(--border-color);
+    color: var(--text-body);
+  }
+
+  :root:not([data-theme="light"]) .example-btn:hover {
+    background: var(--surface-elevated);
+    border-color: var(--coral);
+  }
+
+  :root:not([data-theme="light"]) .example-btn.active {
+    background: var(--coral-light);
+    border-color: var(--coral);
+  }
+
+  :root:not([data-theme="light"]) .story-form {
+    background: var(--surface);
+    border-color: var(--border-color);
+  }
+
+  :root:not([data-theme="light"]) .form-group textarea,
+  :root:not([data-theme="light"]) .form-group input[type="text"] {
+    background: var(--surface-elevated);
+    border-color: var(--border-color);
+    color: var(--text-ink);
+  }
+
+  :root:not([data-theme="light"]) .form-group textarea:focus,
+  :root:not([data-theme="light"]) .form-group input[type="text"]:focus {
+    background: var(--surface-elevated);
+    border-color: var(--coral);
+  }
+
+  :root:not([data-theme="light"]) .form-group textarea::placeholder,
+  :root:not([data-theme="light"]) .form-group input[type="text"]::placeholder {
+    color: var(--text-whisper);
+  }
+
+  :root:not([data-theme="light"]) .btn-primary:disabled {
+    background: var(--warm-gray);
+    color: var(--text-whisper);
+  }
+
+  :root:not([data-theme="light"]) .progress-step {
+    background: var(--surface);
+  }
+
+  :root:not([data-theme="light"]) .storybook-page {
+    background: var(--surface);
+  }
+
+  :root:not([data-theme="light"]) .companion-card {
+    background: var(--surface);
+  }
+
+  :root:not([data-theme="light"]) .nav-prev {
+    background: var(--surface);
+    border-color: var(--border-color);
+    color: var(--text-muted);
+  }
+
+  :root:not([data-theme="light"]) .nav-prev:hover:not(:disabled) {
+    border-color: var(--coral);
+    color: var(--coral);
+  }
+
+  :root:not([data-theme="light"]) .btn-secondary {
+    background: var(--surface);
+    border-color: var(--coral);
   }
 }
 
