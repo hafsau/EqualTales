@@ -583,8 +583,12 @@ function StorybookViewer({ storyData, illustrations, qaResult, realWoman, onRese
     setPageTransition(`exit-${direction}`);
     setTimeout(() => {
       setCurrentPage(newPage);
-      setSeenPages(prev => new Set([...prev, newPage]));
-      setShowTypewriter(!seenPages.has(newPage));
+      // Show typewriter for pages not yet seen (check BEFORE updating seenPages)
+      const isNewPage = !seenPages.has(newPage);
+      if (isNewPage) {
+        setShowTypewriter(true);
+      }
+      // Don't add to seenPages here - do it when typewriter completes
       setPageTransition(`enter-${direction}`);
       setTimeout(() => setPageTransition(''), 500);
     }, 200);
@@ -661,7 +665,7 @@ function StorybookViewer({ storyData, illustrations, qaResult, realWoman, onRese
 
   const page = pages[currentPage];
   const illustration = illustrations[currentPage];
-  const isFirstView = !seenPages.has(currentPage) || (currentPage === 0 && showTypewriter);
+  const isFirstView = showTypewriter;
 
   return (
     <div className="storybook">
@@ -713,7 +717,10 @@ function StorybookViewer({ storyData, illustrations, qaResult, realWoman, onRese
               <TypewriterText
                 text={page?.text || ''}
                 speed={25}
-                onComplete={() => setShowTypewriter(false)}
+                onComplete={() => {
+                  setShowTypewriter(false);
+                  setSeenPages(prev => new Set([...prev, currentPage]));
+                }}
               />
             ) : (
               page?.text
