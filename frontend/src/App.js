@@ -552,7 +552,6 @@ function StorybookViewer({ storyData, illustrations, qaResult, realWoman, onRese
   };
 
   const navigateToPage = (newPage, direction) => {
-    play('page');
     setPageTransition(`exit-${direction}`);
     setTimeout(() => {
       setCurrentPage(newPage);

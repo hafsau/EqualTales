@@ -113,6 +113,143 @@ def _generate_character_appearance(child_name, child_age):
 
 
 # ============================================================
+# STREAMING STORY GENERATION (for progressive illustration spawning)
+# ============================================================
+
+_openrouter_client = None
+
+def get_openrouter_client():
+    """Get OpenRouter client for direct streaming calls."""
+    global _openrouter_client
+    if _openrouter_client is None:
+        from openai import OpenAI
+        _openrouter_client = OpenAI(
+            base_url="https://openrouter.ai/api/v1",
+            api_key=os.getenv("OPENROUTER_API_KEY"),
+        )
+    return _openrouter_client
+
+
+def _get_story_prompt(stereotype_text, child_name, child_age, woman, woman_adaptation, counter_message):
+    """Generate the story prompt (same as MCP server)."""
+    age_group = _get_age_group(child_age)
+
+    return f"""You are a children's story writer creating an anti-stereotype story. Write a 5-page illustrated children's story.
+
+INPUTS:
+- Stereotype to counter: "{stereotype_text}"
+- Child's name: {child_name}
+- Child's age: {child_age} ({age_group} reading level)
+- Real woman to feature: {woman["name"]}
+- Her achievement: {woman["achievement"]}
+- Her fairy-tale moment: {woman["fairy_tale_moment"]}
+- Age-appropriate version: {woman_adaptation}
+- Counter-message: {counter_message}
+
+STORY STRUCTURE (exactly 5 pages):
+
+Page 1 — "The Belief": {child_name} encounters or expresses the stereotype in a relatable, everyday situation. Show the belief naturally — through a classmate's comment, a TV show, or an overheard conversation. Don't make {child_name} the villain; they're absorbing what the world tells them.
+
+Page 2 — "The Question": Something happens that cracks the stereotype. {child_name} sees, hears, or experiences something that doesn't fit the belief. Curiosity emerges. This should feel surprising and magical.
+
+Page 3 — "The Discovery": {child_name} discovers {woman["name"]}. This isn't a biography dump — it's a magical discovery. Maybe they find an old book, a portrait comes alive, or a wise character tells them about this remarkable person. Use: {woman["fairy_tale_moment"]}
+
+Page 4 — "The Inspiration": Tell {woman["name"]}'s specific story in fairy-tale language appropriate for age {child_age}. Use: {woman_adaptation}. Make it vivid and awe-inspiring. Show the obstacles she faced and how she overcame them.
+
+Page 5 — "The New Belief": {child_name} returns to their world changed. They take a specific action inspired by what they learned. The old belief is replaced by a new understanding. End with hope and empowerment — not a lecture.
+
+WRITING RULES:
+- {"Use short sentences (5-10 words). Simple vocabulary. Lots of sensory details. Repetition for emphasis." if age_group == "young" else "Use medium-length sentences. Vivid descriptions. Some challenging vocabulary with context clues." if age_group == "middle" else "Use varied sentence structures. Rich vocabulary. Nuance and complexity. Emotional depth."}
+- Each page should be {"3-5 sentences" if age_group == "young" else "5-8 sentences" if age_group == "middle" else "6-10 sentences"}
+- Show, don't tell. Never say "stereotypes are bad." Let the story do the work.
+- The story should feel warm, magical, and empowering — never preachy or guilt-inducing.
+- {child_name} should feel like a real kid the reader can identify with.
+
+OUTPUT FORMAT:
+Return ONLY a JSON object with this structure:
+{{
+  "title": "story title",
+  "pages": [
+    {{
+      "page_number": 1,
+      "page_title": "The Belief",
+      "text": "the story text for this page",
+      "illustration_description": "A detailed description for an illustrator: scene, action, colors, mood, specific visual elements. Do NOT describe the child's race, skin color, hair type, or ethnicity — the character appearance will be provided separately for consistency."
+    }},
+    ... (5 pages total)
+  ],
+  "real_woman_name": "{woman["name"]}",
+  "real_woman_achievement": "one sentence about her achievement for the companion section",
+  "discussion_prompts": ["3 questions a parent can ask their child after reading"],
+  "activity_suggestion": "one hands-on activity related to the story theme"
+}}
+
+Return ONLY valid JSON."""
+
+
+def _parse_json_response(text):
+    """Parse JSON from response, handling markdown code blocks."""
+    text = text.strip()
+    if text.startswith("```"):
+        lines = text.split("\n")
+        lines = lines[1:]  # Remove opening ```json
+        if lines and lines[-1].strip() == "```":
+            lines = lines[:-1]
+        text = "\n".join(lines)
+    return json.loads(text)
+
+
+def _extract_completed_pages(accumulated_text):
+    """Extract any fully completed pages from accumulated streaming text.
+
+    Returns (list of completed pages, remaining text to continue accumulating).
+    Looks for complete page objects in the pages array.
+    """
+    completed_pages = []
+
+    # Try to find the pages array start
+    pages_match = accumulated_text.find('"pages"')
+    if pages_match == -1:
+        return completed_pages, accumulated_text
+
+    # Find the opening bracket of pages array
+    bracket_start = accumulated_text.find('[', pages_match)
+    if bracket_start == -1:
+        return completed_pages, accumulated_text
+
+    # Try to parse page objects one by one
+    search_start = bracket_start + 1
+    brace_count = 0
+    page_start = -1
+
+    i = search_start
+    while i < len(accumulated_text):
+        char = accumulated_text[i]
+
+        if char == '{':
+            if brace_count == 0:
+                page_start = i
+            brace_count += 1
+        elif char == '}':
+            brace_count -= 1
+            if brace_count == 0 and page_start != -1:
+                # Found a complete page object
+                page_text = accumulated_text[page_start:i+1]
+                try:
+                    page_obj = json.loads(page_text)
+                    # Check if it has the required fields
+                    if "illustration_description" in page_obj and "text" in page_obj:
+                        completed_pages.append(page_obj)
+                except json.JSONDecodeError:
+                    pass  # Not valid JSON yet, keep accumulating
+                page_start = -1
+
+        i += 1
+
+    return completed_pages, accumulated_text
+
+
+# ============================================================
 # API ROUTES
 # ============================================================
 
@@ -216,26 +353,74 @@ def generate_stream():
                 "achievement": woman["achievement"]
             }})
 
-            # --- Step 3: Generate story ---
+            # --- Step 3: Generate story WITH STREAMING + progressive illustrations ---
             age_group = _get_age_group(child_age)
             woman_adaptation = woman["age_adaptations"].get(age_group, woman["age_adaptations"]["middle"])
+            char_desc = _generate_character_appearance(child_name, child_age)
 
             yield _sse({"type": "status", "message": f"Writing a story about {child_name} and {woman['name']}..."})
-            story_json = tools["generate"](
-                stereotype_text=stereotype_text,
-                child_name=child_name,
-                child_age=child_age,
-                woman_name=woman["name"],
-                woman_achievement=woman["achievement"],
-                woman_fairy_tale_moment=woman["fairy_tale_moment"],
-                woman_age_adaptation=woman_adaptation,
-                counter_message=counter_message,
+
+            # Get story prompt and call OpenRouter with streaming
+            prompt = _get_story_prompt(
+                stereotype_text, child_name, child_age,
+                woman, woman_adaptation, counter_message
             )
-            story_data = json.loads(story_json)
+
+            client = get_openrouter_client()
+
+            # Track illustration jobs spawned during streaming
+            illustration_futures = {}
+            pages_spawned = set()
+            illust_done = 0
+
+            # Use ThreadPoolExecutor for background illustration generation
+            pool = ThreadPoolExecutor(max_workers=6)
+
+            def _generate_illustration_async(page_index, page_data):
+                try:
+                    img_json = tools["illustrate"](
+                        scene_description=page_data["illustration_description"],
+                        character_description=char_desc,
+                        page_number=page_index + 1,
+                    )
+                    return ("illustration", page_index, json.loads(img_json))
+                except Exception as e:
+                    return ("illustration", page_index, {"url": None, "error": str(e)})
+
+            # Stream the story generation
+            accumulated_text = ""
+            response = client.chat.completions.create(
+                model="anthropic/claude-opus-4.6",
+                max_tokens=2500,
+                messages=[{"role": "user", "content": prompt}],
+                stream=True,
+            )
+
+            for chunk in response:
+                if chunk.choices and chunk.choices[0].delta.content:
+                    accumulated_text += chunk.choices[0].delta.content
+
+                    # Try to extract completed pages and spawn illustrations
+                    completed_pages, _ = _extract_completed_pages(accumulated_text)
+
+                    for page in completed_pages:
+                        page_num = page.get("page_number", len(pages_spawned) + 1)
+                        page_idx = page_num - 1
+
+                        if page_idx not in pages_spawned and "illustration_description" in page:
+                            pages_spawned.add(page_idx)
+                            # Spawn illustration generation immediately
+                            future = pool.submit(_generate_illustration_async, page_idx, page)
+                            illustration_futures[future] = page_idx
+                            yield _sse({"type": "status", "message": f"Writing story... Starting illustration {page_num}/5"})
+
+            # Parse the complete story
+            story_data = _parse_json_response(accumulated_text)
 
             # Validate story has pages
             if not story_data.get("pages") or len(story_data["pages"]) < 1:
                 raise ValueError("Story generation returned no pages. Please try again.")
+
             # Ensure each page has required fields
             for i, page in enumerate(story_data["pages"]):
                 if "text" not in page:
@@ -245,24 +430,15 @@ def generate_stream():
                 if "page_title" not in page:
                     page["page_title"] = ["The Belief", "The Question", "The Discovery", "The Inspiration", "The New Belief"][min(i, 4)]
 
+                # Spawn any illustrations not yet started (fallback)
+                if i not in pages_spawned:
+                    pages_spawned.add(i)
+                    future = pool.submit(_generate_illustration_async, i, page)
+                    illustration_futures[future] = i
+
             yield _sse({"type": "story", "data": story_data})
 
-            # --- Steps 4+5: QA verification + illustrations IN PARALLEL ---
-            char_desc = _generate_character_appearance(child_name, child_age)
-
-            yield _sse({"type": "status", "message": "Quality check + painting illustrations..."})
-
-            def _generate_one(page_index, page):
-                try:
-                    img_json = tools["illustrate"](
-                        scene_description=page["illustration_description"],
-                        character_description=char_desc,
-                        page_number=page_index + 1,
-                    )
-                    return ("illustration", page_index, json.loads(img_json))
-                except Exception as e:
-                    return ("illustration", page_index, {"url": None, "error": str(e)})
-
+            # --- Step 4: QA verification (can start now that story is complete) ---
             def _run_qa():
                 try:
                     qa_json = tools["verify"](
@@ -273,23 +449,22 @@ def generate_stream():
                 except Exception:
                     return ("qa", None, {"passed": True, "score": 7, "issues": [], "strengths": ["Story generated successfully"], "suggestion": None})
 
-            with ThreadPoolExecutor(max_workers=6) as pool:
-                futures = {}
-                # Submit QA as one thread
-                futures[pool.submit(_run_qa)] = "qa"
-                # Submit all 5 illustrations
-                for i, page in enumerate(story_data["pages"]):
-                    futures[pool.submit(_generate_one, i, page)] = f"illust_{i}"
+            qa_future = pool.submit(_run_qa)
+            illustration_futures[qa_future] = "qa"
 
-                illust_done = 0
-                for future in as_completed(futures):
-                    result = future.result()
-                    if result[0] == "qa":
-                        yield _sse({"type": "qa_result", "data": result[2]})
-                    elif result[0] == "illustration":
-                        illust_done += 1
-                        yield _sse({"type": "illustration", "page": result[1], "url": result[2].get("url")})
-                        yield _sse({"type": "status", "message": f"Painting illustrations ({illust_done}/5)..."})
+            yield _sse({"type": "status", "message": "Quality check + finishing illustrations..."})
+
+            # Collect all results (illustrations that started during streaming + QA)
+            for future in as_completed(illustration_futures):
+                result = future.result()
+                if result[0] == "qa":
+                    yield _sse({"type": "qa_result", "data": result[2]})
+                elif result[0] == "illustration":
+                    illust_done += 1
+                    yield _sse({"type": "illustration", "page": result[1], "url": result[2].get("url")})
+                    yield _sse({"type": "status", "message": f"Painting illustrations ({illust_done}/5)..."})
+
+            pool.shutdown(wait=False)
 
             yield _sse({"type": "complete", "message": "Your story is ready!"})
 
