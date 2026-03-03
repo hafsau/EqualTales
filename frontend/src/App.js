@@ -30,13 +30,13 @@ function SoundProvider({ children }) {
     if (muted) return;
     try {
       const ctx = getContext();
-      const osc = ctx.createOscillator();
-      const gain = ctx.createGain();
-      osc.connect(gain);
-      gain.connect(ctx.destination);
 
       switch (type) {
-        case 'click':
+        case 'click': {
+          const osc = ctx.createOscillator();
+          const gain = ctx.createGain();
+          osc.connect(gain);
+          gain.connect(ctx.destination);
           osc.frequency.value = 600;
           osc.type = 'sine';
           gain.gain.setValueAtTime(0.1, ctx.currentTime);
@@ -44,15 +44,39 @@ function SoundProvider({ children }) {
           osc.start(ctx.currentTime);
           osc.stop(ctx.currentTime + 0.1);
           break;
-        case 'page':
-          osc.frequency.value = 200;
-          osc.type = 'triangle';
-          gain.gain.setValueAtTime(0.08, ctx.currentTime);
-          gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.15);
-          osc.start(ctx.currentTime);
-          osc.stop(ctx.currentTime + 0.15);
+        }
+        case 'page': {
+          // Paper flip sound using filtered noise
+          const bufferSize = ctx.sampleRate * 0.15; // 150ms
+          const buffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
+          const data = buffer.getChannelData(0);
+
+          // Generate noise with envelope
+          for (let i = 0; i < bufferSize; i++) {
+            const t = i / bufferSize;
+            // Quick attack, longer decay envelope
+            const envelope = t < 0.1 ? t * 10 : Math.pow(1 - t, 2);
+            data[i] = (Math.random() * 2 - 1) * envelope;
+          }
+
+          const source = ctx.createBufferSource();
+          source.buffer = buffer;
+
+          // Low-pass filter for softer sound
+          const filter = ctx.createBiquadFilter();
+          filter.type = 'lowpass';
+          filter.frequency.value = 2000;
+
+          const gain = ctx.createGain();
+          gain.gain.value = 0.12;
+
+          source.connect(filter);
+          filter.connect(gain);
+          gain.connect(ctx.destination);
+          source.start(ctx.currentTime);
           break;
-        case 'complete':
+        }
+        case 'complete': {
           // Play a little melody
           const notes = [523, 659, 784]; // C5, E5, G5
           notes.forEach((freq, i) => {
@@ -68,6 +92,7 @@ function SoundProvider({ children }) {
             o.stop(ctx.currentTime + i * 0.15 + 0.3);
           });
           break;
+        }
         default:
           break;
       }
