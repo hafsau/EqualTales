@@ -1,0 +1,66 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300">
+  <defs>
+    <linearGradient id="sky1" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#87CEEB"/>
+      <stop offset="100%" style="stop-color:#E6F3FF"/>
+    </linearGradient>
+    <linearGradient id="ground1" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#90EE90"/>
+      <stop offset="100%" style="stop-color:#6DAA73"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Background -->
+  <rect width="400" height="300" fill="url(#sky1)"/>
+  <ellipse cx="200" cy="320" rx="250" ry="80" fill="url(#ground1)"/>
+
+  <!-- Sun -->
+  <circle cx="340" cy="60" r="35" fill="#E8B44C" opacity="0.9"/>
+
+  <!-- Cloud -->
+  <g fill="white" opacity="0.8">
+    <ellipse cx="80" cy="50" rx="30" ry="20"/>
+    <ellipse cx="110" cy="45" rx="25" ry="18"/>
+    <ellipse cx="95" cy="60" rx="28" ry="15"/>
+  </g>
+
+  <!-- School building -->
+  <rect x="240" y="160" width="120" height="90" fill="#FDF0EE" stroke="#C4594B" stroke-width="2"/>
+  <rect x="280" y="210" width="40" height="40" fill="#8B6DB5"/>
+  <rect x="255" y="175" width="25" height="30" fill="#5EA8CC" opacity="0.7"/>
+  <rect x="320" y="175" width="25" height="30" fill="#5EA8CC" opacity="0.7"/>
+  <polygon points="240,160 300,120 360,160" fill="#C4594B"/>
+
+  <!-- Main character - Lily looking sad -->
+  <g transform="translate(120, 170)">
+    <!-- Dress -->
+    <path d="M0,50 Q-15,80 -20,100 L20,100 Q15,80 0,50" fill="#E07A6A"/>
+    <!-- Head -->
+    <circle cx="0" cy="30" r="28" fill="#DEB887"/>
+    <!-- Hair -->
+    <path d="M-25,20 Q-30,0 -15,-15 Q0,-25 15,-15 Q30,0 25,20 Q20,10 0,15 Q-20,10 -25,20" fill="#4A3728"/>
+    <path d="M-20,25 Q-25,40 -22,55" stroke="#4A3728" stroke-width="4" fill="none"/>
+    <path d="M20,25 Q25,40 22,55" stroke="#4A3728" stroke-width="4" fill="none"/>
+    <!-- Sad face -->
+    <circle cx="-8" cy="28" r="3" fill="#4A3728"/>
+    <circle cx="8" cy="28" r="3" fill="#4A3728"/>
+    <!-- Sad mouth -->
+    <path d="M-8,42 Q0,38 8,42" stroke="#4A3728" stroke-width="2" fill="none"/>
+    <!-- Tear -->
+    <ellipse cx="-12" cy="35" rx="2" ry="3" fill="#5EA8CC" opacity="0.7"/>
+  </g>
+
+  <!-- Other kids in background playing -->
+  <g transform="translate(300, 200)" opacity="0.6">
+    <circle cx="0" cy="-15" r="10" fill="#DEB887"/>
+    <rect x="-8" y="-5" width="16" height="25" fill="#5EA8CC"/>
+  </g>
+  <g transform="translate(330, 205)" opacity="0.6">
+    <circle cx="0" cy="-15" r="10" fill="#8B6852"/>
+    <rect x="-8" y="-5" width="16" height="25" fill="#90EE90"/>
+  </g>
+
+  <!-- Stars (faded, representing her dreams) -->
+  <text x="60" y="100" font-size="20" fill="#E8B44C" opacity="0.3">★</text>
+  <text x="150" y="80" font-size="15" fill="#E8B44C" opacity="0.2">★</text>
+</svg>
