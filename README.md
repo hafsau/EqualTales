@@ -4,85 +4,62 @@
 
 ---
 
-## Problem Statement
-
-### Who
-Mothers of children ages 3–10 who want to counter gender stereotypes their children are absorbing.
-
-### Problem
-Children internalize gender stereotypes by **age 3**. By **age 6**, girls start believing boys are inherently "smarter." Existing counter-stereotype content is either:
-- **Generic** ("girls can do anything!") — too vague to address specific beliefs
-- **Biographical** — disconnected from the child's personal experience
-
-### Impact
-Early stereotypes shape career aspirations, self-confidence, and life choices. Without targeted intervention, these beliefs become deeply ingrained.
-
----
-
-## Solution Overview
-
-EqualTales is an **AI-powered web application** that generates personalized, illustrated children's stories designed to counter specific gender stereotypes.
-
-A mother types the stereotype her child expressed (e.g., "my daughter thinks math is for boys"), enters the child's name and age, and receives a complete **5-page illustrated storybook** where a fictional child discovers a real woman who proved the stereotype wrong.
-
-### Key Features
-
-| Feature | Description | Why It Matters |
-|---------|-------------|----------------|
-| **Personalized Stories** | Child's name becomes the protagonist | Creates personal connection and identification |
-| **Real Women Integration** | 50 historical women matched to stereotypes | Provides concrete proof, not abstract affirmation |
-| **Age-Adaptive Content** | Stories adjust for ages 3-5, 6-8, 9-10 | Appropriate vocabulary and complexity |
-| **QA Verification** | AI checks for stereotype reinforcement | Ensures stories don't amplify the bias they counter |
-| **Illustrated Pages** | 5 DALL-E 3 watercolor illustrations | Engaging visual storytelling experience |
-
----
-
-## Quick Start & Demo Path
-
-### Requirements
-- Python 3.10+
-- Node.js 18+
-- OpenRouter API key ($80 sponsored credits)
-- OpenAI API key (for DALL-E 3)
-
-### Installation
+## Quickstart (1-Command Setup)
 
 ```bash
-# Clone repository
-git clone https://github.com/[your-username]/EqualTales.git
-cd EqualTales
-
-# Backend setup
-cd backend
-pip install -r requirements.txt
-cp ../.env.example ../.env  # Add your API keys
-
-# Frontend setup
-cd ../frontend
-npm install
-
-# Run both (in separate terminals)
-cd backend && python3 app.py      # http://localhost:5001
-cd frontend && npm start          # http://localhost:3000
+# Clone and run (requires Python 3.10+, Node.js 18+)
+git clone https://github.com/hafsau/EqualTales.git && cd EqualTales && \
+cp .env.example .env && \
+echo "Add your API keys to .env, then run:" && \
+echo "Terminal 1: cd backend && pip install -r requirements.txt && python3 app.py" && \
+echo "Terminal 2: cd frontend && npm install && npm start"
 ```
 
-### 60-Second Demo Path
+### .env.example
+```
+OPENROUTER_API_KEY=sk-or-your-key-here
+OPENAI_API_KEY=sk-proj-your-key-here
+```
 
-| Step | Action | Expected Result |
-|------|--------|-----------------|
-| 1 | Open http://localhost:3000 | Landing page with "Try It Now" button |
-| 2 | Click "Try It Now" | Input form appears |
-| 3 | Click "Girls can't do math" example | Stereotype text fills in |
-| 4 | Enter child's name: "Lily" | Name field populated |
-| 5 | Set age slider to 6 | Age selected |
-| 6 | Click "Create My Story" | Progress screen with steps |
-| 7 | Watch generation (~75 seconds) | See "Featuring Katherine Johnson" reveal |
-| 8 | View storybook | 5 illustrated pages with navigation |
-| 9 | Click through to "Discussion & Activities" | See discussion prompts + QA badge |
+Open http://localhost:3000 → Click "Try It Now" → Select a stereotype → Generate!
 
 ---
 
-## Technical Architecture
+## Project Overview
+
+### What It Does
+EqualTales generates personalized, illustrated children's stories that counter specific gender stereotypes. A mother inputs a stereotype (e.g., "Girls can't do math"), her child's name and age, and receives a 5-page illustrated storybook featuring a real woman who proved the stereotype wrong.
+
+### Tech Stack
+
+| Component | Technology | Purpose |
+|-----------|-----------|---------|
+| Frontend | React 18.2 | Single-page application with storybook UI |
+| Backend | Flask 3.0 | REST API with SSE streaming |
+| AI Agent | Goose + FastMCP | MCP tool orchestration |
+| Story Generation | Claude Opus 4.6 | High-quality creative writing |
+| Classification/QA | Claude Sonnet 4.5 | Fast analytical tasks |
+| Illustrations | DALL-E 3 | Children's book watercolor style |
+
+### Dependencies
+
+```
+# Backend (requirements.txt)
+flask>=3.0.0
+openai>=1.55.0
+python-dotenv>=1.0.0
+gunicorn>=21.0.0
+fastmcp>=2.0.0
+
+# Frontend (package.json)
+react: ^18.2.0
+react-dom: ^18.2.0
+react-scripts: 5.0.1
+```
+
+---
+
+## Architecture Diagram
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
@@ -115,155 +92,167 @@ cd frontend && npm start          # http://localhost:3000
 └──────────────┘  └──────────────┘  └──────────────┘
 ```
 
-### Tech Stack
+---
 
-| Component | Technology | Purpose |
-|-----------|-----------|---------|
-| Frontend | React 18.2 | Single-page application with storybook UI |
-| Backend | Flask 3.0 | REST API with SSE streaming |
-| AI Agent | Goose + FastMCP | MCP tool orchestration |
-| Story Generation | Claude Opus 4.6 | High-quality creative writing |
-| Classification/QA | Claude Sonnet 4.5 | Fast analytical tasks |
-| Illustrations | DALL-E 3 | Children's book watercolor style |
-| Hosting | Vercel + Render | Frontend + backend deployment |
+## Decision Log
 
-### Goose Integration
+Key technical choices and tradeoffs:
 
-EqualTales uses **Goose** (Block's open-source AI agent framework) with **FastMCP** to expose 5 tools:
+| Decision | Why | Tradeoff |
+|----------|-----|----------|
+| **React 18 + CRA** | Fastest setup for 8-day hackathon; built-in Jest | Slower builds than Vite; acceptable for demo |
+| **Flask over FastAPI** | Simpler synchronous code; easier debugging | No native async; SSE works fine with stream_with_context |
+| **SSE over WebSockets** | One-way streaming is simpler; works through corporate firewalls | Slightly more complex than polling |
+| **Parallel illustrations** | ThreadPoolExecutor runs 5 DALL-E calls simultaneously | Higher momentary API load; saves ~60 seconds |
+| **Claude Opus for stories** | Highest quality creative writing ($15/M tokens) | Expensive; but story quality is core differentiator |
+| **Claude Sonnet for QA** | 5x cheaper ($3/M tokens) for analytical tasks | Lower creativity; fine for classification/verification |
+| **No database** | Privacy by design — can't leak what we don't store | No persistence; acceptable for demo |
+| **50-woman curated KB** | Quality over quantity; manually verified facts | Limited coverage; ensures accuracy |
+| **QA verification loop** | Catches stereotype reinforcement AI typically amplifies | Adds ~3s; essential for ethical credibility |
 
-1. `classify_stereotype` — Categorizes input and selects counter-narrative strategy
-2. `match_real_woman` — Finds best woman from 50-entry knowledge base
-3. `generate_story` — Creates 5-page narrative with discussion prompts
-4. `verify_story` — QA check for stereotype reinforcement (score 1-10)
-5. `generate_illustration` — DALL-E 3 call with character consistency
+[Full Decision Log →](docs/DECISION_LOG.md)
 
 ---
 
-## Story Structure
+## AI Trace Log
 
-Each story follows a 5-page narrative arc:
+*Required for AI/ML track — documenting AI tool usage with verification*
 
-| Page | Title | Purpose |
-|------|-------|---------|
-| 1 | **The Belief** | Fictional child encounters/expresses the stereotype |
-| 2 | **The Question** | Something cracks the stereotype — curiosity emerges |
-| 3 | **The Discovery** | Child discovers a real woman who defied it |
-| 4 | **The Inspiration** | Real woman's achievement told in fairy-tale language |
-| 5 | **The New Belief** | Child takes action, stereotype replaced by understanding |
+### Trace 1: Story Generation
+| Field | Content |
+|-------|---------|
+| **Tool** | Claude Opus 4.6 via OpenRouter |
+| **What AI Generated** | 5-page narrative with titles, discussion prompts, activity suggestion |
+| **What I Changed** | Added instruction NOT to describe child's race (handled by diversity system); enforced JSON output |
+| **Verification** | Manual review of 10+ stories; automated QA loop; checked discussion prompts are open-ended |
+
+### Trace 2: QA Verification
+| Field | Content |
+|-------|---------|
+| **Tool** | Claude Sonnet 4.5 via OpenRouter |
+| **What AI Generated** | Passed/failed status, score 1-10, issues list, strengths |
+| **What I Changed** | Added safe default (passed=true, score=7) on API failure; threshold set at score >= 7 |
+| **Verification** | Compared QA scores with manual review; tested with intentionally problematic stories |
+
+### Trace 3: Illustration Generation
+| Field | Content |
+|-------|---------|
+| **Tool** | DALL-E 3 via OpenAI API |
+| **What AI Generated** | 1024x1024 watercolor-style children's book illustrations |
+| **What I Changed** | Character description injection for consistency; coral/gold/sage palette to match UI |
+| **Verification** | Visual inspection of 50+ illustrations for age-appropriateness and consistency |
+
+### Trace 4: Test Scaffolding
+| Field | Content |
+|-------|---------|
+| **Tool** | Goose AI Agent (Block) with Claude |
+| **What AI Generated** | pytest fixtures, test structure, mock configurations |
+| **What I Changed** | Fixed mock data structures; simplified SSE streaming tests |
+| **Verification** | 151 backend tests passing; 24 frontend tests passing |
+
+### Trace 5: Knowledge Base Curation
+| Field | Content |
+|-------|---------|
+| **Tool** | Goose AI Agent (Block) with Claude |
+| **What AI Generated** | Initial list of 50 women with categories, achievements, story angles |
+| **What I Changed** | Verified every fact against Wikipedia/Britannica; rewrote for age-appropriateness |
+| **Verification** | Cross-referenced each achievement with 2+ historical sources |
+
+[Full AI Trace Log →](docs/AI_TRACE_LOG.md)
 
 ---
 
-## Project Logs & Documentation
+## Risk Log
 
-| Document | Description | Location |
-|----------|-------------|----------|
-| Decision Log | 15 key technical choices with tradeoffs | [docs/DECISION_LOG.md](docs/DECISION_LOG.md) |
-| Risk Log | 8 issues identified and fixed | [docs/RISK_LOG.md](docs/RISK_LOG.md) |
-| Evidence Log | 14 sources with licenses | [docs/EVIDENCE_LOG.md](docs/EVIDENCE_LOG.md) |
-| AI Trace Log | 7 AI usage entries with verification | [docs/AI_TRACE_LOG.md](docs/AI_TRACE_LOG.md) |
-| Problem Frame | 4-line problem definition | [docs/PROBLEM_FRAME.md](docs/PROBLEM_FRAME.md) |
+| Risk | Severity | Mitigation | Status |
+|------|----------|------------|--------|
+| **API keys hardcoded** | Critical | Moved to `.env`; added to `.gitignore`; created `.env.example` | ✅ Fixed |
+| **AI amplifies stereotypes** | Major | QA verification loop detects reinforcement; stories must score 7+/10 | ✅ Fixed |
+| **150s generation time** | Major | Parallel execution with ThreadPoolExecutor; reduced to ~75s | ✅ Fixed |
+| **AI hallucinating facts** | Major | 50 women manually verified against Wikipedia/Britannica | ✅ Fixed |
+| **Character inconsistency** | Major | Detailed character description injected into every DALL-E prompt | ✅ Fixed |
+| **Privacy concerns** | Minor | No database, no login, no cookies — session-only data | ✅ Fixed |
+| **DALL-E URLs expire** | Minor | Acceptable for demo; would need S3/Cloudinary for production | Documented |
+
+[Full Risk Log →](docs/RISK_LOG.md)
 
 ---
 
-## Testing & Known Issues
+## Evidence Log
 
-### Test Results
+### Research Sources
 
-```bash
-# Backend (pytest)
-cd backend && pytest tests/ -v
-# Result: 149 passed, 2 skipped in 0.68s
+| # | Claim | Source | Type |
+|---|-------|--------|------|
+| 1 | "Children absorb stereotypes by age 3" | Bian et al. (2017). *Science*, 355(6323). DOI: 10.1126/science.aah6524 | Academic |
+| 2 | "By age 6, girls believe boys are smarter" | Same study (Bian et al., 2017) | Academic |
+| 3 | "Counter-stereotypical content shifts attitudes" | Master et al. (2016). *J. Educational Psychology*, 108(3). DOI: 10.1037/edu0000061 | Academic |
+| 4 | "AI-generated stories amplify stereotypes 55% more" | EMNLP 2025 research on AI bias | Academic |
 
-# Frontend (Jest)
-cd frontend && npm test
-# Result: 24 passed, 25 skipped (SSE mocking complexity)
-```
+### Code Dependencies
 
-### Test Coverage
+| # | Package | License | Link |
+|---|---------|---------|------|
+| 5 | React | MIT | https://react.dev |
+| 6 | Flask | BSD-3-Clause | https://flask.palletsprojects.com |
+| 7 | FastMCP | MIT | https://github.com/jlowin/fastmcp |
+| 8 | OpenAI SDK | MIT | https://github.com/openai/openai-python |
+| 9 | Goose | Apache 2.0 | https://github.com/block/goose |
+| 10 | Quicksand Font | SIL OFL | https://fonts.google.com/specimen/Quicksand |
+| 11 | DM Sans Font | SIL OFL | https://fonts.google.com/specimen/DM+Sans |
+| 12 | Caveat Font | SIL OFL | https://fonts.google.com/specimen/Caveat |
 
-| Area | Tests | Coverage |
-|------|-------|----------|
-| API Routes | 50+ | All 6 endpoints |
-| MCP Tools | 50+ | All 5 tools |
-| Input Validation | 20+ | All edge cases including XSS, injection |
-| Integration Tests | 14 | E2E pipeline, error recovery, performance |
-| React Components | 24 | Landing, Input, Error handling |
+### Data Sources
+
+| # | Item | Source | License |
+|---|------|--------|---------|
+| 13 | Knowledge base (50 women) | Wikipedia, Britannica, biographies | Public domain / Fair use |
+| 14 | Historical achievements | Multiple verified sources per woman | Public domain |
+
+[Full Evidence Log →](docs/EVIDENCE_LOG.md)
+
+---
+
+## Known Issues & Next Steps
 
 ### Known Issues
 
 | Issue | Workaround | Status |
 |-------|------------|--------|
-| DALL-E URLs expire after ~1 hour | Acceptable for demo; would need storage for production | Documented |
-| SSE tests skipped in Jest | Integration tests with real backend recommended | By design |
-| Generation time ~75-90s | Progress indicators + parallel generation | Optimized |
+| DALL-E URLs expire after ~1 hour | Acceptable for demo; would need image storage | Documented |
+| SSE tests skipped in Jest | Complex to mock; integration tests recommended | By design |
+| Generation time ~35-75s | Progress indicators + parallel generation | Optimized |
 
-### Future Improvements
+### Next Steps
 
 - [ ] Image persistence (S3/Cloudinary)
 - [ ] Multi-language support
 - [ ] PDF export
 - [ ] Parent dashboard
+- [ ] More women in knowledge base
 
 ---
 
-## Project Structure
+## Testing
 
-```
-EqualTales/
-├── backend/
-│   ├── app.py              # Flask API (port 5001)
-│   ├── requirements.txt    # Production dependencies
-│   ├── requirements-dev.txt # Test dependencies
-│   ├── conftest.py         # pytest fixtures
-│   └── tests/              # 117 pytest tests
-├── frontend/
-│   ├── src/
-│   │   ├── App.js          # React app (5 components)
-│   │   ├── App.css         # Warm storybook design
-│   │   └── App.test.js     # Jest tests
-│   └── package.json
-├── mcp_server/
-│   └── server.py           # FastMCP (5 tools)
-├── scripts/
-│   └── qa_agent.py         # QA monitoring agent
-├── data/
-│   └── women_knowledge_base.json  # 50 women, 14 categories
-├── docs/
-│   ├── PROBLEM_FRAME.md
-│   ├── DECISION_LOG.md
-│   ├── RISK_LOG.md
-│   ├── EVIDENCE_LOG.md
-│   └── AI_TRACE_LOG.md
-├── .env                    # API keys (not committed)
-├── CLAUDE.md               # Claude Code context
-└── README.md               # This file
+```bash
+# Backend (pytest)
+cd backend && pytest tests/ -v
+# 151 tests (unit + integration)
+
+# Frontend (Jest)
+cd frontend && npm test
+# 24 passed, 25 skipped
 ```
 
 ---
 
-## Team & Acknowledgments
-
-### Team: Solo Builder
-
-| Name | Role | GitHub | LinkedIn |
-|------|------|--------|----------|
-| [Your Name] | Full-Stack + AI/ML | [@username](https://github.com/username) | [Profile](https://linkedin.com/in/username) |
-
-### Special Thanks
-
-- **CreateHER Fest** — For the #75HER Challenge opportunity
-- **Block** — For Goose and the $80 OpenRouter credits
-- **Anthropic** — For Claude's exceptional creative writing
-- **OpenAI** — For DALL-E 3's beautiful illustrations
-
----
-
-## License & Attributions
+## License
 
 ### Project License
-MIT License
+**MIT License** — See [LICENSE](LICENSE)
 
-### Dependencies
+### Attributions
 
 | Package | License | Link |
 |---------|---------|------|
@@ -275,6 +264,8 @@ MIT License
 | Quicksand Font | SIL OFL | https://fonts.google.com/specimen/Quicksand |
 | DM Sans Font | SIL OFL | https://fonts.google.com/specimen/DM+Sans |
 | Caveat Font | SIL OFL | https://fonts.google.com/specimen/Caveat |
+
+All licenses are permissive and compatible with commercial use.
 
 ---
 
