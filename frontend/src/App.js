@@ -377,6 +377,15 @@ const WAIT_TIPS = [
   "Children who see diverse role models dream bigger dreams.",
   "A single story can change how a child sees their potential.",
   "The best time to counter stereotypes is before age 7.",
+  "Girls who read about female scientists are more likely to pursue STEM.",
+  "Children remember stories 22 times more than facts alone.",
+  "Diverse books help all children develop cultural awareness.",
+  "Kids ask 'why' about 300 times a day — stories help answer those questions.",
+  "Picture books activate the same brain regions as real experiences.",
+  "Children form gender stereotypes as early as age 2.",
+  "Reading fiction increases a child's ability to understand others' perspectives.",
+  "Stories featuring real role models have lasting impact on career aspirations.",
+  "The women in our stories broke barriers so today's girls can dream without limits.",
 ];
 
 function GenerationProgress({ status, storyData, illustrations, qaResult, realWoman, elapsedTime }) {
