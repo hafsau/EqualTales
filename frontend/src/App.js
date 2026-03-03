@@ -529,7 +529,6 @@ function StorybookViewer({ storyData, illustrations, qaResult, realWoman, onRese
   const [currentPage, setCurrentPage] = useState(0);
   const [showCompanion, setShowCompanion] = useState(false);
   const [pageTransition, setPageTransition] = useState('');
-  const [showTypewriter, setShowTypewriter] = useState(true);
   const [seenPages, setSeenPages] = useState(new Set([0]));
   const [swipeOffset, setSwipeOffset] = useState(0);
   const touchStartRef = useRef(null);
@@ -583,12 +582,7 @@ function StorybookViewer({ storyData, illustrations, qaResult, realWoman, onRese
     setPageTransition(`exit-${direction}`);
     setTimeout(() => {
       setCurrentPage(newPage);
-      // Show typewriter for pages not yet seen (check BEFORE updating seenPages)
-      const isNewPage = !seenPages.has(newPage);
-      if (isNewPage) {
-        setShowTypewriter(true);
-      }
-      // Don't add to seenPages here - do it when typewriter completes
+      setSeenPages(prev => new Set([...prev, newPage]));
       setPageTransition(`enter-${direction}`);
       setTimeout(() => setPageTransition(''), 500);
     }, 200);
@@ -665,7 +659,6 @@ function StorybookViewer({ storyData, illustrations, qaResult, realWoman, onRese
 
   const page = pages[currentPage];
   const illustration = illustrations[currentPage];
-  const isFirstView = showTypewriter;
 
   return (
     <div className="storybook">
@@ -713,18 +706,7 @@ function StorybookViewer({ storyData, illustrations, qaResult, realWoman, onRese
         <div className="page-content">
           <div className="page-label">{page?.page_title}</div>
           <div className="page-text">
-            {isFirstView ? (
-              <TypewriterText
-                text={page?.text || ''}
-                speed={25}
-                onComplete={() => {
-                  setShowTypewriter(false);
-                  setSeenPages(prev => new Set([...prev, currentPage]));
-                }}
-              />
-            ) : (
-              page?.text
-            )}
+            {page?.text}
           </div>
           <div className="page-number">— {currentPage + 1} of {totalPages} —</div>
         </div>

@@ -457,7 +457,10 @@ def generate_illustration(
     """
     logger.info(f"Generating illustration for page {page_number}")
 
-    client = get_openai_client()
+    # Create fresh client per call to enable true parallel execution
+    # (shared client may serialize requests)
+    from openai import OpenAI
+    client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 
     character_note = ""
     if character_description:
