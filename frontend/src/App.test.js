@@ -77,8 +77,10 @@ const createMockSSEStream = (events) => {
 describe('LandingPage', () => {
   test('renders title "EqualTales"', () => {
     render(<App />);
-    expect(screen.getByText('Equal')).toBeInTheDocument();
-    expect(screen.getByText('Tales')).toBeInTheDocument();
+    // Title is now animated with individual character spans
+    const title = document.querySelector('.landing-title');
+    expect(title).toBeInTheDocument();
+    expect(title.textContent).toBe('EqualTales');
   });
 
   test('renders subtitle', () => {

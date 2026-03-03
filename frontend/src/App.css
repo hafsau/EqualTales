@@ -623,6 +623,23 @@ body {
   font-weight: 600;
 }
 
+/* Animated title letters */
+.title-char {
+  display: inline-block;
+  opacity: 0;
+  transform: translateY(20px) scale(0.8);
+}
+
+.landing.visible .title-char {
+  animation: letterReveal 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+}
+
+@keyframes letterReveal {
+  0% { opacity: 0; transform: translateY(20px) scale(0.8); }
+  60% { opacity: 1; transform: translateY(-5px) scale(1.05); }
+  100% { opacity: 1; transform: translateY(0) scale(1); }
+}
+
 .landing-subtitle {
   font-family: 'Quicksand', sans-serif;
   font-size: 1.25rem;
@@ -636,11 +653,45 @@ body {
 .landing-description {
   font-size: 1.02rem;
   color: var(--text-muted);
-  margin-bottom: 36px;
+  margin-bottom: 24px;
   line-height: 1.75;
   max-width: 520px;
   margin-left: auto;
   margin-right: auto;
+}
+
+/* Social proof badge */
+.social-proof-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 22px;
+  background: var(--gold-light);
+  border: 1px solid rgba(232, 180, 76, 0.3);
+  border-radius: 30px;
+  font-size: 0.95rem;
+  color: var(--text-body);
+  margin-bottom: 28px;
+  opacity: 0;
+  transform: translateY(10px);
+}
+
+.landing.visible .social-proof-badge {
+  animation: badgeFadeIn 0.6s ease 1s forwards;
+}
+
+@keyframes badgeFadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.social-proof-badge .badge-icon {
+  font-size: 1.1rem;
+}
+
+.social-proof-badge strong {
+  color: var(--coral);
+  font-weight: 700;
 }
 
 .landing-stats {

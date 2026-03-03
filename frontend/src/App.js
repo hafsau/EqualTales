@@ -165,6 +165,21 @@ function ThemeToggle() {
 }
 
 /* ============================================================
+   ANIMATED TITLE HELPER
+   ============================================================ */
+function AnimatedTitle({ text, delay = 0 }) {
+  return text.split('').map((char, i) => (
+    <span
+      key={i}
+      className="title-char"
+      style={{ animationDelay: `${delay + i * 0.05}s` }}
+    >
+      {char}
+    </span>
+  ));
+}
+
+/* ============================================================
    LANDING PAGE
    ============================================================ */
 function LandingPage({ onStart }) {
@@ -182,8 +197,8 @@ function LandingPage({ onStart }) {
           <span className="logo-icon" role="img" aria-label="open book">📖</span>
         </div>
         <h1 className="landing-title">
-          <span className="title-equal">Equal</span>
-          <span className="title-tales">Tales</span>
+          <span className="title-equal"><AnimatedTitle text="Equal" delay={0.3} /></span>
+          <span className="title-tales"><AnimatedTitle text="Tales" delay={0.55} /></span>
         </h1>
         <p className="landing-subtitle">
           AI-powered stories that change what children believe is possible
@@ -192,6 +207,10 @@ function LandingPage({ onStart }) {
           Type the stereotype your child has expressed. We'll create a personalized,
           illustrated story featuring a real woman who proved it wrong.
         </p>
+        <div className="social-proof-badge">
+          <span className="badge-icon">✨</span>
+          <span>Featuring <strong>50+</strong> inspiring women who broke barriers</span>
+        </div>
         <button className="btn-primary btn-cta" onClick={onStart}>
           Try It Now
         </button>
