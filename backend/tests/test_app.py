@@ -709,13 +709,14 @@ class TestMCPResponseEdgeCases:
 
     def test_empty_pages_array(self, client, mock_mcp_tools):
         """Empty pages array should raise error."""
-        mock_mcp_tools['generate'] = MagicMock(return_value=json.dumps({
+        empty_story = {
             "title": "Test",
             "pages": [],
             "discussion_prompts": [],
             "activity_suggestion": ""
-        }))
-        with patch('app.get_mcp_tools', return_value=mock_mcp_tools):
+        }
+        with patch('app.get_mcp_tools', return_value=mock_mcp_tools), \
+             patch('app._parse_json_response', return_value=empty_story):
             response = client.post('/api/generate/stream',
                 data=json.dumps({"stereotype": "Test", "child_name": "Lily", "child_age": 6}),
                 content_type='application/json')
@@ -725,13 +726,14 @@ class TestMCPResponseEdgeCases:
 
     def test_null_pages(self, client, mock_mcp_tools):
         """Null pages should raise error."""
-        mock_mcp_tools['generate'] = MagicMock(return_value=json.dumps({
+        null_pages_story = {
             "title": "Test",
             "pages": None,
             "discussion_prompts": [],
             "activity_suggestion": ""
-        }))
-        with patch('app.get_mcp_tools', return_value=mock_mcp_tools):
+        }
+        with patch('app.get_mcp_tools', return_value=mock_mcp_tools), \
+             patch('app._parse_json_response', return_value=null_pages_story):
             response = client.post('/api/generate/stream',
                 data=json.dumps({"stereotype": "Test", "child_name": "Lily", "child_age": 6}),
                 content_type='application/json')
