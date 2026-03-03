@@ -148,24 +148,19 @@ def classify_stereotype(stereotype_text: str) -> str:
 
     response = client.chat.completions.create(
         model="anthropic/claude-sonnet-4.5",
-        max_tokens=1024,
+        max_tokens=256,
         messages=[
             {
                 "role": "user",
-                "content": f"""Analyze this stereotype that a child has expressed or a parent wants to counter:
+                "content": f"""Classify this stereotype into one of these categories: {json.dumps(categories)}
 
-"{stereotype_text}"
+Stereotype: "{stereotype_text}"
 
-Available stereotype categories: {json.dumps(categories)}
+Return JSON with:
+1. "primary_category": best matching category from the list
+2. "secondary_categories": array of 0-2 other relevant categories
 
-Return a JSON object with:
-1. "primary_category": the best matching category from the list above
-2. "secondary_categories": array of 1-2 other relevant categories
-3. "stereotype_essence": a one-sentence summary of the core belief to counter
-4. "age_strategy": object with keys "young" (3-5), "middle" (6-8), "older" (9-10) each containing a brief note on how to approach the counter-narrative for that age
-5. "emotional_tone": the emotional tone of the stereotype (e.g., "limiting", "dismissive", "fearful")
-
-Return ONLY valid JSON, no other text.""",
+Return ONLY valid JSON.""",
             }
         ],
     )
