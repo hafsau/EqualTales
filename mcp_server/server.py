@@ -147,7 +147,7 @@ def classify_stereotype(stereotype_text: str) -> str:
     client = get_openrouter_client()
 
     response = client.chat.completions.create(
-        model="anthropic/claude-sonnet-4.5",
+        model="anthropic/claude-sonnet-4",
         max_tokens=1024,
         messages=[
             {
@@ -395,7 +395,7 @@ def verify_story(story_pages_json: str, stereotype_text: str) -> str:
     client = get_openrouter_client()
 
     response = client.chat.completions.create(
-        model="anthropic/claude-sonnet-4.5",
+        model="anthropic/claude-sonnet-4",
         max_tokens=512,  # Reduced from 1024 - QA result is ~200 tokens
         messages=[
             {
