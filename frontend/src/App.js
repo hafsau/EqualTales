@@ -391,10 +391,19 @@ const WAIT_TIPS = [
 function GenerationProgress({ status, storyData, illustrations, qaResult, realWoman, elapsedTime }) {
   const [tipIndex, setTipIndex] = useState(0);
   const [tipVisible, setTipVisible] = useState(true);
+  const tipsStarted = useRef(false);
 
+  // Track when tips should start (after 10s)
   useEffect(() => {
-    if (elapsedTime < 10) return; // Don't show tips until 10s in
+    if (elapsedTime >= 10) {
+      tipsStarted.current = true;
+    }
+  }, [elapsedTime]);
+
+  // Rotate tips every 8 seconds (separate effect to avoid resetting interval)
+  useEffect(() => {
     const interval = setInterval(() => {
+      if (!tipsStarted.current) return;
       setTipVisible(false);
       setTimeout(() => {
         setTipIndex(prev => (prev + 1) % WAIT_TIPS.length);
@@ -402,7 +411,7 @@ function GenerationProgress({ status, storyData, illustrations, qaResult, realWo
       }, 300);
     }, 8000);
     return () => clearInterval(interval);
-  }, [elapsedTime]);
+  }, []);
 
   const steps = [
     { key: 'classify', label: 'Understanding the stereotype', icon: '🔍' },
