@@ -432,9 +432,9 @@ def generate_stream():
 
             client = get_openrouter_client()
 
-            # Generate story with Sonnet 4.6 for quality
+            # Generate story with Sonnet 4 (faster, good quality)
             response = client.chat.completions.create(
-                model="anthropic/claude-sonnet-4.6",
+                model="anthropic/claude-sonnet-4",
                 max_tokens=4000,
                 messages=[{"role": "user", "content": prompt}],
             )
