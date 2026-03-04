@@ -296,16 +296,16 @@ def health():
 def get_examples():
     """Return pre-loaded stereotype examples for quick-start buttons."""
     examples = [
-        {"text": "Girls can't do math", "emoji": "🔢"},
+        {"text": "Girls can’t do math", "emoji": "🔢"},
         {"text": "Science is for boys", "emoji": "🔬"},
-        {"text": "Girls aren't strong enough", "emoji": "💪"},
+        {"text": "Girls aren’t strong enough", "emoji": "💪"},
         {"text": "Boys are better at sports", "emoji": "⚽"},
         {"text": "Girls should be quiet and polite", "emoji": "🤫"},
-        {"text": "Girls can't be leaders", "emoji": "👑"},
+        {"text": "Girls can’t be leaders", "emoji": "👑"},
         {"text": "Technology is for boys", "emoji": "💻"},
-        {"text": "Girls can't build things", "emoji": "🏗️"},
+        {"text": "Girls can’t build things", "emoji": "🏗️"},
         {"text": "Being a mom means giving up your dreams", "emoji": "👩‍👧"},
-        {"text": "It's too late to start something new", "emoji": "⏰"},
+        {"text": "It’s too late to start something new", "emoji": "⏰"},
     ]
     return jsonify(examples)
 
