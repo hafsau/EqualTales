@@ -467,6 +467,8 @@ function GenerationProgress({ status, storyData, illustrations, qaResult, realWo
 
       {realWoman && (
         <div className="woman-reveal">
+          <span className="woman-reveal-sparkle" aria-hidden="true">✨</span>
+          <span className="woman-reveal-sparkle" aria-hidden="true">✨</span>
           <span className="woman-reveal-label">Featuring</span>
           <strong>{realWoman.name}</strong>
           <span className="woman-reveal-achievement">{realWoman.achievement}</span>
@@ -676,17 +678,26 @@ function StorybookViewer({ storyData, illustrations, qaResult, realWoman, onRese
           ✕
         </button>
         <h1 className="story-title">{storyData.title}</h1>
-        <div className="page-indicator">
-          {pages.map((_, i) => (
-            <button
-              key={i}
-              className={`page-dot ${i === currentPage ? 'active' : ''} ${seenPages.has(i) ? 'seen' : ''}`}
-              onClick={() => {
-                if (i !== currentPage) navigateToPage(i, i > currentPage ? 'left' : 'right');
-              }}
-              aria-label={`Page ${i + 1}`}
+        <div className="page-indicator-container">
+          <div className="page-indicator">
+            {pages.map((_, i) => (
+              <button
+                key={i}
+                className={`page-dot ${i === currentPage ? 'active' : ''} ${seenPages.has(i) ? 'seen' : ''}`}
+                data-page={`Page ${i + 1}`}
+                onClick={() => {
+                  if (i !== currentPage) navigateToPage(i, i > currentPage ? 'left' : 'right');
+                }}
+                aria-label={`Page ${i + 1}`}
+              />
+            ))}
+          </div>
+          <div className="reading-progress">
+            <div
+              className="reading-progress-fill"
+              style={{ width: `${((currentPage + 1) / pages.length) * 100}%` }}
             />
-          ))}
+          </div>
         </div>
       </div>
 
