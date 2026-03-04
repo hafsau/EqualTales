@@ -77,9 +77,21 @@ react-scripts: 5.0.1
 │                   Flask API (Port 5001)                      │
 │  ┌──────────────────────────────────────────────────────┐   │
 │  │                  /api/generate/stream                 │   │
-│  │  classify → match → generate → [verify + illustrate] │   │
-│  │                                    (parallel)         │   │
-│  └──────────────────────────────────────────────────────┘   │
+│  └──────────────────────────┬───────────────────────────┘   │
+│                             │                                │
+│  ┌──────────────────────────▼───────────────────────────┐   │
+│  │           GOOSE MCP SERVER (FastMCP)                  │   │
+│  │              mcp_server/server.py                     │   │
+│  │  ┌─────────────────────────────────────────────────┐  │   │
+│  │  │  5 MCP TOOLS (stdio transport, JSON-RPC 2.0)    │  │   │
+│  │  │                                                  │  │   │
+│  │  │  1. classify_stereotype  ──→ Claude Sonnet 4.5  │  │   │
+│  │  │  2. match_real_woman     ──→ Local KB (50 women)│  │   │
+│  │  │  3. generate_story       ──→ Claude Opus 4.6    │  │   │
+│  │  │  4. verify_story         ──→ Claude Sonnet 4.5  │  │   │
+│  │  │  5. generate_illustration──→ DALL-E 3           │  │   │
+│  │  └─────────────────────────────────────────────────┘  │   │
+│  └───────────────────────────────────────────────────────┘   │
 └─────────────────────────┬───────────────────────────────────┘
                           │
         ┌─────────────────┼─────────────────┐
@@ -91,6 +103,58 @@ react-scripts: 5.0.1
 │  OpenRouter  │  │  OpenRouter  │  │              │
 └──────────────┘  └──────────────┘  └──────────────┘
 ```
+
+---
+
+## Goose + MCP Integration
+
+**EqualTales is a Goose-compatible MCP (Model Context Protocol) extension.** The entire story generation engine is exposed as 5 MCP tools that Goose can orchestrate autonomously.
+
+### MCP Server Configuration
+
+```yaml
+# goose_config.yaml — Goose extension config
+extensions:
+  equaltales:
+    name: EqualTales Story Engine
+    cmd: python
+    args: [mcp_server/server.py]
+    transport: stdio
+    enabled: true
+```
+
+### The 5 MCP Tools
+
+| Tool | Model | Purpose | Latency |
+|------|-------|---------|---------|
+| `classify_stereotype` | Claude Sonnet 4.5 | Categorize stereotype into 14 categories | ~3s |
+| `match_real_woman` | Local KB | Find best-matching woman from 50-entry knowledge base | <0.1s |
+| `generate_story` | Claude Opus 4.6 | Create 5-page narrative with illustrations descriptions | ~57s |
+| `verify_story` | Claude Sonnet 4.5 | QA check for stereotype reinforcement | ~5s |
+| `generate_illustration` | DALL-E 3 | Create watercolor children's book illustration | ~15s |
+
+### How Goose Orchestrates
+
+When Goose receives a stereotype input, it autonomously:
+
+1. **Classifies** the stereotype → identifies primary/secondary categories
+2. **Matches** a real woman → finds inspiring counter-example from KB
+3. **Generates** the story → creates age-appropriate 5-page narrative
+4. **Verifies** (parallel) → ensures no stereotype reinforcement
+5. **Illustrates** (parallel) → generates 5 DALL-E images concurrently
+
+The Flask backend can run in two modes:
+- **Direct mode**: Imports MCP tools directly (current production)
+- **Goose mode**: Goose orchestrates via stdio transport (full MCP pattern)
+
+### Why MCP + Goose?
+
+| Benefit | How |
+|---------|-----|
+| **Autonomous orchestration** | Goose decides tool order and handles errors |
+| **Tool composability** | Each tool is independent and reusable |
+| **Streaming support** | Real-time progress via SSE |
+| **Error recovery** | Goose retries failed tools automatically |
 
 ---
 

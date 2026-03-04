@@ -1214,12 +1214,12 @@ body {
   animation: sparkleFloat 2s ease-in-out infinite;
 }
 
-.woman-reveal .woman-reveal-sparkle:first-of-type {
+.woman-reveal .woman-reveal-sparkle:nth-child(1) {
   top: 8px;
   right: 20px;
 }
 
-.woman-reveal .woman-reveal-sparkle:last-of-type {
+.woman-reveal .woman-reveal-sparkle:nth-child(2) {
   bottom: 8px;
   left: 25px;
   font-size: 1rem;
@@ -1233,21 +1233,22 @@ body {
   position: absolute;
   top: 0;
   left: -100%;
-  width: 50%;
+  width: 60%;
   height: 100%;
   background: linear-gradient(
     90deg,
-    transparent,
-    rgba(255, 255, 255, 0.5),
-    transparent
+    transparent 0%,
+    rgba(255, 255, 255, 0.6) 50%,
+    transparent 100%
   );
-  animation: cardShimmer 2s ease-in-out 0.5s forwards;
+  animation: cardShimmer 1.5s ease-in-out 0.3s 2;
   pointer-events: none;
+  z-index: 10;
 }
 
 @keyframes cardShimmer {
   0% { left: -100%; }
-  100% { left: 200%; }
+  100% { left: 150%; }
 }
 
 @keyframes sparkleFloat {
