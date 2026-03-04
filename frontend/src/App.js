@@ -3,6 +3,15 @@ import './App.css';
 
 const API_BASE = process.env.REACT_APP_API_URL || 'http://localhost:5001';
 
+// Helper to resolve illustration URLs (cached images need API_BASE prefix)
+const resolveImageUrl = (url) => {
+  if (!url) return null;
+  if (url.startsWith('/cached-stories/')) {
+    return `${API_BASE}${url}`;
+  }
+  return url;
+};
+
 /* ============================================================
    SOUND EFFECTS
    ============================================================ */
@@ -711,7 +720,7 @@ function StorybookViewer({ storyData, illustrations, qaResult, realWoman, onRese
         <div className="page-illustration">
           {illustration ? (
             <img
-              src={illustration}
+              src={resolveImageUrl(illustration)}
               alt={page?.illustration_description || `Illustration for page ${currentPage + 1}`}
               className="illustration-img"
               onError={(e) => { e.target.style.display = 'none'; e.target.nextSibling && (e.target.nextSibling.style.display = 'flex'); }}
