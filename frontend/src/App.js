@@ -869,7 +869,7 @@ function App() {
                     setQaResult(event.data);
                     break;
                   case 'illustration':
-                    console.log('Illustration received:', event.page, event.url?.substring(0, 100));
+                    console.log('Illustration received:', event.page, event.url?.substring(0, 100), event.error || '');
                     setIllustrations(prev => {
                       const updated = [...prev];
                       updated[event.page] = event.url;
