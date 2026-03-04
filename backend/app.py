@@ -472,7 +472,7 @@ def generate_stream():
             for future in as_completed(illustration_futures):
                 page_idx, result = future.result()
                 illust_done += 1
-                yield _sse({"type": "illustration", "page": page_idx, "url": result.get("url")})
+                yield _sse({"type": "illustration", "page": page_idx, "url": result.get("url"), "error": result.get("error")})
                 yield _sse({"type": "status", "message": f"Painting illustrations ({illust_done}/5)..."})
 
             yield _sse({"type": "complete", "message": "Your story is ready!"})
