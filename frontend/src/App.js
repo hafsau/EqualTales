@@ -723,7 +723,7 @@ function StorybookViewer({ storyData, illustrations, qaResult, realWoman, onRese
               src={resolveImageUrl(illustration)}
               alt={page?.illustration_description || `Illustration for page ${currentPage + 1}`}
               className="illustration-img"
-              onError={(e) => { e.target.style.display = 'none'; e.target.nextSibling && (e.target.nextSibling.style.display = 'flex'); }}
+              onError={(e) => { console.error('Image load failed:', resolveImageUrl(illustration)); e.target.style.display = 'none'; e.target.nextSibling && (e.target.nextSibling.style.display = 'flex'); }}
             />
           ) : null}
           <div className="illustration-placeholder" style={illustration ? {display: 'none'} : {}}>
@@ -869,6 +869,7 @@ function App() {
                     setQaResult(event.data);
                     break;
                   case 'illustration':
+                    console.log('Illustration received:', event.page, event.url?.substring(0, 100));
                     setIllustrations(prev => {
                       const updated = [...prev];
                       updated[event.page] = event.url;
