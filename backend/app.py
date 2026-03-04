@@ -352,9 +352,13 @@ def generate_stream():
         try:
             # --- Check for cached story first (instant loading for demos) ---
             # Only use cache for example stereotypes with default name/age
+            # Case-insensitive name check (user might type "lily" instead of "Lily")
+            print(f"[CACHE DEBUG] stereotype={repr(stereotype_text)}, name={repr(child_name)}, age={child_age}")
+            print(f"[CACHE DEBUG] in_precomputed={stereotype_text in PRECOMPUTED_CLASSIFICATIONS}")
             if (stereotype_text in PRECOMPUTED_CLASSIFICATIONS and
-                child_name == "Lily" and child_age == 6):
+                child_name.lower() == "lily" and child_age == 6):
                 cached = _load_cached_story(stereotype_text)
+                print(f"[CACHE DEBUG] cached_found={cached is not None}")
                 if cached:
                     yield _sse({"type": "status", "message": "Loading your story..."})
                     yield _sse({"type": "classification", "data": cached["classification"]})
