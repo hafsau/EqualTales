@@ -12,6 +12,41 @@ const resolveImageUrl = (url) => {
   return url;
 };
 
+// Helper to convert technical errors to friendly messages
+const getFriendlyError = (error) => {
+  const errorStr = String(error).toLowerCase();
+
+  if (errorStr.includes('billing') || errorStr.includes('quota')) {
+    return {
+      message: "Our illustration service is temporarily unavailable.",
+      tip: "The story text is ready! Illustrations will be added when service resumes."
+    };
+  }
+  if (errorStr.includes('network') || errorStr.includes('failed to fetch') || errorStr.includes('connection')) {
+    return {
+      message: "Connection lost. Please check your internet.",
+      tip: "Tip: Cached example stories work offline!"
+    };
+  }
+  if (errorStr.includes('timeout') || errorStr.includes('taking longer')) {
+    return {
+      message: "This is taking longer than expected.",
+      tip: "Tip: Try a shorter stereotype description, or use a cached example for instant results."
+    };
+  }
+  if (errorStr.includes('backend') || errorStr.includes('unavailable') || errorStr.includes('503')) {
+    return {
+      message: "Our servers are warming up. Please try again in a moment.",
+      tip: "Tip: Click 'View Demo Story' to see a sample while you wait."
+    };
+  }
+  // Generic fallback
+  return {
+    message: "Something went wrong. Don't worry, you can try again!",
+    tip: "Tip: Cached examples (like 'Girls can't do math') load instantly."
+  };
+};
+
 /* ============================================================
    SOUND EFFECTS
    ============================================================ */
@@ -932,17 +967,21 @@ function App() {
         </div>
       )}
 
-      {error && (
-        <div className="error-banner">
-          <p>{error}</p>
-          <div className="error-actions">
-            {lastInputs && <button onClick={() => handleGenerate(lastInputs)}>Try Again</button>}
-            <button onClick={loadFallbackStory} className="btn-demo">View Demo Story</button>
-            <button onClick={() => { setError(null); setScreen('input'); }}>Change Input</button>
-            <button onClick={() => setError(null)}>Dismiss</button>
+      {error && (() => {
+        const friendly = getFriendlyError(error);
+        return (
+          <div className="error-banner">
+            <p className="error-message">{friendly.message}</p>
+            <p className="error-tip">{friendly.tip}</p>
+            <div className="error-actions">
+              {lastInputs && <button onClick={() => handleGenerate(lastInputs)}>Try Again</button>}
+              <button onClick={loadFallbackStory} className="btn-demo">View Demo Story</button>
+              <button onClick={() => { setError(null); setScreen('input'); }}>Change Input</button>
+              <button onClick={() => setError(null)}>Dismiss</button>
+            </div>
           </div>
-        </div>
-      )}
+        );
+      })()}
 
       {screen === 'landing' && (
         <LandingPage onStart={() => setScreen('input')} />

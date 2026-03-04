@@ -1953,9 +1953,10 @@ body {
   padding: 16px 24px;
   border-radius: var(--r-lg);
   display: flex;
+  flex-direction: column;
   align-items: center;
-  justify-content: space-between;
-  gap: 16px;
+  text-align: center;
+  gap: 12px;
   z-index: 1000;
   font-weight: 500;
   box-shadow: var(--shadow-lg);
@@ -1963,10 +1964,24 @@ body {
   animation: bannerSlideIn 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
+.error-message {
+  font-size: 1rem;
+  margin: 0;
+}
+
+.error-tip {
+  font-size: 0.85rem;
+  opacity: 0.9;
+  font-weight: 400;
+  font-style: italic;
+  margin: 0;
+}
+
 .error-actions {
   display: flex;
   gap: 8px;
-  flex-shrink: 0;
+  flex-wrap: wrap;
+  justify-content: center;
 }
 
 .error-banner button {
@@ -2041,17 +2056,7 @@ body {
   /* Illustration aspect ratio for portrait mobile */
   .page-illustration { aspect-ratio: 4/3; }
 
-  /* Error banner mobile layout */
-  .error-banner {
-    flex-direction: column;
-    text-align: center;
-    gap: 12px;
-  }
-  .error-actions {
-    flex-wrap: wrap;
-    justify-content: center;
-    width: 100%;
-  }
+  /* Error banner mobile - buttons take full width */
   .error-banner button {
     flex: 1;
     min-width: 80px;
