@@ -24,7 +24,7 @@ import subprocess
 import time
 from concurrent.futures import ThreadPoolExecutor, as_completed
 
-from flask import Flask, Response, jsonify, request, stream_with_context
+from flask import Flask, Response, jsonify, request, stream_with_context, send_from_directory
 from flask_cors import CORS
 from dotenv import load_dotenv
 
@@ -290,6 +290,12 @@ def health():
             "categories": len(KNOWLEDGE_BASE["stereotype_categories"])
         }
     })
+
+
+@app.route("/cached-stories/<path:filename>")
+def serve_cached_image(filename):
+    """Serve pre-generated illustration images for cached stories."""
+    return send_from_directory(CACHED_STORIES_DIR, filename)
 
 
 @app.route("/api/examples", methods=["GET"])
