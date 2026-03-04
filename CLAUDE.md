@@ -123,10 +123,10 @@ python scripts/qa_agent.py --json       # JSON output for CI
 ## Knowledge Base
 
 50 women across 14 stereotype categories in `data/women_knowledge_base.json`:
-- girls_cant_do_math, science_is_for_boys, girls_arent_strong, boys_are_better_at_sports
-- girls_should_be_quiet, girls_cant_be_leaders, technology_is_for_boys, girls_cant_build_things
-- mom_gives_up_dreams, too_late_to_start, girls_cant_be_adventurous, girls_are_too_emotional
-- pretty_girls_arent_smart, girls_cant_do_dangerous_things
+- girls_cant_do_math, science_is_for_boys, girls_arent_strong, girls_cant_be_adventurous
+- girls_should_be_quiet, girls_cant_be_leaders, girls_cant_do_tech, girls_cant_build_things
+- moms_cant_be_leaders, its_too_late_to_start, girls_cant_run_businesses, emotions_are_weakness
+- pretty_girls_arent_smart, disability_means_you_cant
 
 ## Important Gotchas
 
