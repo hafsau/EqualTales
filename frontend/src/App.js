@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef, useCallback } from 'react';
 import './App.css';
 
 const API_BASE = process.env.REACT_APP_API_URL || 'http://localhost:5001';
+console.log('API_BASE:', API_BASE);  // Debug: verify env var is set
 
 // Helper to resolve illustration URLs (cached images need API_BASE prefix)
 const resolveImageUrl = (url) => {
