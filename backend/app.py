@@ -43,8 +43,9 @@ with open(KB_PATH, "r") as f:
     KNOWLEDGE_BASE = json.load(f)
 
 # Pre-computed classifications for example stereotypes (skip API call)
+# NOTE: Apostrophes must match the /api/examples endpoint (curly ' not straight ')
 PRECOMPUTED_CLASSIFICATIONS = {
-    "Girls can't do math": {
+    "Girls can’t do math": {
         "primary_category": "girls_cant_do_math",
         "secondary_categories": ["science_is_for_boys"]
     },
@@ -52,7 +53,7 @@ PRECOMPUTED_CLASSIFICATIONS = {
         "primary_category": "science_is_for_boys",
         "secondary_categories": ["girls_cant_do_math"]
     },
-    "Girls aren't strong enough": {
+    "Girls aren’t strong enough": {
         "primary_category": "girls_arent_strong",
         "secondary_categories": []
     },
@@ -64,7 +65,7 @@ PRECOMPUTED_CLASSIFICATIONS = {
         "primary_category": "girls_should_be_quiet",
         "secondary_categories": ["girls_cant_be_leaders"]
     },
-    "Girls can't be leaders": {
+    "Girls can’t be leaders": {
         "primary_category": "girls_cant_be_leaders",
         "secondary_categories": ["girls_should_be_quiet"]
     },
@@ -72,7 +73,7 @@ PRECOMPUTED_CLASSIFICATIONS = {
         "primary_category": "girls_cant_do_tech",
         "secondary_categories": ["science_is_for_boys"]
     },
-    "Girls can't build things": {
+    "Girls can’t build things": {
         "primary_category": "girls_cant_build_things",
         "secondary_categories": ["girls_cant_do_tech"]
     },
@@ -80,7 +81,7 @@ PRECOMPUTED_CLASSIFICATIONS = {
         "primary_category": "moms_cant_be_leaders",
         "secondary_categories": []
     },
-    "It's too late to start something new": {
+    "It’s too late to start something new": {
         "primary_category": "its_too_late_to_start",
         "secondary_categories": []
     },
