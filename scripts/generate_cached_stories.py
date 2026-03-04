@@ -48,7 +48,7 @@ from server import (
 # CONFIGURATION
 # ============================================================
 
-CACHE_DIR = PROJECT_ROOT / "frontend" / "public" / "cached-stories"
+CACHE_DIR = PROJECT_ROOT / "backend" / "cached-stories"
 
 # The 10 example stereotypes (must match PRECOMPUTED_CLASSIFICATIONS in app.py)
 EXAMPLE_STEREOTYPES = [

@@ -88,7 +88,8 @@ PRECOMPUTED_CLASSIFICATIONS = {
 }
 
 # Directory for pre-generated cached stories (for instant demo loading)
-CACHED_STORIES_DIR = os.path.join(os.path.dirname(__file__), "..", "frontend", "public", "cached-stories")
+# Located in backend/ so it deploys to Render with the API
+CACHED_STORIES_DIR = os.path.join(os.path.dirname(__file__), "cached-stories")
 
 
 def _load_cached_story(stereotype_text: str):
