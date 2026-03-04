@@ -83,6 +83,49 @@ We chose Sonnet 4.6 because:
 ### Why No Database?
 Privacy by design. No user accounts, no stored stories, no tracking. Every story is generated fresh and exists only in the browser session. This eliminates privacy risks and simplifies architecture.
 
+### Why Vercel (Frontend) + Render (Backend)?
+
+**The Challenge:** We needed separate hosting for React frontend and Flask backend because:
+1. Flask requires a Python runtime (not static hosting)
+2. SSE streaming needs long-lived connections
+3. Free tier must support hackathon demo traffic
+
+**Options Considered:**
+
+| Platform | Frontend | Backend | SSE Support | Free Tier |
+|----------|----------|---------|-------------|-----------|
+| Vercel | Excellent | Limited (serverless timeout) | Poor | Generous |
+| Render | Good | Excellent (persistent) | Excellent | Good |
+| Railway | Good | Good | Good | Limited free |
+| Heroku | Good | Good | Good | No free tier |
+| Netlify | Excellent | Limited (functions) | Poor | Generous |
+
+**Decision: Vercel for Frontend + Render for Backend**
+
+1. **Vercel for React frontend:**
+   - Instant deploys from GitHub
+   - Global CDN for fast loading
+   - Automatic HTTPS
+   - Generous free tier (100GB bandwidth)
+   - Perfect for static/SPA apps
+
+2. **Render for Flask backend:**
+   - Native Python support with persistent processes
+   - SSE streaming works without timeout issues
+   - Free tier includes 750 hours/month
+   - Auto-deploy from GitHub
+   - Environment variables for API keys
+
+3. **Why not single platform?**
+   - Vercel's serverless functions timeout at 10s (free) / 60s (pro) — our generation takes 75-90s
+   - Render's static hosting is less optimized than Vercel's CDN
+   - Split architecture matches our local dev setup (ports 3000 + 5001)
+
+4. **CORS Configuration:**
+   - Backend allows `https://equaltales.vercel.app` origin
+   - Credentials included for SSE streaming
+   - Preflight caching for performance
+
 ---
 
 *Decision Log maintained throughout development (Feb 27 – Mar 7, 2026)*
