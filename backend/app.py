@@ -46,7 +46,7 @@ with open(KB_PATH, "r") as f:
 PRECOMPUTED_CLASSIFICATIONS = {
     "Girls can't do math": {
         "primary_category": "girls_cant_do_math",
-        "secondary_categories": []
+        "secondary_categories": ["science_is_for_boys"]
     },
     "Science is for boys": {
         "primary_category": "science_is_for_boys",
@@ -54,11 +54,11 @@ PRECOMPUTED_CLASSIFICATIONS = {
     },
     "Girls aren't strong enough": {
         "primary_category": "girls_arent_strong",
-        "secondary_categories": ["boys_are_better_at_sports"]
+        "secondary_categories": []
     },
     "Boys are better at sports": {
-        "primary_category": "boys_are_better_at_sports",
-        "secondary_categories": ["girls_arent_strong"]
+        "primary_category": "girls_arent_strong",
+        "secondary_categories": []
     },
     "Girls should be quiet and polite": {
         "primary_category": "girls_should_be_quiet",
@@ -69,22 +69,52 @@ PRECOMPUTED_CLASSIFICATIONS = {
         "secondary_categories": ["girls_should_be_quiet"]
     },
     "Technology is for boys": {
-        "primary_category": "technology_is_for_boys",
+        "primary_category": "girls_cant_do_tech",
         "secondary_categories": ["science_is_for_boys"]
     },
     "Girls can't build things": {
         "primary_category": "girls_cant_build_things",
-        "secondary_categories": ["technology_is_for_boys"]
+        "secondary_categories": ["girls_cant_do_tech"]
     },
     "Being a mom means giving up your dreams": {
-        "primary_category": "mom_gives_up_dreams",
+        "primary_category": "moms_cant_be_leaders",
         "secondary_categories": []
     },
     "It's too late to start something new": {
-        "primary_category": "too_late_to_start",
+        "primary_category": "its_too_late_to_start",
         "secondary_categories": []
     },
 }
+
+# Directory for pre-generated cached stories (for instant demo loading)
+CACHED_STORIES_DIR = os.path.join(os.path.dirname(__file__), "..", "frontend", "public", "cached-stories")
+
+
+def _load_cached_story(stereotype_text: str):
+    """Load cached story if available for example stereotypes.
+
+    Returns the cached story data dict, or None if not cached.
+    """
+    index_path = os.path.join(CACHED_STORIES_DIR, "index.json")
+    if not os.path.exists(index_path):
+        return None
+
+    try:
+        with open(index_path) as f:
+            index = json.load(f)
+
+        story_key = index.get("stories", {}).get(stereotype_text)
+        if not story_key:
+            return None
+
+        story_path = os.path.join(CACHED_STORIES_DIR, story_key, "story.json")
+        if not os.path.exists(story_path):
+            return None
+
+        with open(story_path) as f:
+            return json.load(f)
+    except Exception:
+        return None
 
 
 # ============================================================
@@ -243,71 +273,6 @@ def _parse_json_response(text):
     return json.loads(text)
 
 
-def _extract_completed_pages(accumulated_text):
-    """Extract any fully completed pages from accumulated streaming text.
-
-    Returns list of completed page objects.
-    Uses string-aware parsing to correctly handle braces inside text content.
-    """
-    completed_pages = []
-
-    # Try to find the pages array start
-    pages_match = accumulated_text.find('"pages"')
-    if pages_match == -1:
-        return completed_pages
-
-    # Find the opening bracket of pages array
-    bracket_start = accumulated_text.find('[', pages_match)
-    if bracket_start == -1:
-        return completed_pages
-
-    # Parse with string awareness - track when we're inside a JSON string
-    search_start = bracket_start + 1
-    brace_count = 0
-    page_start = -1
-    in_string = False
-    escape_next = False
-
-    i = search_start
-    while i < len(accumulated_text):
-        char = accumulated_text[i]
-
-        if escape_next:
-            escape_next = False
-            i += 1
-            continue
-
-        if char == '\\' and in_string:
-            escape_next = True
-            i += 1
-            continue
-
-        if char == '"':
-            in_string = not in_string
-        elif not in_string:
-            if char == '{':
-                if brace_count == 0:
-                    page_start = i
-                brace_count += 1
-            elif char == '}':
-                brace_count -= 1
-                if brace_count == 0 and page_start != -1:
-                    # Found a complete page object
-                    page_text = accumulated_text[page_start:i+1]
-                    try:
-                        page_obj = json.loads(page_text)
-                        # Check if it has the required fields for an illustration
-                        if "illustration_description" in page_obj:
-                            completed_pages.append(page_obj)
-                    except json.JSONDecodeError:
-                        pass  # Not valid JSON yet
-                    page_start = -1
-
-        i += 1
-
-    return completed_pages
-
-
 # ============================================================
 # API ROUTES
 # ============================================================
@@ -383,6 +348,22 @@ def generate_stream():
 
     def event_stream():
         try:
+            # --- Check for cached story first (instant loading for demos) ---
+            # Only use cache for example stereotypes with default name/age
+            if (stereotype_text in PRECOMPUTED_CLASSIFICATIONS and
+                child_name == "Lily" and child_age == 6):
+                cached = _load_cached_story(stereotype_text)
+                if cached:
+                    yield _sse({"type": "status", "message": "Loading your story..."})
+                    yield _sse({"type": "classification", "data": cached["classification"]})
+                    yield _sse({"type": "real_woman", "data": cached["real_woman"]})
+                    yield _sse({"type": "story", "data": cached["story"]})
+                    for i, url in enumerate(cached["illustrations"]):
+                        yield _sse({"type": "illustration", "page": i, "url": url})
+                    yield _sse({"type": "complete", "message": "Your story is ready!"})
+                    yield _sse({"type": "qa_result", "data": cached.get("qa_result", {"passed": True, "score": 9})})
+                    return
+
             tools = get_mcp_tools()
 
             # --- Step 1: Classify stereotype ---
