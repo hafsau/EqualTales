@@ -458,7 +458,7 @@ function GenerationProgress({ status, storyData, illustrations, qaResult, realWo
               </span>
               <span className="step-label">
                 {step.label}
-                {step.key === 'illustrate' && illustrationCount > 0 && ` (${illustrationCount}/5)`}
+                {step.key === 'illustrate' && getStepStatus('illustrate') === 'active' && ` (${illustrationCount}/5)`}
               </span>
             </div>
           );
