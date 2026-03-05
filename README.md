@@ -1,6 +1,32 @@
 # EqualTales #75HER
 
-**Mothers of children ages 3–10** get a **personalized, illustrated anti-stereotype story** in **under 90 seconds** — featuring real women who broke barriers.
+## 3-Line Pitch
+
+**Turn stereotypes into bedtime stories.** *(6 words)*
+
+A mother types what her child said — "girls can't do math" — and gets a personalized, illustrated 5-page story featuring a real woman who proved it wrong. *(28 words)*
+
+**[→ Try It Now](https://equaltales.vercel.app)** *(CTA)*
+
+---
+
+## 4-Line Problem Frame
+
+| | |
+|---|---|
+| **User** | Mothers of children ages 3–10 who hear gender stereotypes |
+| **Problem** | No quick, engaging way to counter stereotypes at bedtime |
+| **Constraints** | Under 90 seconds; no login; age-appropriate; historically accurate |
+| **Success Test** | Child finishes story knowing a real woman who broke the stereotype |
+
+---
+
+## [→ Try It Now: equaltales.vercel.app](https://equaltales.vercel.app)
+
+| | |
+|---|---|
+| **Live Demo** | https://equaltales.vercel.app |
+| **API** | https://equaltales-api.onrender.com |
 
 ---
 
