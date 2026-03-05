@@ -83,6 +83,57 @@ We chose Sonnet 4.6 because:
 ### Why No Database?
 Privacy by design. No user accounts, no stored stories, no tracking. Every story is generated fresh and exists only in the browser session. This eliminates privacy risks and simplifies architecture.
 
+### Goose Integration: Architecture vs. Runtime
+
+**The Challenge:** The AI/ML track requires meaningful Goose integration. We needed to balance genuine MCP architecture with production reliability for demo day.
+
+**What We Built:**
+
+EqualTales exposes **5 MCP tools** via a FastMCP server (`mcp_server/server.py`) that Goose can orchestrate:
+
+| Tool | Function | Model |
+|------|----------|-------|
+| `classify_stereotype` | Categorize input into 14 stereotype categories | Claude Sonnet 4.5 |
+| `match_real_woman` | Select best woman from 50-entry knowledge base | Local (no API) |
+| `generate_story` | Write 5-page narrative with illustration descriptions | Claude Sonnet 4.6 |
+| `verify_story` | QA check for stereotype reinforcement | Claude Sonnet 4.5 |
+| `generate_illustration` | Create watercolor children's book image | DALL-E 3 |
+
+**The Architecture Is Goose-Native:**
+- Full MCP protocol compliance (stdio transport, JSON-RPC 2.0)
+- Tools decorated with `@mcp.tool()` following FastMCP patterns
+- `goose_config.yaml` configures Goose to discover and use these tools
+- Each tool is autonomous — Goose can call them in any order
+
+**Two Runtime Modes:**
+
+```python
+USE_GOOSE = os.getenv("USE_GOOSE", "false").lower() == "true"
+```
+
+| Mode | How It Works | When to Use |
+|------|--------------|-------------|
+| **Goose Mode** (`USE_GOOSE=true`) | Goose subprocess orchestrates tools via stdio | Local development, demonstrating MCP |
+| **Direct Mode** (`USE_GOOSE=false`) | Flask imports tool functions directly | Production, reliable demos |
+
+**Why Direct Mode for Production?**
+
+1. **Subprocess reliability**: Spawning Goose as a subprocess from a web server adds failure points (process crashes, stdio buffering, timeout handling)
+2. **Demo stability**: A failed Goose subprocess during a judge demo is catastrophic
+3. **Same tools, same logic**: Both modes execute identical tool code — the difference is orchestration layer
+4. **Pragmatic engineering**: The architecture proves MCP competence; the deployment choice proves production awareness
+
+**This Is Not Surface-Level Integration:**
+
+| Surface-Level Would Be | What We Actually Did |
+|------------------------|---------------------|
+| Calling Goose API once | Built 5 composable MCP tools |
+| Wrapping existing code in MCP | Designed pipeline around MCP tool boundaries |
+| Config file only | Full stdio transport, JSON-RPC protocol |
+| No local Goose testing | `USE_GOOSE=true` enables real Goose orchestration |
+
+**Judges can verify Goose integration locally** — see README for instructions.
+
 ### Why Vercel (Frontend) + Render (Backend)?
 
 **The Challenge:** We needed separate hosting for React frontend and Flask backend because:
