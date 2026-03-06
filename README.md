@@ -182,6 +182,50 @@ The Flask backend can run in two modes:
 | **Streaming support** | Real-time progress via SSE |
 | **Error recovery** | Goose retries failed tools automatically |
 
+### Why Direct Mode in Production?
+
+Production uses direct tool imports (`USE_GOOSE=false`) for reliability:
+
+| Concern | Direct Mode Solution |
+|---------|---------------------|
+| Subprocess crashes | No subprocess — tools run in-process |
+| Demo stability | No external orchestrator that could fail |
+| Same code paths | Identical tool logic, different orchestration |
+
+**The architecture is Goose-native; the deployment is pragmatic.** See [Decision Log](docs/DECISION_LOG.md) for full rationale.
+
+### Try Goose Mode Locally
+
+Verify the MCP integration works with actual Goose orchestration:
+
+```bash
+# 1. Install Goose (if not already installed)
+pip install goose-ai
+
+# 2. Copy the Goose config
+cp goose_config.yaml ~/.config/goose/config.yaml
+# Edit the path in config.yaml to your actual project location
+
+# 3. Set environment variables
+export OPENROUTER_API_KEY=your_key_here
+export OPENAI_API_KEY=your_key_here
+
+# 4. Test the MCP server directly
+cd mcp_server && python server.py
+# Should print: "Starting EqualTales MCP Server..."
+
+# 5. Run Flask in Goose mode
+cd backend
+USE_GOOSE=true python app.py
+# Should print: "EqualTales API starting in Goose-orchestrated mode"
+```
+
+Or interact with the MCP tools via Goose CLI:
+
+```bash
+goose run --extension equaltales "Classify this stereotype: Girls can't do math"
+```
+
 ---
 
 ## Decision Log
@@ -208,28 +252,28 @@ Key technical choices and tradeoffs:
 
 *Required for AI/ML track — documenting AI tool usage with verification*
 
-### Trace 1: Story Generation
+### Trace 1: Story Generation (Core Product)
 | Field | Content |
 |-------|---------|
-| **Tool** | Claude Opus 4.6 via OpenRouter |
-| **What AI Generated** | 5-page narrative with titles, discussion prompts, activity suggestion |
-| **What I Changed** | Added instruction NOT to describe child's race (handled by diversity system); enforced JSON output |
-| **Verification** | Manual review of 10+ stories; automated QA loop; checked discussion prompts are open-ended |
+| **Tool** | Claude Opus 4.6 via OpenRouter (`generate_story` MCP tool) |
+| **What AI Generated** | 5-page narrative with titles, illustration descriptions, discussion prompts, activity suggestion |
+| **What I Changed** | Added "Do NOT describe child's race" instruction (diversity handled separately); enforced "Discovery, Not Biography" design principle; strict JSON output |
+| **Verification** | Manual review of 10+ stories; automated QA loop (Tool 4); age-appropriateness check per tier |
 
 ### Trace 2: QA Verification
 | Field | Content |
 |-------|---------|
-| **Tool** | Claude Sonnet 4.5 via OpenRouter |
-| **What AI Generated** | Passed/failed status, score 1-10, issues list, strengths |
-| **What I Changed** | Added safe default (passed=true, score=7) on API failure; threshold set at score >= 7 |
+| **Tool** | Claude Sonnet 4.5 via OpenRouter (`verify_story` MCP tool) |
+| **What AI Generated** | Passed/failed status, score 1-10, issues list, strengths, suggestion |
+| **What I Changed** | Safe default (passed=true, score=7) on API failure; 6-point checklist; max tokens reduced to 512 |
 | **Verification** | Compared QA scores with manual review; tested with intentionally problematic stories |
 
 ### Trace 3: Illustration Generation
 | Field | Content |
 |-------|---------|
-| **Tool** | DALL-E 3 via OpenAI API |
-| **What AI Generated** | 1024x1024 watercolor-style children's book illustrations |
-| **What I Changed** | Character description injection for consistency; coral/gold/sage palette to match UI |
+| **Tool** | DALL-E 3 via OpenAI API (`generate_illustration` MCP tool) |
+| **What AI Generated** | 1024×1024 watercolor-style children's book illustrations |
+| **What I Changed** | Decoupled character appearance from story text; 10 diverse appearance templates; coral/gold/sage palette |
 | **Verification** | Visual inspection of 50+ illustrations for age-appropriateness and consistency |
 
 ### Trace 4: Test Scaffolding
@@ -237,16 +281,24 @@ Key technical choices and tradeoffs:
 |-------|---------|
 | **Tool** | Goose AI Agent (Block) with Claude |
 | **What AI Generated** | pytest fixtures, test structure, mock configurations |
-| **What I Changed** | Fixed mock data structures; simplified SSE streaming tests |
+| **What I Changed** | Fixed mock data structures; simplified SSE streaming tests; adjusted charset assertions |
 | **Verification** | 151 backend tests passing; 24 frontend tests passing |
 
 ### Trace 5: Knowledge Base Curation
 | Field | Content |
 |-------|---------|
 | **Tool** | Goose AI Agent (Block) with Claude |
-| **What AI Generated** | Initial list of 50 women with categories, achievements, story angles |
-| **What I Changed** | Verified every fact against Wikipedia/Britannica; rewrote for age-appropriateness |
-| **Verification** | Cross-referenced each achievement with 2+ historical sources |
+| **What AI Generated** | Initial list of 50 women with categories, achievements, fairy_tale_moments, age_adaptations |
+| **What I Changed** | Verified every fact against Wikipedia/Britannica; fixed era typos (Malala, Simone Biles "2997"→"1997"); removed duplicates; ensured all 50 suggested by categories |
+| **Verification** | Cross-referenced each achievement with 2+ sources; automated validation script |
+
+### Trace 6: Frontend + Backend Development
+| Field | Content |
+|-------|---------|
+| **Tool** | Goose AI Agent (Block) with Claude |
+| **What AI Generated** | React components, CSS styling, sound system, parallelization, precomputed classifications |
+| **What I Changed** | Fixed 6/10 precomputed category keys; removed dead code; aligned models; fixed keyboard nav closure bug |
+| **Verification** | End-to-end pipeline testing; manual UI review; all precomputed categories validated against KB |
 
 [Full AI Trace Log →](docs/AI_TRACE_LOG.md)
 

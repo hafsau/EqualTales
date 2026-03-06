@@ -2,65 +2,59 @@
 
 **Project:** EqualTales
 **Team:** Solo Builder
+**Timeline:** Feb 27 – Mar 7, 2026
 
 ---
 
 ## Identified Risks & Mitigations
 
-| Area | Issue Description | Severity | Fix Applied | Evidence/Link | Status |
-|------|-------------------|----------|-------------|---------------|--------|
-| **Security** | API keys (OPENROUTER_API_KEY, OPENAI_API_KEY) initially hardcoded in development | 🔴 Critical | Moved to `.env` file; added `.env` to `.gitignore`; created `.env.example` with placeholder values | `.gitignore:1`, `.env.example` | ✅ Fixed |
-| **Ethics** | AI-generated stories amplify stereotypes 55% more than human-written ones (EMNLP 2025 research) | 🟠 Major | Built QA verification loop using Claude Sonnet 4.5 to detect stereotype reinforcement before displaying story; stories must score 7+/10 | `mcp_server/server.py:352-420` (verify_story tool) | ✅ Fixed |
-| **Performance** | Initial sequential generation took ~150 seconds (classify → match → generate → verify → 5 illustrations) | 🟠 Major | Implemented parallel execution: QA + 5 illustrations run concurrently using ThreadPoolExecutor(max_workers=6); reduced to ~75-90 seconds | `backend/app.py:180-220` | ✅ Fixed |
-| **Privacy** | Potential for storing user data (child names, stereotypes entered) | 🟡 Minor | Privacy by design: no database, no login, no cookies, no analytics; all data exists only in browser session | Architecture decision (no persistence layer) | ✅ Fixed |
-| **Accessibility** | Initial UI lacked ARIA labels on interactive elements | 🟡 Minor | Added `aria-label` to all buttons, inputs, and navigation elements; tested with screen reader | `frontend/src/App.js:393-400` (page dots with aria-label) | ✅ Fixed |
-| **Accessibility** | Color contrast below WCAG AA (4.5:1 for text, 3:1 for large text) | 🟡 Minor | Updated `--text-muted` from #8A7E76 (3.8:1) to #6B605A (5:1); changed primary button from coral to coral-dark (#C4594B) for 4.5:1 ratio | `frontend/src/App.css:12,227` | ✅ Fixed |
-| **Content Safety** | DALL-E could generate inappropriate illustrations for children's book | 🟡 Minor | Prompt engineering: explicit "suitable for ages 3-10" and "children's picture book" in every illustration prompt; DALL-E 3's built-in content filtering | `mcp_server/server.py:454-460` | ✅ Fixed |
-| **Historical Accuracy** | Risk of AI hallucinating facts about real women | 🟠 Major | All 50 women in knowledge base manually verified against established historical record; AI uses only KB data, not general knowledge | `data/women_knowledge_base.json` (curated, verified) | ✅ Fixed |
-| **Character Consistency** | DALL-E generates different-looking children across 5 pages | 🟠 Major | Created detailed character description template injected into every illustration prompt; description includes specific hair, skin, clothing details | `backend/app.py:50-80` (_generate_character_appearance) | ✅ Fixed |
-| **Input Validation** | API crashes on null/malformed inputs (null stereotype, non-integer age, array body) | 🟠 Major | Added comprehensive input validation: type checking before .strip(), try/except for int conversion, dict validation for request body | `backend/app.py:158-175` | ✅ Fixed |
-| **Injection Attacks** | Potential XSS/SQL injection via stereotype or child name fields | 🟡 Minor | No database (no SQL injection possible); React escapes output (XSS protected); added validation tests confirming safe handling | `backend/tests/test_app.py:598-605` | ✅ Fixed |
+| # | Area | Risk | Severity | Mitigation | Status |
+|---|------|------|----------|------------|--------|
+| 1 | **Security** | API keys (OPENROUTER_API_KEY, OPENAI_API_KEY) could be exposed in source code | 🔴 Critical | Moved to `.env` file; added `.env` to `.gitignore`; created `.env.example` with placeholders; Render/Vercel env vars set via dashboard | ✅ Fixed |
+| 2 | **Ethics** | AI-generated stories amplify stereotypes 55% more than human-written ones (EMNLP 2025) | 🟠 Major | Built `verify_story` MCP tool using Claude Sonnet 4.5; stories must score 7+/10; 6-point checklist for stereotype reinforcement, new stereotypes, preachy language, forced biography, unrealistic endings, gendered descriptions | ✅ Fixed |
+| 3 | **Performance** | Sequential pipeline took ~150s (classify → match → generate → verify → 5× illustrate) | 🟠 Major | Parallelized: QA + 5 illustrations run concurrently via `ThreadPoolExecutor(max_workers=6)`; precomputed classifications for 10 example buttons (saves ~5-8s); reduced to ~60-90s total | ✅ Fixed |
+| 4 | **Accuracy** | AI could hallucinate facts about real historical women | 🟠 Major | All 50 women in knowledge base manually verified against Wikipedia/Britannica; AI uses only KB-provided data (achievement, fairy_tale_moment, age_adaptations), not general knowledge | ✅ Fixed |
+| 5 | **Visual** | DALL-E 3 generates different-looking children across 5 pages | 🟠 Major | `_generate_character_appearance()` creates detailed description (skin, hair, clothing) injected into every illustration prompt; 10 diverse appearance templates ensure representation | ✅ Fixed |
+| 6 | **Input** | API crashes on null/malformed inputs (null stereotype, non-integer age, array body) | 🟠 Major | Comprehensive validation: type checking before `.strip()`, `try/except` for int conversion, dict validation for request body, min length 3, max length 500, name truncated to 30 chars | ✅ Fixed |
+| 7 | **Privacy** | Potential for storing/leaking user data (child names, stereotypes) | 🟡 Minor | Privacy by design: no database, no login, no cookies, no analytics; all data exists only in browser session; nothing to breach | ✅ Fixed |
+| 8 | **Accessibility** | UI lacked ARIA labels; color contrast below WCAG AA | 🟡 Minor | Added `aria-label` to all buttons/inputs/navigation; keyboard navigation (arrow keys, spacebar); contrast updated to 4.5:1+ for all text; alt text on all images | ✅ Fixed |
+| 9 | **Content Safety** | DALL-E could generate inappropriate illustrations | 🟡 Minor | Prompt engineering: explicit "suitable for ages 3-10" and "children's picture book" constraints; DALL-E 3's built-in content filtering; `standard` quality (not `hd`) for faster, safer output | ✅ Fixed |
+| 10 | **Injection** | XSS/SQL injection via stereotype or child name fields | 🟡 Minor | No database (no SQL injection possible); React auto-escapes output (XSS protected); input length limits enforced server-side | ✅ Fixed |
+| 11 | **Availability** | DALL-E image URLs expire after ~1 hour | 🟡 Minor | Acceptable for demo scope; would need S3/Cloudinary for production; fallback story with local images saved in `data/fallback/` | Documented |
+| 12 | **Availability** | Render free tier cold-starts (~30s first request) | 🟡 Minor | Health check endpoint keeps service warm; judges warned to expect initial load time | Documented |
+| 13 | **Demo** | APIs fail during live demo | 🟠 Major | Fallback story pre-generated and saved locally (`data/fallback/fallback_story.json` + 5 PNGs); Maya, age 6, "Girls can't do math", Katherine Johnson, QA score 9/10 | ✅ Built |
 
 ---
 
-## Risk Categories Addressed
+## Risk Categories
 
 ### Privacy & Data Protection
 - **No user accounts** — Can't leak what we don't store
 - **No analytics** — No tracking pixels, no third-party scripts
 - **Session-only data** — Stories exist only in browser memory
-- **No child data persistence** — Names/ages used only for generation
+- **No child data persistence** — Names/ages used only for generation, never saved
 
 ### Ethical AI Use
-- **QA verification loop** — Every story checked for stereotype reinforcement
-- **Transparency** — Clear messaging that stories are AI-generated
-- **Human oversight** — Knowledge base manually curated and verified
-- **Inclusive representation** — 10 diverse character appearances, 50 women from varied backgrounds
+- **QA verification loop** — Every story checked for stereotype reinforcement (6-point checklist)
+- **Discovery, Not Biography** — Design principle ensures stories show, don't tell
+- **Human-curated KB** — 50 women manually verified; AI doesn't invent historical facts
+- **Inclusive representation** — 10 diverse character appearances; 50 women from varied backgrounds, eras, and fields
+- **EMNLP 2025 citation** — QA tool grounded in research showing AI amplifies stereotypes
 
 ### Legal & IP Compliance
-- **All dependencies MIT/BSD/Apache licensed** — See Evidence Log
-- **Historical figures in public domain** — No licensing issues
-- **No copyrighted content** — All stories freshly generated
-- **API usage within terms** — OpenRouter, OpenAI TOS compliance
+- **All dependencies permissively licensed** — MIT, BSD-3-Clause, Apache 2.0, SIL OFL
+- **Historical figures in public domain** — No licensing issues for biographical facts
+- **No copyrighted content** — All stories freshly generated per request
+- **API terms compliance** — OpenRouter and OpenAI TOS followed
 
-### Accessibility (WCAG AA Compliant)
-- **Keyboard navigation** — Arrow keys and spacebar for story navigation
+### Accessibility (WCAG AA)
+- **Keyboard navigation** — Arrow keys, spacebar, tab for full app navigation
+- **Touch/swipe** — Mobile gesture support with visual feedback
 - **ARIA labels** — Screen reader support for all interactive elements
-- **WCAG AA contrast** — All text meets 4.5:1 ratio (muted text #6B605A = 5:1, buttons #C4594B = 4.5:1)
-- **Alt text** — All images have descriptive alt attributes
-- **Responsive design** — Mobile-friendly, tested on various screen sizes
-- **Reading level** — UI text at grade-8 level for broad accessibility
-- **Descriptive links** — All links describe their destination
-
----
-
-## Monitoring & Ongoing Risks
-
-| Risk | Mitigation | Monitoring |
-|------|------------|------------|
-| DALL-E image URL expiration (1 hour) | Acceptable for demo; would need image storage for production | Manual testing before demo |
-| OpenRouter rate limits | $80 budget with usage monitoring | OpenRouter dashboard |
-| Story quality variance | QA loop catches worst cases; manual spot-checking | QA scores in companion section |
+- **WCAG AA contrast** — All text meets 4.5:1 ratio minimum
+- **Alt text** — All illustrations have descriptive alt attributes from scene descriptions
+- **Responsive** — 5 breakpoints: 1024px, 768px, 640px, 480px, 375px
+- **Dark mode** — Respects system preference; manual toggle available
 
 ---
 

@@ -1,110 +1,80 @@
 # EqualTales Demo Video Script
 
-**Total Length:** 3:30 - 4:00 minutes
+**Total Length:** 4:00 - 4:30 minutes (trimmed v2)
 **Format:** Screen recording with voiceover
 **Upload:** YouTube (unlisted), captions required
 
 ---
 
-## 1. PROBLEM STATEMENT (45 seconds)
+## 1. PROBLEM STATEMENT (30 seconds)
 
-**[SCREEN: Black screen, then fade into landing page]**
+**[SCREEN: Fade into landing page]**
 
-> "Last week, my five-year-old daughter came home from school and said, 'Mama, my friend told me girls can't be scientists.'
+> "My five-year-old came home and said, 'Mama, girls can't be scientists.' She's five — and already being told what she can't be.
 
-> She's five. And already, she's being told what she can't be.
+**[SCREEN: Show the example buttons grid]**
 
-**[SCREEN: Show the example buttons grid slowly]**
+> By age six, research shows girls rate themselves as less talented than boys. Not because it's true — because that's what they've been told.
 
-> This happens in homes everywhere. 'Girls aren't good at math.' 'Boys are better at sports.' 'Moms have to give up their dreams.' Children absorb these messages before they can even tie their shoes.
-
-> By age six, research shows girls already rate themselves as less talented than boys — not because it's true, but because that's what they've been told.
-
-**[SCREEN: Pause on landing page]**
-
-> Most parents want to push back. But in that moment, when your child looks up at you waiting for an answer... what do you say? 'That's not true' doesn't feel like enough.
-
-> I built EqualTales because every child deserves a better answer."
+> When your child looks up waiting for an answer, 'That's not true' doesn't feel like enough. I built EqualTales because every child deserves a better answer."
 
 ---
 
-## 2. SOLUTION OVERVIEW (50 seconds)
+## 2. SOLUTION OVERVIEW (35 seconds)
 
 **[SCREEN: Landing page hero section]**
 
-> "EqualTales turns stereotypes into stories.
-
-> A mother types what her child said. Our AI finds a real woman from history who lived the opposite of that stereotype. And then, it writes a personalized, illustrated bedtime story where a fictional child — with your child's name — discovers this woman's incredible journey.
+> "EqualTales turns stereotypes into stories. A mother types what her child said, and our AI writes a personalized, illustrated bedtime story featuring a real woman who proved that stereotype wrong.
 
 **[SCREEN: Hover over features - Age 3, Age 6, 5 Pages]**
 
-> Not a lecture. Not a Wikipedia article. A bedtime story — the way children have learned about the world for thousands of years.
-
-**[SCREEN: Show the warm, inviting design]**
-
-> Five pages. Beautiful watercolor illustrations. Discussion prompts to keep the conversation going. And zero friction — no signup, no login, no data stored. Because a mother shouldn't need an account to tell her daughter she can be anything."
+> Five pages. Watercolor illustrations. Discussion prompts. No signup, no login — because a mother shouldn't need an account to tell her daughter she can be anything."
 
 ---
 
-## 3. LIVE DEMO (100 seconds)
+## 3. LIVE DEMO (80 seconds)
 
 **[SCREEN: Click "Try It Now" button]**
 
-> "Let me show you what this looks like."
+> "Let me show you."
 
 **[SCREEN: Input form appears. Click on "Girls can't do math" example button]**
 
-> "Let's take a stereotype I hear constantly: 'Girls can't do math.'"
-
-**[SCREEN: Type "Sofia" in name field, adjust age slider to 5]**
-
-> "I'll personalize this for Sofia, age five. Her name will be woven throughout the story."
+> "Let's take 'Girls can't do math.' I'll personalize it for Sofia, age five."
 
 **[SCREEN: Click "Create My Story" button]**
 
-> "One click — and watch."
+> "One click."
 
 **[SCREEN: Generation progress screen with steps lighting up]**
 
-> "Behind the scenes, Claude — Anthropic's most advanced model — is doing something remarkable. It's not just generating text. It's crafting a narrative arc: from belief... to question... to discovery... to inspiration... to a new belief.
+> "Our AI crafts a narrative arc — from belief, to question, to discovery, to a new belief.
 
-**[SCREEN: Woman reveal card appears with Marie Curie]**
+**[SCREEN: Woman reveal card appears]**
 
-> "And look who Sofia is about to meet — Marie Curie. The first woman to win a Nobel Prize. The only human being to win Nobel Prizes in two different sciences. A woman who was told she didn't belong in a laboratory."
+> "Sofia is about to meet Marie Curie — the only person to win Nobel Prizes in two different sciences.
 
-**[SCREEN: Story appears in storybook viewer]**
+**[SCREEN: Story appears in storybook viewer, click through pages]**
 
-> "Here's our story: 'Sofia and the Glowing Jars.'"
-
-**[SCREEN: Click through pages, pausing on each illustration]**
-
-> "Page one — Sofia hears the stereotype and believes it. Page two — she wanders into a library and discovers a mysterious photograph. Page three — she's transported to Marie Curie's laboratory in Paris, surrounded by jars glowing with radium."
-
-**[SCREEN: Show page 4 and 5]**
-
-> "And by page five, Sofia isn't the same girl. She picks up her pencil. She tries. And when a classmate notices, she says: 'Math has no gender.'"
+> "Page one — Sofia hears the stereotype. Page three — she discovers Marie Curie's laboratory. Page five — she picks up her pencil and tries.
 
 **[SCREEN: Scroll to companion section]**
 
-> "Below the story, we give parents tools to continue: discussion questions like 'Has anyone told you that you couldn't do something?' An activity to do together. And this badge — confirmation that our AI verified this story doesn't accidentally reinforce the very stereotypes we're trying to break."
+> "Below: discussion questions, activities, and a QA badge confirming the story doesn't reinforce stereotypes."
 
 ---
 
-## 4. IMPACT & SDG ALIGNMENT (45 seconds)
+## 4. IMPACT & SDG ALIGNMENT (30 seconds)
 
-**[SCREEN: Return to landing page or show SDG icons]**
+**[SCREEN: Return to landing page]**
 
 > "EqualTales advances three UN Sustainable Development Goals:
 
-> SDG 4: Quality Education — because learning about Marie Curie shouldn't require a trip to the library or a parent who majored in history. Every mother, regardless of her background, can now share these stories.
+> SDG 4: Quality Education — every mother can now share these stories, regardless of background.
 
-> SDG 5: Gender Equality — because we're not waiting until girls are teenagers to address stereotypes. We're meeting them at age three, four, five — when beliefs are still forming.
+> SDG 5: Gender Equality — we're meeting stereotypes at age three, when beliefs are still forming.
 
-> SDG 10: Reduced Inequalities — because our fifty women span every field. Mathematicians. Athletes. Astronauts. Artists. Leaders. Adventurers.
-
-**[SCREEN: Show diverse example buttons]**
-
-> From Katherine Johnson calculating the trajectory to the moon, to Junko Tabei becoming the first woman to summit Everest. Real women. Real stories. Real impact."
+> SDG 10: Reduced Inequalities — fifty women spanning every field, from Katherine Johnson to Junko Tabei. Real women. Real impact."
 
 ---
 
