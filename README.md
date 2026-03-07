@@ -192,7 +192,7 @@ Production uses direct tool imports (`USE_GOOSE=false`) for reliability:
 | Demo stability | No external orchestrator that could fail |
 | Same code paths | Identical tool logic, different orchestration |
 
-**The architecture is Goose-native; the deployment is pragmatic.** See [Decision Log](docs/DECISION_LOG.md) for full rationale.
+**The architecture is Goose-native; the deployment is pragmatic.** See [Decision Log](docs/DECISION_LOG.docx.pdf) for full rationale.
 
 ### Try Goose Mode Locally
 
@@ -244,7 +244,7 @@ Key technical choices and tradeoffs:
 | **50-woman curated KB** | Quality over quantity; manually verified facts | Limited coverage; ensures accuracy |
 | **QA verification loop** | Catches stereotype reinforcement AI typically amplifies | Adds ~3s; essential for ethical credibility |
 
-[Full Decision Log →](docs/DECISION_LOG.md)
+[Full Decision Log →](docs/DECISION_LOG.docx.pdf)
 
 ---
 
@@ -300,7 +300,7 @@ Key technical choices and tradeoffs:
 | **What I Changed** | Fixed 6/10 precomputed category keys; removed dead code; aligned models; fixed keyboard nav closure bug |
 | **Verification** | End-to-end pipeline testing; manual UI review; all precomputed categories validated against KB |
 
-[Full AI Trace Log →](docs/AI_TRACE_LOG.md)
+[Full AI Trace Log →](docs/AI_TRACE_LOG.docx.pdf)
 
 ---
 
@@ -317,7 +317,7 @@ Key technical choices and tradeoffs:
 | **WCAG AA compliance** | Minor | Color contrast 4.5:1+ (#6B605A text, #C4594B buttons); ARIA labels; keyboard nav | ✅ Fixed |
 | **DALL-E URLs expire** | Minor | Acceptable for demo; would need S3/Cloudinary for production | Documented |
 
-[Full Risk Log →](docs/RISK_LOG.md)
+[Full Risk Log →](docs/RISK_LOG.docx.pdf)
 
 ---
 
@@ -352,7 +352,7 @@ Key technical choices and tradeoffs:
 | 13 | Knowledge base (50 women) | Wikipedia, Britannica, biographies | Public domain / Fair use |
 | 14 | Historical achievements | Multiple verified sources per woman | Public domain |
 
-[Full Evidence Log →](docs/EVIDENCE_LOG.md)
+[Full Evidence Log →](docs/EVIDENCE_LOG.pdf)
 
 ---
 
