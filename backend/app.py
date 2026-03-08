@@ -423,7 +423,7 @@ def generate_stream():
 
             # Generate story with GPT-OSS-120B (free tier)
             response = client.chat.completions.create(
-                model="openai/gpt-oss-120b:free",
+                model="google/gemma-3n-e4b-it:free",
                 max_tokens=4000,
                 messages=[{"role": "user", "content": prompt}],
             )
