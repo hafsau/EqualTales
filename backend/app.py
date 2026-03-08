@@ -421,9 +421,9 @@ def generate_stream():
 
             client = get_openrouter_client()
 
-            # Generate story with Opus 4.6 (highest quality for children's stories)
+            # Generate story with GPT-OSS-120B (free tier)
             response = client.chat.completions.create(
-                model="anthropic/claude-opus-4.6",
+                model="openai/gpt-oss-120b:free",
                 max_tokens=4000,
                 messages=[{"role": "user", "content": prompt}],
             )
