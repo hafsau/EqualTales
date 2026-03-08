@@ -147,7 +147,7 @@ def classify_stereotype(stereotype_text: str) -> str:
     client = get_openrouter_client()
 
     response = client.chat.completions.create(
-        model="openai/gpt-oss-120b:free",
+        model="google/gemma-3n-e4b-it:free",
         max_tokens=256,
         messages=[
             {
@@ -343,7 +343,7 @@ Return ONLY a JSON object with this structure:
 Return ONLY valid JSON."""
 
     response = client.chat.completions.create(
-        model="openai/gpt-oss-120b:free",
+        model="google/gemma-3n-e4b-it:free",
         max_tokens=2500,  # Reduced from 4096 - story is ~2000 tokens
         messages=[{"role": "user", "content": prompt}],
     )
@@ -390,7 +390,7 @@ def verify_story(story_pages_json: str, stereotype_text: str) -> str:
     client = get_openrouter_client()
 
     response = client.chat.completions.create(
-        model="openai/gpt-oss-120b:free",
+        model="google/gemma-3n-e4b-it:free",
         max_tokens=512,  # Reduced from 1024 - QA result is ~200 tokens
         messages=[
             {
