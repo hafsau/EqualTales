@@ -10,6 +10,14 @@ A mother types what her child said — "girls can't do math" — and gets a pers
 
 ---
 
+## Award
+
+**Best Use of AI/ML** — CreateHER Fest #75HER Challenge Hackathon 2026
+
+[View Announcement](https://www.linkedin.com/feed/update/urn:li:activity:7439369110162989057/)
+
+---
+
 ## 4-Line Problem Frame
 
 | | |
