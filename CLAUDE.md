@@ -16,6 +16,15 @@ EqualTales is an AI-powered children's story engine for the **CreateHER Fest #75
 | Classification/QA | Claude Sonnet 4.5 via OpenRouter | Model ID: `anthropic/claude-sonnet-4.5` |
 | Illustrations | DALL-E 3 via OpenAI API | 1024x1024, standard quality |
 
+## Hosted Backend
+
+**Production URL**: https://equaltales-api.onrender.com
+
+When asked to "run the backend", always use the hosted Render backend, not the local server. To check if it's running:
+```bash
+curl https://equaltales-api.onrender.com/api/health
+```
+
 ## Architecture
 
 ```
