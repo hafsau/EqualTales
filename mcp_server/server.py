@@ -344,7 +344,7 @@ Return ONLY valid JSON."""
 
     response = client.chat.completions.create(
         model="z-ai/glm-4.5-air:free",
-        max_tokens=2500,  # Reduced from 4096 - story is ~2000 tokens
+        max_tokens=4096,  # GLM needs more tokens for full story
         messages=[{"role": "user", "content": prompt}],
     )
 
