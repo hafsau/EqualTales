@@ -36,6 +36,9 @@ global.IntersectionObserver = class IntersectionObserver {
   unobserve() { return null; }
 };
 
+// Mock Vercel Analytics (manual mock in __mocks__/@vercel/analytics.js)
+jest.mock('@vercel/analytics/react');
+
 // Suppress console errors during tests (optional)
 // const originalError = console.error;
 // beforeAll(() => {
