@@ -471,14 +471,22 @@ Important: This is for a children's picture book about breaking gender stereotyp
             model="gpt-image-1-mini",
             prompt=prompt,
             size="1024x1024",
-            quality="standard",
             n=1,
         )
 
+        # gpt-image-1-mini returns base64, convert to data URL
+        image_data = response.data[0]
+        if hasattr(image_data, 'b64_json') and image_data.b64_json:
+            url = f"data:image/png;base64,{image_data.b64_json}"
+        elif hasattr(image_data, 'url') and image_data.url:
+            url = image_data.url
+        else:
+            raise ValueError("No image data in response")
+
         result = {
-            "url": response.data[0].url,
+            "url": url,
             "page_number": page_number,
-            "revised_prompt": response.data[0].revised_prompt,
+            "revised_prompt": getattr(image_data, 'revised_prompt', None),
             "status": "success",
         }
         logger.info(f"Illustration generated for page {page_number}")
