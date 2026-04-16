@@ -147,7 +147,7 @@ def classify_stereotype(stereotype_text: str) -> str:
     client = get_openrouter_client()
 
     response = client.chat.completions.create(
-        model="arcee/trinity-large-preview:free",
+        model="z-ai/glm-4.5-air:free",
         max_tokens=256,
         messages=[
             {
@@ -343,7 +343,7 @@ Return ONLY a JSON object with this structure:
 Return ONLY valid JSON."""
 
     response = client.chat.completions.create(
-        model="arcee/trinity-large-preview:free",
+        model="z-ai/glm-4.5-air:free",
         max_tokens=4096,
         messages=[{"role": "user", "content": prompt}],
     )
@@ -390,7 +390,7 @@ def verify_story(story_pages_json: str, stereotype_text: str) -> str:
     client = get_openrouter_client()
 
     response = client.chat.completions.create(
-        model="arcee/trinity-large-preview:free",
+        model="z-ai/glm-4.5-air:free",
         max_tokens=512,  # Reduced from 1024 - QA result is ~200 tokens
         messages=[
             {
@@ -468,7 +468,7 @@ Important: This is for a children's picture book about breaking gender stereotyp
 
     try:
         response = client.images.generate(
-            model="gpt-image-1-mini",
+            model="dall-e-3",
             prompt=prompt,
             size="1024x1024",
             quality="standard",
