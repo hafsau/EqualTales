@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
+import { Analytics } from "@vercel/analytics/react";
 import './App.css';
 
 const API_BASE = process.env.REACT_APP_API_URL || 'http://localhost:5001';
@@ -1012,6 +1013,7 @@ function App() {
         />
       )}
     </div>
+    <Analytics />
     </SoundProvider>
   );
 }
