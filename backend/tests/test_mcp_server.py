@@ -88,23 +88,24 @@ class TestClassifyStereotype:
 
     @pytest.fixture
     def mock_client(self):
-        """Mock OpenRouter client."""
+        """Mock Anthropic client."""
         mock = MagicMock()
         response = MagicMock()
-        response.choices = [MagicMock()]
-        response.choices[0].message.content = json.dumps({
+        response.stop_reason = "end_turn"
+        response.content = [MagicMock(type="text", text=json.dumps({
             "primary_category": "girls_cant_do_math",
             "secondary_categories": ["science_is_for_boys"],
             "stereotype_essence": "Belief that math is gender-linked",
             "age_strategy": {"young": "...", "middle": "...", "older": "..."},
             "emotional_tone": "limiting"
-        })
-        mock.chat.completions.create.return_value = response
+        }))]
+        mock.messages.create.return_value = response
+        mock.beta.messages.create.return_value = response
         return mock
 
     def test_returns_json_string(self, mock_client):
         from server import classify_stereotype
-        with patch('server.get_openrouter_client', return_value=mock_client):
+        with patch('server.get_claude_client', return_value=mock_client):
             result = classify_stereotype("Girls can't do math")
             assert isinstance(result, str)
             parsed = json.loads(result)
@@ -112,28 +113,30 @@ class TestClassifyStereotype:
 
     def test_returns_primary_category(self, mock_client):
         from server import classify_stereotype
-        with patch('server.get_openrouter_client', return_value=mock_client):
+        with patch('server.get_claude_client', return_value=mock_client):
             result = json.loads(classify_stereotype("Girls can't do math"))
             assert "primary_category" in result
 
     def test_returns_secondary_categories(self, mock_client):
         from server import classify_stereotype
-        with patch('server.get_openrouter_client', return_value=mock_client):
+        with patch('server.get_claude_client', return_value=mock_client):
             result = json.loads(classify_stereotype("Girls can't do math"))
             assert "secondary_categories" in result
 
-    def test_returns_emotional_tone(self, mock_client):
-        from server import classify_stereotype
-        with patch('server.get_openrouter_client', return_value=mock_client):
-            result = json.loads(classify_stereotype("Girls can't do math"))
-            assert "emotional_tone" in result
+    def test_schema_restricts_to_known_categories(self, mock_client):
+        import server
+        with patch('server.get_claude_client', return_value=mock_client):
+            server.classify_stereotype("Girls can't do math")
+            schema = mock_client.messages.create.call_args.kwargs['output_config']['format']['schema']
+            allowed = schema['properties']['primary_category']['enum']
+            assert set(allowed) == set(server.KNOWLEDGE_BASE["stereotype_categories"])
 
-    def test_uses_sonnet_model(self, mock_client):
-        from server import classify_stereotype
-        with patch('server.get_openrouter_client', return_value=mock_client):
-            classify_stereotype("Girls can't do math")
-            call_args = mock_client.chat.completions.create.call_args
-            assert 'sonnet' in call_args.kwargs['model']
+    def test_uses_fast_model(self, mock_client):
+        import server
+        with patch('server.get_claude_client', return_value=mock_client):
+            server.classify_stereotype("Girls can't do math")
+            call_args = mock_client.messages.create.call_args
+            assert call_args.kwargs['model'] == server.FAST_MODEL
 
 
 # ============================================================
@@ -208,11 +211,11 @@ class TestGenerateStory:
 
     @pytest.fixture
     def mock_client(self):
-        """Mock OpenRouter client for story generation."""
+        """Mock Anthropic client for story generation."""
         mock = MagicMock()
         response = MagicMock()
-        response.choices = [MagicMock()]
-        response.choices[0].message.content = json.dumps({
+        response.stop_reason = "end_turn"
+        response.content = [MagicMock(type="text", text=json.dumps({
             "title": "Test Story",
             "pages": [
                 {"page_number": i+1, "page_title": t, "text": f"Page {i+1}", "illustration_description": f"Scene {i+1}"}
@@ -222,13 +225,14 @@ class TestGenerateStory:
             "real_woman_achievement": "NASA mathematician",
             "discussion_prompts": ["Q1?", "Q2?", "Q3?"],
             "activity_suggestion": "Try counting!"
-        })
-        mock.chat.completions.create.return_value = response
+        }))]
+        mock.messages.create.return_value = response
+        mock.beta.messages.create.return_value = response
         return mock
 
     def test_returns_json_string(self, mock_client):
         from server import generate_story
-        with patch('server.get_openrouter_client', return_value=mock_client):
+        with patch('server.get_claude_client', return_value=mock_client):
             result = generate_story(
                 stereotype_text="Girls can't do math",
                 child_name="Lily",
@@ -245,7 +249,7 @@ class TestGenerateStory:
 
     def test_returns_title(self, mock_client):
         from server import generate_story
-        with patch('server.get_openrouter_client', return_value=mock_client):
+        with patch('server.get_claude_client', return_value=mock_client):
             result = json.loads(generate_story(
                 stereotype_text="Girls can't do math",
                 child_name="Lily",
@@ -260,7 +264,7 @@ class TestGenerateStory:
 
     def test_returns_5_pages(self, mock_client):
         from server import generate_story
-        with patch('server.get_openrouter_client', return_value=mock_client):
+        with patch('server.get_claude_client', return_value=mock_client):
             result = json.loads(generate_story(
                 stereotype_text="Girls can't do math",
                 child_name="Lily",
@@ -275,7 +279,7 @@ class TestGenerateStory:
 
     def test_pages_have_required_fields(self, mock_client):
         from server import generate_story
-        with patch('server.get_openrouter_client', return_value=mock_client):
+        with patch('server.get_claude_client', return_value=mock_client):
             result = json.loads(generate_story(
                 stereotype_text="Girls can't do math",
                 child_name="Lily",
@@ -294,7 +298,7 @@ class TestGenerateStory:
 
     def test_returns_discussion_prompts(self, mock_client):
         from server import generate_story
-        with patch('server.get_openrouter_client', return_value=mock_client):
+        with patch('server.get_claude_client', return_value=mock_client):
             result = json.loads(generate_story(
                 stereotype_text="Girls can't do math",
                 child_name="Lily",
@@ -308,10 +312,11 @@ class TestGenerateStory:
             assert "discussion_prompts" in result
             assert len(result["discussion_prompts"]) == 3
 
-    def test_uses_opus_model(self, mock_client):
-        from server import generate_story
-        with patch('server.get_openrouter_client', return_value=mock_client):
-            generate_story(
+    def test_uses_story_model(self, mock_client):
+        import server
+        with patch('server.get_claude_client', return_value=mock_client), \
+             patch('server.STORY_MODEL', 'claude-opus-5-5'):
+            server.generate_story(
                 stereotype_text="Girls can't do math",
                 child_name="Lily",
                 child_age=6,
@@ -321,8 +326,10 @@ class TestGenerateStory:
                 woman_age_adaptation="...",
                 counter_message="..."
             )
-            call_args = mock_client.chat.completions.create.call_args
-            assert 'opus' in call_args.kwargs['model']
+            # Opus 5.5 supports refusal fallbacks, so the call goes through beta.messages
+            call_args = mock_client.beta.messages.create.call_args
+            assert call_args.kwargs['model'] == 'claude-opus-5-5'
+            assert call_args.kwargs['fallbacks'] == 'default'
 
 
 # ============================================================
@@ -334,18 +341,19 @@ class TestVerifyStory:
 
     @pytest.fixture
     def mock_client(self):
-        """Mock OpenRouter client for QA."""
+        """Mock Anthropic client for QA."""
         mock = MagicMock()
         response = MagicMock()
-        response.choices = [MagicMock()]
-        response.choices[0].message.content = json.dumps({
+        response.stop_reason = "end_turn"
+        response.content = [MagicMock(type="text", text=json.dumps({
             "passed": True,
             "score": 9,
             "issues": [],
             "strengths": ["Good story flow", "Age-appropriate language"],
             "suggestion": None
-        })
-        mock.chat.completions.create.return_value = response
+        }))]
+        mock.messages.create.return_value = response
+        mock.beta.messages.create.return_value = response
         return mock
 
     @pytest.fixture
@@ -360,7 +368,7 @@ class TestVerifyStory:
 
     def test_returns_json_string(self, mock_client, sample_pages_json):
         from server import verify_story
-        with patch('server.get_openrouter_client', return_value=mock_client):
+        with patch('server.get_claude_client', return_value=mock_client):
             result = verify_story(sample_pages_json, "Girls can't do math")
             assert isinstance(result, str)
             parsed = json.loads(result)
@@ -368,35 +376,35 @@ class TestVerifyStory:
 
     def test_returns_passed_boolean(self, mock_client, sample_pages_json):
         from server import verify_story
-        with patch('server.get_openrouter_client', return_value=mock_client):
+        with patch('server.get_claude_client', return_value=mock_client):
             result = json.loads(verify_story(sample_pages_json, "Girls can't do math"))
             assert "passed" in result
             assert isinstance(result["passed"], bool)
 
     def test_returns_score(self, mock_client, sample_pages_json):
         from server import verify_story
-        with patch('server.get_openrouter_client', return_value=mock_client):
+        with patch('server.get_claude_client', return_value=mock_client):
             result = json.loads(verify_story(sample_pages_json, "Girls can't do math"))
             assert "score" in result
             assert 1 <= result["score"] <= 10
 
     def test_returns_issues_list(self, mock_client, sample_pages_json):
         from server import verify_story
-        with patch('server.get_openrouter_client', return_value=mock_client):
+        with patch('server.get_claude_client', return_value=mock_client):
             result = json.loads(verify_story(sample_pages_json, "Girls can't do math"))
             assert "issues" in result
             assert isinstance(result["issues"], list)
 
     def test_returns_strengths_list(self, mock_client, sample_pages_json):
         from server import verify_story
-        with patch('server.get_openrouter_client', return_value=mock_client):
+        with patch('server.get_claude_client', return_value=mock_client):
             result = json.loads(verify_story(sample_pages_json, "Girls can't do math"))
             assert "strengths" in result
             assert isinstance(result["strengths"], list)
 
     def test_handles_invalid_json_input(self, mock_client):
         from server import verify_story
-        with patch('server.get_openrouter_client', return_value=mock_client):
+        with patch('server.get_claude_client', return_value=mock_client):
             # Should not crash
             result = json.loads(verify_story("not valid json", "Girls can't do math"))
             assert "passed" in result
@@ -404,16 +412,16 @@ class TestVerifyStory:
     def test_handles_nested_pages_object(self, mock_client):
         from server import verify_story
         nested = json.dumps({"pages": [{"page_number": 1, "text": "Test"}]})
-        with patch('server.get_openrouter_client', return_value=mock_client):
+        with patch('server.get_claude_client', return_value=mock_client):
             result = json.loads(verify_story(nested, "Girls can't do math"))
             assert "passed" in result
 
-    def test_uses_sonnet_model(self, mock_client, sample_pages_json):
-        from server import verify_story
-        with patch('server.get_openrouter_client', return_value=mock_client):
-            verify_story(sample_pages_json, "Girls can't do math")
-            call_args = mock_client.chat.completions.create.call_args
-            assert 'sonnet' in call_args.kwargs['model']
+    def test_uses_fast_model(self, mock_client, sample_pages_json):
+        import server
+        with patch('server.get_claude_client', return_value=mock_client):
+            server.verify_story(sample_pages_json, "Girls can't do math")
+            call_args = mock_client.messages.create.call_args
+            assert call_args.kwargs['model'] == server.FAST_MODEL
 
 
 # ============================================================
@@ -487,7 +495,8 @@ class TestGenerateIllustration:
             assert result["status"] == "failed"
             assert "error" in result
 
-    def test_uses_dalle3_model(self, mock_client):
+    def test_uses_configured_image_model(self, mock_client):
+        import server
         from server import generate_illustration
         with patch('server.get_openai_client', return_value=mock_client):
             generate_illustration(
@@ -495,7 +504,7 @@ class TestGenerateIllustration:
                 page_number=1
             )
             call_args = mock_client.images.generate.call_args
-            assert call_args.kwargs['model'] == 'dall-e-3'
+            assert call_args.kwargs['model'] == server.IMAGE_MODEL
 
     def test_uses_1024x1024_size(self, mock_client):
         from server import generate_illustration
@@ -564,3 +573,71 @@ class TestKnowledgeBase:
             assert "young" in adaptations
             assert "middle" in adaptations
             assert "older" in adaptations
+
+
+# ============================================================
+# CLAUDE CALL SAFETY CHECKS
+# ============================================================
+
+class TestClaudeJsonSafetyChecks:
+    """_claude_json must fail loudly and clearly, never with a cryptic crash."""
+
+    SCHEMA = {"type": "object", "properties": {"a": {"type": "string"}}, "required": ["a"], "additionalProperties": False}
+
+    def _client(self, stop_reason="end_turn", text='{"a": "b"}'):
+        mock = MagicMock()
+        response = MagicMock()
+        response.stop_reason = stop_reason
+        response.content = [MagicMock(type="thinking"), MagicMock(type="text", text=text)]
+        mock.messages.create.return_value = response
+        mock.beta.messages.create.return_value = response
+        return mock
+
+    def test_returns_parsed_json_and_skips_thinking_blocks(self):
+        import server
+        with patch('server.get_claude_client', return_value=self._client()):
+            assert server._claude_json("p", self.SCHEMA, "claude-haiku-5-5", "low", 100) == {"a": "b"}
+
+    def test_empty_response_raises_clear_error(self):
+        # The live site crashed with "JSON object must be str ... not NoneType" here
+        import server
+        with patch('server.get_claude_client', return_value=self._client(text="")):
+            with pytest.raises(RuntimeError, match="empty response"):
+                server._claude_json("p", self.SCHEMA, "claude-haiku-5-5", "low", 100)
+
+    def test_truncated_response_raises_clear_error(self):
+        import server
+        with patch('server.get_claude_client', return_value=self._client(stop_reason="max_tokens")):
+            with pytest.raises(RuntimeError, match="cut off"):
+                server._claude_json("p", self.SCHEMA, "claude-haiku-5-5", "low", 100)
+
+    def test_refusal_raises_clear_error(self):
+        import server
+        with patch('server.get_claude_client', return_value=self._client(stop_reason="refusal")):
+            with pytest.raises(RuntimeError, match="declined"):
+                server._claude_json("p", self.SCHEMA, "claude-haiku-5-5", "low", 100)
+
+    def test_sends_schema_and_effort(self):
+        import server
+        client = self._client()
+        with patch('server.get_claude_client', return_value=client):
+            server._claude_json("p", self.SCHEMA, "claude-haiku-5-5", "low", 100)
+        output_config = client.messages.create.call_args.kwargs["output_config"]
+        assert output_config == {"effort": "low", "format": {"type": "json_schema", "schema": self.SCHEMA}}
+
+    def test_fallbacks_only_on_supported_models(self):
+        import server
+        client = self._client()
+        with patch('server.get_claude_client', return_value=client):
+            server._claude_json("p", self.SCHEMA, "claude-opus-5-5", "medium", 100)
+            server._claude_json("p", self.SCHEMA, "claude-haiku-5-5", "low", 100)
+        assert client.beta.messages.create.call_args.kwargs["model"] == "claude-opus-5-5"
+        assert client.messages.create.call_args.kwargs["model"] == "claude-haiku-5-5"
+        assert "fallbacks" not in client.messages.create.call_args.kwargs
+
+    def test_missing_api_key_raises_clear_error(self, monkeypatch):
+        import server
+        monkeypatch.delenv("ANTHROPIC_API_KEY", raising=False)
+        monkeypatch.setattr(server, "_claude_client", None)
+        with pytest.raises(RuntimeError, match="ANTHROPIC_API_KEY is not set"):
+            server.get_claude_client()

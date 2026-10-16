@@ -331,15 +331,15 @@ def check_env_file() -> CheckResult:
             passed=False,
             message=".env file not found",
             duration=time.time() - start,
-            details="Create .env with OPENROUTER_API_KEY and OPENAI_API_KEY",
+            details="Create .env with ANTHROPIC_API_KEY and OPENAI_API_KEY",
         )
 
     with open(env_path) as f:
         content = f.read()
 
     missing = []
-    if "OPENROUTER_API_KEY" not in content:
-        missing.append("OPENROUTER_API_KEY")
+    if "ANTHROPIC_API_KEY" not in content:
+        missing.append("ANTHROPIC_API_KEY")
     if "OPENAI_API_KEY" not in content:
         missing.append("OPENAI_API_KEY")
 

@@ -153,60 +153,6 @@ def sample_illustration_result():
 # ============================================================
 
 @pytest.fixture
-def mock_openrouter_client():
-    """Mock OpenRouter client for Claude API calls."""
-    mock_client = MagicMock()
-
-    def create_completion(*args, **kwargs):
-        response = MagicMock()
-        response.choices = [MagicMock()]
-
-        # Determine what kind of response based on the model
-        model = kwargs.get('model', '')
-        messages = kwargs.get('messages', [{}])
-        content = messages[0].get('content', '') if messages else ''
-
-        if 'sonnet' in model and 'Analyze this stereotype' in content:
-            # Classification response
-            response.choices[0].message.content = json.dumps({
-                "primary_category": "girls_cant_do_math",
-                "secondary_categories": ["science_is_for_boys"],
-                "stereotype_essence": "Belief that math is for boys",
-                "age_strategy": {"young": "...", "middle": "...", "older": "..."},
-                "emotional_tone": "limiting"
-            })
-        elif 'opus' in model:
-            # Story generation response
-            response.choices[0].message.content = json.dumps({
-                "title": "Test Story",
-                "pages": [
-                    {"page_number": i+1, "page_title": t, "text": f"Page {i+1} text.", "illustration_description": f"Scene {i+1}"}
-                    for i, t in enumerate(["The Belief", "The Question", "The Discovery", "The Inspiration", "The New Belief"])
-                ],
-                "real_woman_name": "Katherine Johnson",
-                "real_woman_achievement": "NASA mathematician",
-                "discussion_prompts": ["Q1?", "Q2?", "Q3?"],
-                "activity_suggestion": "Try counting!"
-            })
-        elif 'sonnet' in model and 'stereotype detection' in content.lower():
-            # QA verification response
-            response.choices[0].message.content = json.dumps({
-                "passed": True,
-                "score": 9,
-                "issues": [],
-                "strengths": ["Good story"],
-                "suggestion": None
-            })
-        else:
-            response.choices[0].message.content = "{}"
-
-        return response
-
-    mock_client.chat.completions.create = MagicMock(side_effect=create_completion)
-    return mock_client
-
-
-@pytest.fixture
 def mock_openai_client():
     """Mock OpenAI client for DALL-E calls."""
     mock_client = MagicMock()

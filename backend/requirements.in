@@ -1,0 +1,11 @@
+# Direct dependencies. requirements.txt is the fully pinned lock generated from this file:
+#   python3.11 -m venv /tmp/lock && /tmp/lock/bin/pip install -r requirements.in
+#   /tmp/lock/bin/pip freeze > requirements.txt
+# Upgrade deliberately: bump a version here, regenerate, run the tests, then commit both files.
+flask==3.1.3
+flask-cors==6.0.5
+anthropic==1.15.0
+openai==3.31.0
+python-dotenv==1.2.4
+gunicorn==26.2.0
+fastmcp==4.1.0

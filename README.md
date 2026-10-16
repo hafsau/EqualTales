@@ -51,9 +51,11 @@ echo "Terminal 2: cd frontend && npm install && npm start"
 
 ### .env.example
 ```
-OPENROUTER_API_KEY=sk-or-your-key-here
+ANTHROPIC_API_KEY=sk-ant-your-key-here
 OPENAI_API_KEY=sk-proj-your-key-here
 ```
+Models are pinned in code and can be overridden with `CLAUDE_STORY_MODEL`, `CLAUDE_FAST_MODEL` and `IMAGE_MODEL` (see `.env.example`).
+Python dependencies are fully pinned in `backend/requirements.txt` (generated from `backend/requirements.in`).
 
 Open http://localhost:3000 → Click "Try It Now" → Select a stereotype → Generate!
 
@@ -71,9 +73,9 @@ EqualTales generates personalized, illustrated children's stories that counter s
 | Frontend | React 18.2 | Single-page application with storybook UI |
 | Backend | Flask 3.0 | REST API with SSE streaming |
 | AI Agent | Goose + FastMCP | MCP tool orchestration |
-| Story Generation | Claude Opus 4.6 | High-quality creative writing |
-| Classification/QA | Claude Sonnet 4.5 | Fast analytical tasks |
-| Illustrations | DALL-E 3 | Children's book watercolor style |
+| Story Generation | Claude Opus 5.5 (`claude-opus-5-5`) via Anthropic API | High-quality creative writing |
+| Classification/QA | Claude Haiku 5.5 (`claude-haiku-5-5`) via Anthropic API | Fast analytical tasks |
+| Illustrations | OpenAI `gpt-image-1-mini` | Children's book watercolor style |
 
 ### Dependencies
 
@@ -119,11 +121,11 @@ react-scripts: 5.0.1
 │  │  ┌─────────────────────────────────────────────────┐  │   │
 │  │  │  5 MCP TOOLS (stdio transport, JSON-RPC 2.0)    │  │   │
 │  │  │                                                  │  │   │
-│  │  │  1. classify_stereotype  ──→ Claude Sonnet 4.5  │  │   │
+│  │  │  1. classify_stereotype  ──→ Claude Haiku 5.5   │  │   │
 │  │  │  2. match_real_woman     ──→ Local KB (50 women)│  │   │
-│  │  │  3. generate_story       ──→ Claude Opus 4.6    │  │   │
-│  │  │  4. verify_story         ──→ Claude Sonnet 4.5  │  │   │
-│  │  │  5. generate_illustration──→ DALL-E 3           │  │   │
+│  │  │  3. generate_story       ──→ Claude Opus 5.5    │  │   │
+│  │  │  4. verify_story         ──→ Claude Haiku 5.5   │  │   │
+│  │  │  5. generate_illustration──→ gpt-image-1-mini   │  │   │
 │  │  └─────────────────────────────────────────────────┘  │   │
 │  └───────────────────────────────────────────────────────┘   │
 └─────────────────────────┬───────────────────────────────────┘
@@ -131,10 +133,10 @@ react-scripts: 5.0.1
         ┌─────────────────┼─────────────────┐
         ▼                 ▼                 ▼
 ┌──────────────┐  ┌──────────────┐  ┌──────────────┐
-│   Claude     │  │   Claude     │  │   DALL-E 3   │
-│  Opus 4.6    │  │  Sonnet 4.5  │  │   (OpenAI)   │
+│   Claude     │  │   Claude     │  │ gpt-image-1  │
+│  Opus 5.5    │  │  Haiku 5.5   │  │   (OpenAI)   │
 │  (Stories)   │  │  (QA/Class)  │  │ (Illustrations)│
-│  OpenRouter  │  │  OpenRouter  │  │              │
+│  Anthropic   │  │  Anthropic   │  │              │
 └──────────────┘  └──────────────┘  └──────────────┘
 ```
 
@@ -161,11 +163,11 @@ extensions:
 
 | Tool | Model | Purpose | Latency |
 |------|-------|---------|---------|
-| `classify_stereotype` | Claude Sonnet 4.5 | Categorize stereotype into 14 categories | ~3s |
+| `classify_stereotype` | Claude Haiku 5.5 | Categorize stereotype into 14 categories (schema-enforced) | fast |
 | `match_real_woman` | Local KB | Find best-matching woman from 50-entry knowledge base | <0.1s |
-| `generate_story` | Claude Opus 4.6 | Create 5-page narrative with illustrations descriptions | ~57s |
-| `verify_story` | Claude Sonnet 4.5 | QA check for stereotype reinforcement | ~5s |
-| `generate_illustration` | DALL-E 3 | Create watercolor children's book illustration | ~15s |
+| `generate_story` | Claude Opus 5.5 | Create 5-page narrative with illustration descriptions (schema-enforced JSON) | slowest step |
+| `verify_story` | Claude Haiku 5.5 | QA check for stereotype reinforcement | fast |
+| `generate_illustration` | gpt-image-1-mini | Create watercolor children's book illustration | ~12s each, 5 in parallel |
 
 ### How Goose Orchestrates
 
@@ -175,7 +177,7 @@ When Goose receives a stereotype input, it autonomously:
 2. **Matches** a real woman → finds inspiring counter-example from KB
 3. **Generates** the story → creates age-appropriate 5-page narrative
 4. **Verifies** (parallel) → ensures no stereotype reinforcement
-5. **Illustrates** (parallel) → generates 5 DALL-E images concurrently
+5. **Illustrates** (parallel) → generates 5 images concurrently
 
 The Flask backend can run in two modes:
 - **Direct mode**: Imports MCP tools directly (current production)
@@ -215,7 +217,7 @@ cp goose_config.yaml ~/.config/goose/config.yaml
 # Edit the path in config.yaml to your actual project location
 
 # 3. Set environment variables
-export OPENROUTER_API_KEY=your_key_here
+export ANTHROPIC_API_KEY=your_key_here
 export OPENAI_API_KEY=your_key_here
 
 # 4. Test the MCP server directly

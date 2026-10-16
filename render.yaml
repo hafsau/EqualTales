@@ -8,12 +8,20 @@ services:
     region: oregon
     plan: free
     buildCommand: pip install -r backend/requirements.txt
-    startCommand: cd backend && gunicorn app:app --bind 0.0.0.0:$PORT --timeout 180 --workers 2
+    # Threads let one worker serve several long-running SSE story streams at once
+    startCommand: cd backend && gunicorn app:app --bind 0.0.0.0:$PORT --timeout 300 --workers 2 --threads 4
     envVars:
       - key: PYTHON_VERSION
         value: "3.11.0"
-      - key: OPENROUTER_API_KEY
+      - key: ANTHROPIC_API_KEY
         sync: false  # Must be set manually in Render dashboard
       - key: OPENAI_API_KEY
         sync: false  # Must be set manually in Render dashboard
+      # Pinned models — change here (or in the dashboard) rather than in code
+      - key: CLAUDE_STORY_MODEL
+        value: claude-opus-5-5
+      - key: CLAUDE_FAST_MODEL
+        value: claude-haiku-5-5
+      - key: IMAGE_MODEL
+        value: gpt-image-1-mini
     healthCheckPath: /api/health

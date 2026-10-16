@@ -9,7 +9,7 @@ anti-stereotype children's story generation pipeline:
 2. match_real_woman - Find the best real-life woman from the knowledge base
 3. generate_story - Write a 5-page illustrated children's story
 4. verify_story - QA check for inadvertent stereotype reinforcement
-5. generate_illustration - Create a children's book illustration via DALL-E 3
+5. generate_illustration - Create a children's book illustration via an OpenAI image model
 
 Goose orchestrates these tools autonomously through its agent loop.
 """
@@ -39,6 +39,18 @@ logger = logging.getLogger("equaltales")
 # Load environment variables
 load_dotenv()
 
+# ============================================================
+# MODEL CONFIGURATION
+# Pinned model IDs, overridable in .env without touching code
+# ============================================================
+STORY_MODEL = os.getenv("CLAUDE_STORY_MODEL", "claude-opus-5-5")   # writes the story
+FAST_MODEL = os.getenv("CLAUDE_FAST_MODEL", "claude-haiku-5-5")    # classify + QA
+STORY_EFFORT = os.getenv("CLAUDE_STORY_EFFORT", "medium")          # low | medium | high
+IMAGE_MODEL = os.getenv("IMAGE_MODEL", "gpt-image-1-mini")
+
+# Models that accept server-side refusal fallbacks ("default" routing)
+_FALLBACK_MODELS = {"claude-opus-5-5", "claude-opus-5", "claude-fable-5-1", "claude-sonnet-5-5"}
+
 # Initialize MCP server
 mcp = FastMCP("EqualTales — Anti-Stereotype Story Engine")
 
@@ -60,25 +72,55 @@ except FileNotFoundError:
 # LAZY API CLIENT INITIALIZATION
 # (Only created when a tool that needs them is called)
 # ============================================================
-_openrouter_client = None
+_claude_client = None
 _openai_client = None
 
 
-def get_openrouter_client():
-    """Get OpenRouter client for Claude API calls (OpenAI-compatible format)."""
-    global _openrouter_client
-    if _openrouter_client is None:
-        from openai import OpenAI
-        _openrouter_client = OpenAI(
-            base_url="https://openrouter.ai/api/v1",
-            api_key=os.getenv("OPENROUTER_API_KEY"),
+def get_claude_client():
+    """Get Anthropic client for the Claude text tools."""
+    global _claude_client
+    if _claude_client is None:
+        if not os.getenv("ANTHROPIC_API_KEY"):
+            raise RuntimeError("ANTHROPIC_API_KEY is not set. Add it to .env (or the Render dashboard).")
+        import anthropic
+        # Keep the worst case (timeout x attempts) inside gunicorn's request timeout
+        _claude_client = anthropic.Anthropic(timeout=120.0, max_retries=1)
+        logger.info(f"Initialized Anthropic client (story={STORY_MODEL}, fast={FAST_MODEL})")
+    return _claude_client
+
+
+def _claude_json(prompt: str, schema: dict, model: str, effort: str, max_tokens: int) -> dict:
+    """Call Claude and return the JSON object it produced.
+
+    Structured outputs guarantee schema-valid JSON, so the checks below only
+    cover the ways a call can still come back without a usable answer.
+    """
+    client = get_claude_client()
+    kwargs = dict(
+        model=model,
+        max_tokens=max_tokens,
+        output_config={"effort": effort, "format": {"type": "json_schema", "schema": schema}},
+        messages=[{"role": "user", "content": prompt}],
+    )
+    if model in _FALLBACK_MODELS:
+        response = client.beta.messages.create(
+            betas=["server-side-fallback-2026-07-01"], fallbacks="default", **kwargs
         )
-        logger.info("Initialized OpenRouter client")
-    return _openrouter_client
+    else:
+        response = client.messages.create(**kwargs)
+
+    if response.stop_reason == "refusal":
+        raise RuntimeError("The AI declined this request. Please try rephrasing the stereotype.")
+    if response.stop_reason == "max_tokens":
+        raise RuntimeError(f"The AI response was cut off ({model}, max_tokens={max_tokens}). Please try again.")
+    text = "".join(block.text for block in response.content if block.type == "text")
+    if not text.strip():
+        raise RuntimeError(f"The AI returned an empty response ({model}). Please try again.")
+    return json.loads(text)
 
 
 def get_openai_client():
-    """Get OpenAI client for DALL-E 3 illustration generation."""
+    """Get OpenAI client for illustration generation."""
     global _openai_client
     if _openai_client is None:
         from openai import OpenAI
@@ -98,6 +140,8 @@ def _get_age_group(age: int) -> str:
 
 def _parse_json_response(text: str) -> dict:
     """Extract JSON from Claude response, handling markdown code blocks."""
+    if not text:
+        raise ValueError("Empty response from model")
     # Try direct parse first
     try:
         return json.loads(text)
@@ -144,28 +188,32 @@ def classify_stereotype(stereotype_text: str) -> str:
     logger.info(f"Classifying stereotype: {stereotype_text}")
 
     categories = list(KNOWLEDGE_BASE["stereotype_categories"].keys())
-    client = get_openrouter_client()
+    # The enum guarantees the model can only answer with a real category
+    category_type = {"type": "string", "enum": categories} if categories else {"type": "string"}
+    schema = {
+        "type": "object",
+        "properties": {
+            "primary_category": category_type,
+            "secondary_categories": {"type": "array", "items": category_type},
+        },
+        "required": ["primary_category", "secondary_categories"],
+        "additionalProperties": False,
+    }
 
-    response = client.chat.completions.create(
-        model="openrouter/free",
-        max_tokens=256,
-        messages=[
-            {
-                "role": "user",
-                "content": f"""Classify this stereotype into one of these categories: {json.dumps(categories)}
+    result = _claude_json(
+        prompt=f"""Classify this stereotype into one of these categories: {json.dumps(categories)}
 
 Stereotype: "{stereotype_text}"
 
 Return JSON with:
 1. "primary_category": best matching category from the list
-2. "secondary_categories": array of 0-2 other relevant categories
-
-Return ONLY valid JSON.""",
-            }
-        ],
+2. "secondary_categories": array of 0-2 other relevant categories""",
+        schema=schema,
+        model=FAST_MODEL,
+        effort="low",
+        max_tokens=2000,
     )
-
-    result = _parse_json_response(response.choices[0].message.content)
+    result["secondary_categories"] = result.get("secondary_categories", [])[:2]
     logger.info(f"Classification result: primary={result.get('primary_category')}")
     return json.dumps(result, indent=2)
 
@@ -253,6 +301,36 @@ def match_real_woman(primary_category: str, secondary_categories: str = "[]") ->
 # ============================================================
 # TOOL 3: GENERATE STORY
 # ============================================================
+_STORY_PAGE_SCHEMA = {
+    "type": "object",
+    "properties": {
+        "page_number": {"type": "integer"},
+        "page_title": {"type": "string"},
+        "text": {"type": "string"},
+        "illustration_description": {"type": "string"},
+    },
+    "required": ["page_number", "page_title", "text", "illustration_description"],
+    "additionalProperties": False,
+}
+
+STORY_SCHEMA = {
+    "type": "object",
+    "properties": {
+        "title": {"type": "string"},
+        "pages": {"type": "array", "items": _STORY_PAGE_SCHEMA},
+        "real_woman_name": {"type": "string"},
+        "real_woman_achievement": {"type": "string"},
+        "discussion_prompts": {"type": "array", "items": {"type": "string"}},
+        "activity_suggestion": {"type": "string"},
+    },
+    "required": [
+        "title", "pages", "real_woman_name", "real_woman_achievement",
+        "discussion_prompts", "activity_suggestion",
+    ],
+    "additionalProperties": False,
+}
+
+
 @mcp.tool()
 def generate_story(
     stereotype_text: str,
@@ -288,7 +366,6 @@ def generate_story(
     logger.info(f"Generating story: {child_name} (age {child_age}) + {woman_name}")
 
     age_group = _get_age_group(child_age)
-    client = get_openrouter_client()
 
     prompt = f"""You are a children's story writer creating an anti-stereotype story. Write a 5-page illustrated children's story.
 
@@ -342,13 +419,13 @@ Return ONLY a JSON object with this structure:
 
 Return ONLY valid JSON."""
 
-    response = client.chat.completions.create(
-        model="openrouter/free",
-        max_tokens=4096,
-        messages=[{"role": "user", "content": prompt}],
+    result = _claude_json(
+        prompt=prompt,
+        schema=STORY_SCHEMA,
+        model=STORY_MODEL,
+        effort=STORY_EFFORT,
+        max_tokens=16000,
     )
-
-    result = _parse_json_response(response.choices[0].message.content)
     logger.info(f"Story generated: '{result.get('title')}' with {len(result.get('pages', []))} pages")
     return json.dumps(result, indent=2)
 
@@ -387,15 +464,21 @@ def verify_story(story_pages_json: str, stereotype_text: str) -> str:
         [f"Page {p.get('page_number', i+1)} — {p.get('page_title', '')}: {p.get('text', '')}" for i, p in enumerate(pages)]
     )
 
-    client = get_openrouter_client()
+    schema = {
+        "type": "object",
+        "properties": {
+            "passed": {"type": "boolean"},
+            "score": {"type": "integer"},
+            "issues": {"type": "array", "items": {"type": "string"}},
+            "strengths": {"type": "array", "items": {"type": "string"}},
+            "suggestion": {"type": "string"},
+        },
+        "required": ["passed", "score", "issues", "strengths", "suggestion"],
+        "additionalProperties": False,
+    }
 
-    response = client.chat.completions.create(
-        model="openrouter/free",
-        max_tokens=512,  # Reduced from 1024 - QA result is ~200 tokens
-        messages=[
-            {
-                "role": "user",
-                "content": f"""You are a stereotype detection system for children's content. Analyze this story that was generated to counter the stereotype: "{stereotype_text}"
+    result = _claude_json(
+        prompt=f"""You are a stereotype detection system for children's content. Analyze this story that was generated to counter the stereotype: "{stereotype_text}"
 
 STORY TEXT:
 {story_text}
@@ -414,15 +497,15 @@ Return a JSON object:
   "score": 1-10 (10 = perfect),
   "issues": ["list of any issues found"],
   "strengths": ["list of things done well"],
-  "suggestion": "one brief improvement suggestion if score < 8, otherwise null"
-}}
-
-Return ONLY valid JSON.""",
-            }
-        ],
+  "suggestion": "one brief improvement suggestion if score < 8, otherwise an empty string"
+}}""",
+        schema=schema,
+        model=FAST_MODEL,
+        effort="low",
+        max_tokens=4000,
     )
-
-    result = _parse_json_response(response.choices[0].message.content)
+    # The frontend expects null when there is no suggestion
+    result["suggestion"] = result.get("suggestion") or None
     logger.info(f"QA result: passed={result.get('passed')}, score={result.get('score')}")
     return json.dumps(result, indent=2)
 
@@ -436,7 +519,7 @@ def generate_illustration(
     character_description: str = "",
     page_number: int = 1,
 ) -> str:
-    """Generate a children's book illustration using DALL-E 3.
+    """Generate a children's book illustration using an OpenAI image model.
 
     Creates a warm, whimsical watercolor-style illustration suitable for a
     children's picture book. Uses consistent character descriptions across
@@ -468,16 +551,18 @@ Important: This is for a children's picture book about breaking gender stereotyp
 
     try:
         response = client.images.generate(
-            model="gpt-image-1-mini",
+            model=IMAGE_MODEL,
             prompt=prompt,
             size="1024x1024",
+            quality="medium",      # ~12s per image vs ~30s at the default quality
+            output_format="jpeg",  # smaller payload than PNG over SSE
             n=1,
         )
 
-        # gpt-image-1-mini returns base64, convert to data URL
+        # gpt-image models return base64, convert to data URL
         image_data = response.data[0]
         if hasattr(image_data, 'b64_json') and image_data.b64_json:
-            url = f"data:image/png;base64,{image_data.b64_json}"
+            url = f"data:image/jpeg;base64,{image_data.b64_json}"
         elif hasattr(image_data, 'url') and image_data.url:
             url = image_data.url
         else:
@@ -491,7 +576,7 @@ Important: This is for a children's picture book about breaking gender stereotyp
         }
         logger.info(f"Illustration generated for page {page_number}")
     except Exception as e:
-        logger.error(f"DALL-E error for page {page_number}: {e}")
+        logger.error(f"Image generation error for page {page_number}: {e}")
         result = {
             "url": None,
             "page_number": page_number,
