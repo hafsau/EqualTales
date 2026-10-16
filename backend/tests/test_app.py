@@ -418,7 +418,7 @@ class TestGenerateEndpointErrorHandling:
     """Test POST /api/generate error handling."""
 
     def test_mcp_tool_error_returns_500(self, client, mock_mcp_tools):
-        mock_mcp_tools['classify'] = MagicMock(side_effect=Exception("API error"))
+        mock_mcp_tools['generate'] = MagicMock(side_effect=Exception("API error"))
         with patch('app.get_mcp_tools', return_value=mock_mcp_tools):
             response = client.post('/api/generate',
                 data=json.dumps({"stereotype": "Test", "child_name": "Lily", "child_age": 6}),
@@ -428,12 +428,14 @@ class TestGenerateEndpointErrorHandling:
             assert 'error' in data
 
     def test_invalid_json_from_classify_handled(self, client, mock_mcp_tools):
+        # Bad classifier output falls back to the default category instead of failing
         mock_mcp_tools['classify'] = MagicMock(return_value="not valid json")
         with patch('app.get_mcp_tools', return_value=mock_mcp_tools):
             response = client.post('/api/generate',
                 data=json.dumps({"stereotype": "Test", "child_name": "Lily", "child_age": 6}),
                 content_type='application/json')
-            assert response.status_code == 500
+            assert response.status_code == 200
+            assert json.loads(response.data)["classification"]["primary_category"] == "girls_cant_do_math"
 
 
 # ============================================================
@@ -715,8 +717,8 @@ class TestMCPResponseEdgeCases:
             "discussion_prompts": [],
             "activity_suggestion": ""
         }
-        with patch('app.get_mcp_tools', return_value=mock_mcp_tools), \
-             patch('app._parse_json_response', return_value=empty_story):
+        mock_mcp_tools['generate'] = MagicMock(return_value=json.dumps(empty_story))
+        with patch('app.get_mcp_tools', return_value=mock_mcp_tools):
             response = client.post('/api/generate/stream',
                 data=json.dumps({"stereotype": "Test", "child_name": "Lily", "child_age": 6}),
                 content_type='application/json')
@@ -732,8 +734,8 @@ class TestMCPResponseEdgeCases:
             "discussion_prompts": [],
             "activity_suggestion": ""
         }
-        with patch('app.get_mcp_tools', return_value=mock_mcp_tools), \
-             patch('app._parse_json_response', return_value=null_pages_story):
+        mock_mcp_tools['generate'] = MagicMock(return_value=json.dumps(null_pages_story))
+        with patch('app.get_mcp_tools', return_value=mock_mcp_tools):
             response = client.post('/api/generate/stream',
                 data=json.dumps({"stereotype": "Test", "child_name": "Lily", "child_age": 6}),
                 content_type='application/json')
@@ -792,3 +794,42 @@ class TestMCPResponseEdgeCases:
             data = response.data.decode('utf-8')
             # Should still complete
             assert 'complete' in data or 'story' in data
+
+
+# ============================================================
+# CLASSIFICATION FALLBACK + HEALTH CONFIG
+# ============================================================
+
+class TestClassificationFallback:
+    """A failed classification should not sink the whole story."""
+
+    def test_classify_failure_still_generates_story(self, client, mock_mcp_tools):
+        mock_mcp_tools['classify'] = MagicMock(side_effect=RuntimeError("The AI returned an empty response"))
+        with patch('app.get_mcp_tools', return_value=mock_mcp_tools):
+            response = client.post('/api/generate/stream',
+                data=json.dumps({"stereotype": "Girls cant be astronauts", "child_name": "Zara", "child_age": 7}),
+                content_type='application/json')
+            data = response.data.decode('utf-8')
+            assert '"type": "story"' in data
+            assert '"type": "error"' not in data
+            assert 'girls_cant_do_math' in data
+
+    def test_unknown_category_falls_back_to_default(self, client, mock_mcp_tools):
+        mock_mcp_tools['classify'] = MagicMock(return_value=json.dumps({"primary_category": "not_a_category"}))
+        with patch('app.get_mcp_tools', return_value=mock_mcp_tools):
+            response = client.post('/api/generate',
+                data=json.dumps({"stereotype": "Something new", "child_name": "Zara", "child_age": 7}),
+                content_type='application/json')
+            assert json.loads(response.data)["classification"]["primary_category"] == "girls_cant_do_math"
+
+
+class TestHealthReportsConfig:
+
+    def test_reports_missing_keys(self, client, monkeypatch):
+        monkeypatch.delenv("ANTHROPIC_API_KEY", raising=False)
+        data = json.loads(client.get('/api/health').data)
+        assert "ANTHROPIC_API_KEY" in data["missing_api_keys"]
+
+    def test_reports_models(self, client):
+        data = json.loads(client.get('/api/health').data)
+        assert set(data["models"]) == {"story", "fast", "image"}

@@ -177,7 +177,7 @@ def _generate_character_appearance(child_name, child_age):
         {"skin": "pale skin", "hair": "short blonde curly hair", "detail": "big blue eyes"},
         {"skin": "medium brown skin", "hair": "long dark hair in a ponytail", "detail": "an adventurous grin"},
         {"skin": "light brown skin", "hair": "shoulder-length wavy dark hair", "detail": "warm brown eyes"},
-        {"skin": "dark skin", "hair": "braids decorated with colorful beads", "detail": "an infectious laugh"},
+        {"skin": "dark skin", "hair": "hair in braids decorated with colorful beads", "detail": "an infectious laugh"},
     ]
     look = random.choice(appearances)
     return (
@@ -187,91 +187,27 @@ def _generate_character_appearance(child_name, child_age):
     )
 
 
-# ============================================================
-# STREAMING STORY GENERATION (for progressive illustration spawning)
-# ============================================================
-
-_openrouter_client = None
-
-def get_openrouter_client():
-    """Get OpenRouter client for direct streaming calls."""
-    global _openrouter_client
-    if _openrouter_client is None:
-        from openai import OpenAI
-        _openrouter_client = OpenAI(
-            base_url="https://openrouter.ai/api/v1",
-            api_key=os.getenv("OPENROUTER_API_KEY"),
-        )
-    return _openrouter_client
+DEFAULT_CLASSIFICATION = {"primary_category": "girls_cant_do_math", "secondary_categories": []}
 
 
-def _get_story_prompt(stereotype_text, child_name, child_age, woman, woman_adaptation, counter_message):
-    """Generate the story prompt (same as MCP server)."""
-    age_group = _get_age_group(child_age)
+def _classify_or_default(tools, stereotype_text):
+    """Classify the stereotype, falling back to a default category on failure.
 
-    return f"""You are a children's story writer creating an anti-stereotype story. Write a 5-page illustrated children's story.
-
-INPUTS:
-- Stereotype to counter: "{stereotype_text}"
-- Child's name: {child_name}
-- Child's age: {child_age} ({age_group} reading level)
-- Real woman to feature: {woman["name"]}
-- Her achievement: {woman["achievement"]}
-- Her fairy-tale moment: {woman["fairy_tale_moment"]}
-- Age-appropriate version: {woman_adaptation}
-- Counter-message: {counter_message}
-
-STORY STRUCTURE (exactly 5 pages):
-
-Page 1 — "The Belief": {child_name} encounters or expresses the stereotype in a relatable, everyday situation. Show the belief naturally — through a classmate's comment, a TV show, or an overheard conversation. Don't make {child_name} the villain; they're absorbing what the world tells them.
-
-Page 2 — "The Question": Something happens that cracks the stereotype. {child_name} sees, hears, or experiences something that doesn't fit the belief. Curiosity emerges. This should feel surprising and magical.
-
-Page 3 — "The Discovery": {child_name} discovers {woman["name"]}. This isn't a biography dump — it's a magical discovery. Maybe they find an old book, a portrait comes alive, or a wise character tells them about this remarkable person. Use: {woman["fairy_tale_moment"]}
-
-Page 4 — "The Inspiration": Tell {woman["name"]}'s specific story in fairy-tale language appropriate for age {child_age}. Use: {woman_adaptation}. Make it vivid and awe-inspiring. Show the obstacles she faced and how she overcame them.
-
-Page 5 — "The New Belief": {child_name} returns to their world changed. They take a specific action inspired by what they learned. The old belief is replaced by a new understanding. End with hope and empowerment — not a lecture.
-
-WRITING RULES:
-- {"Use short sentences (5-10 words). Simple vocabulary. Lots of sensory details. Repetition for emphasis." if age_group == "young" else "Use medium-length sentences. Vivid descriptions. Some challenging vocabulary with context clues." if age_group == "middle" else "Use varied sentence structures. Rich vocabulary. Nuance and complexity. Emotional depth."}
-- Each page should be {"3-5 sentences" if age_group == "young" else "5-8 sentences" if age_group == "middle" else "6-10 sentences"}
-- Show, don't tell. Never say "stereotypes are bad." Let the story do the work.
-- The story should feel warm, magical, and empowering — never preachy or guilt-inducing.
-- {child_name} should feel like a real kid the reader can identify with.
-
-OUTPUT FORMAT:
-Return ONLY a JSON object with this structure:
-{{
-  "title": "story title",
-  "pages": [
-    {{
-      "page_number": 1,
-      "page_title": "The Belief",
-      "text": "the story text for this page",
-      "illustration_description": "A detailed description for an illustrator: scene, action, colors, mood, specific visual elements. Do NOT describe the child's race, skin color, hair type, or ethnicity — the character appearance will be provided separately for consistency."
-    }},
-    ... (5 pages total)
-  ],
-  "real_woman_name": "{woman["name"]}",
-  "real_woman_achievement": "one sentence about her achievement for the companion section",
-  "discussion_prompts": ["3 questions a parent can ask their child after reading"],
-  "activity_suggestion": "one hands-on activity related to the story theme"
-}}
-
-Return ONLY valid JSON."""
+    A failed classification shouldn't sink the whole story: the matcher can
+    still pick a woman from the default category and generation continues.
+    """
+    try:
+        classification = json.loads(tools["classify"](stereotype_text))
+    except Exception as e:
+        app.logger.warning(f"Classification failed, using default category: {e}")
+        return dict(DEFAULT_CLASSIFICATION)
+    if classification.get("primary_category") not in KNOWLEDGE_BASE["stereotype_categories"]:
+        return dict(DEFAULT_CLASSIFICATION)
+    return classification
 
 
-def _parse_json_response(text):
-    """Parse JSON from response, handling markdown code blocks."""
-    text = text.strip()
-    if text.startswith("```"):
-        lines = text.split("\n")
-        lines = lines[1:]  # Remove opening ```json
-        if lines and lines[-1].strip() == "```":
-            lines = lines[:-1]
-        text = "\n".join(lines)
-    return json.loads(text)
+def _missing_api_keys():
+    return [k for k in ("ANTHROPIC_API_KEY", "OPENAI_API_KEY") if not os.getenv(k)]
 
 
 # ============================================================
@@ -280,10 +216,17 @@ def _parse_json_response(text):
 
 @app.route("/api/health", methods=["GET"])
 def health():
+    missing = _missing_api_keys()
     return jsonify({
         "status": "ok",
         "service": "EqualTales",
         "mode": "goose" if USE_GOOSE else "direct",
+        "missing_api_keys": missing,
+        "models": {
+            "story": os.getenv("CLAUDE_STORY_MODEL", "claude-opus-5-5"),
+            "fast": os.getenv("CLAUDE_FAST_MODEL", "claude-haiku-5-5"),
+            "image": os.getenv("IMAGE_MODEL", "gpt-image-1-mini"),
+        },
         "knowledge_base": {
             "women": len(KNOWLEDGE_BASE["women"]),
             "categories": len(KNOWLEDGE_BASE["stereotype_categories"])
@@ -381,12 +324,7 @@ def generate_stream():
             if stereotype_text in PRECOMPUTED_CLASSIFICATIONS:
                 classification = PRECOMPUTED_CLASSIFICATIONS[stereotype_text]
             else:
-                classification_json = tools["classify"](stereotype_text)
-                classification = json.loads(classification_json)
-                # Validate classification has required fields
-                if "primary_category" not in classification:
-                    classification["primary_category"] = "girls_cant_do_math"
-                    classification["secondary_categories"] = []
+                classification = _classify_or_default(tools, stereotype_text)
 
             yield _sse({"type": "classification", "data": classification})
 
@@ -413,23 +351,16 @@ def generate_stream():
 
             yield _sse({"type": "status", "message": f"Writing a story about {child_name} and {woman['name']}..."})
 
-            # Get story prompt and generate with Sonnet (fast, non-streaming)
-            prompt = _get_story_prompt(
-                stereotype_text, child_name, child_age,
-                woman, woman_adaptation, counter_message
-            )
-
-            client = get_openrouter_client()
-
-            # Generate story with GPT-OSS-120B (free tier)
-            response = client.chat.completions.create(
-                model="google/gemma-3n-e4b-it:free",
-                max_tokens=4000,
-                messages=[{"role": "user", "content": prompt}],
-            )
-
-            story_text = response.choices[0].message.content
-            story_data = _parse_json_response(story_text)
+            story_data = json.loads(tools["generate"](
+                stereotype_text=stereotype_text,
+                child_name=child_name,
+                child_age=child_age,
+                woman_name=woman["name"],
+                woman_achievement=woman["achievement"],
+                woman_fairy_tale_moment=woman["fairy_tale_moment"],
+                woman_age_adaptation=woman_adaptation,
+                counter_message=counter_message,
+            ))
 
             # Validate story has pages
             if not story_data.get("pages") or len(story_data["pages"]) < 1:
@@ -545,7 +476,7 @@ def generate():
         tools = get_mcp_tools()
 
         # Step 1: Classify
-        classification = json.loads(tools["classify"](stereotype_text))
+        classification = _classify_or_default(tools, stereotype_text)
 
         # Step 2: Match woman
         woman_data = json.loads(tools["match"](
@@ -652,4 +583,7 @@ if __name__ == "__main__":
     mode = "Goose-orchestrated" if USE_GOOSE else "Direct MCP tool calls"
     print(f"EqualTales API starting in {mode} mode")
     print(f"Knowledge base: {len(KNOWLEDGE_BASE['women'])} women, {len(KNOWLEDGE_BASE['stereotype_categories'])} categories")
-    app.run(debug=True, port=5001)
+    for key in _missing_api_keys():
+        print(f"WARNING: {key} is not set — story generation will fail until it is added to .env")
+    # Port 5000 is taken by macOS AirPlay Receiver
+    app.run(debug=True, port=int(os.getenv("PORT", "5001")))

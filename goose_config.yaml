@@ -5,9 +5,9 @@
 # or merge with your existing config.
 #
 # Before running:
-# 1. pip install fastmcp anthropic openai python-dotenv
+# 1. pip install -r mcp_server/requirements.txt
 # 2. Set environment variables:
-#    export OPENROUTER_API_KEY=your_key_here
+#    export ANTHROPIC_API_KEY=your_key_here
 #    export OPENAI_API_KEY=your_key_here
 # 3. Update the path below to your actual project location
 # ============================================================
@@ -19,7 +19,7 @@ extensions:
     cmd: python
     args: [/Users/hafsa/EqualTales/mcp_server/server.py]
     env:
-      OPENROUTER_API_KEY: "${OPENROUTER_API_KEY}"
+      ANTHROPIC_API_KEY: "${ANTHROPIC_API_KEY}"
       OPENAI_API_KEY: "${OPENAI_API_KEY}"
     timeout: 300
     enabled: true

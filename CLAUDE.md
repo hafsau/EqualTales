@@ -12,9 +12,9 @@ EqualTales is an AI-powered children's story engine for the **CreateHER Fest #75
 |-----------|-----------|-------|
 | Backend | Python/Flask | Port 5001 (NOT 5000 — macOS AirPlay uses 5000) |
 | Frontend | React 18 | CRA (react-scripts), port 3000 |
-| Story Generation | Claude Opus 4.6 via OpenRouter | Model ID: `anthropic/claude-opus-4.6` |
-| Classification/QA | Claude Sonnet 4.5 via OpenRouter | Model ID: `anthropic/claude-sonnet-4.5` |
-| Illustrations | DALL-E 3 via OpenAI API | 1024x1024, standard quality |
+| Story Generation | Claude Opus 5.5 via Anthropic API | `claude-opus-5-5` (env `CLAUDE_STORY_MODEL`), effort `medium` |
+| Classification/QA | Claude Haiku 5.5 via Anthropic API | `claude-haiku-5-5` (env `CLAUDE_FAST_MODEL`), effort `low` |
+| Illustrations | OpenAI `gpt-image-1-mini` | 1024x1024, medium quality, JPEG data URLs (env `IMAGE_MODEL`) |
 
 ## Hosted Backend
 
@@ -28,29 +28,37 @@ curl https://equaltales-api.onrender.com/api/health
 ## Architecture
 
 ```
-[React Frontend :3000] → [Flask API :5001] → [MCP Tools] → [Claude/DALL-E APIs]
+[React Frontend :3000] → [Flask API :5001] → [MCP Tools] → [Anthropic + OpenAI image APIs]
 ```
 
-### Pipeline Flow (~75-90s)
+### Pipeline Flow
 ```
-classify (Sonnet, ~3s) → match (local, <0.1s) → generate_story (Opus, ~57s) → [verify + 5 illustrations] IN PARALLEL (~15s)
+classify (Haiku) → match (local, <0.1s) → generate_story (Opus) → 5 illustrations IN PARALLEL (~12s) → verify (Haiku)
 ```
 
-The backend runs QA verification and all 5 DALL-E illustrations concurrently using `ThreadPoolExecutor(max_workers=6)`.
+The backend runs all 5 illustrations concurrently using `ThreadPoolExecutor(max_workers=6)`.
+
+### Model call rules (mcp_server/server.py `_claude_json`)
+
+- All Claude calls go through `_claude_json`: structured outputs (`output_config.format` JSON schema) guarantee valid JSON, and it raises clear errors on refusal, `max_tokens` truncation, or empty text.
+- Never hardcode model IDs in call sites — use the `STORY_MODEL` / `FAST_MODEL` / `IMAGE_MODEL` constants.
+- Don't route through free/auto model routers: the app previously broke because `openrouter/free` returned empty answers and pinned free models were removed.
+- Dependencies are fully pinned in `backend/requirements.txt` (generated from `backend/requirements.in`; instructions in that file).
 
 ### The 5 MCP Tools (mcp_server/server.py)
 
-1. **classify_stereotype** — Categorizes stereotype text. Uses Sonnet 4.5.
+1. **classify_stereotype** — Categorizes stereotype text. Uses `FAST_MODEL`; category enum enforced by schema.
 2. **match_real_woman** — Local KB lookup from 50-entry knowledge base. No API call.
-3. **generate_story** — Creates 5-page story with narrative arc. Uses Opus 4.6.
-4. **verify_story** — QA check for stereotype reinforcement. Uses Sonnet 4.5.
-5. **generate_illustration** — DALL-E 3 call. Warm watercolor children's book style.
+3. **generate_story** — Creates 5-page story with narrative arc. Uses `STORY_MODEL` (with server-side refusal fallback).
+4. **verify_story** — QA check for stereotype reinforcement. Uses `FAST_MODEL`.
+5. **generate_illustration** — `IMAGE_MODEL` call. Warm watercolor children's book style.
 
 ### Key Backend Behavior
 
-- **Character Diversity**: Backend randomly selects from 10 diverse character appearances. Story prompts tell Claude NOT to specify race — appearance is injected separately to DALL-E.
+- **Character Diversity**: Backend randomly selects from 10 diverse character appearances. Story prompts tell Claude NOT to specify race — appearance is injected separately into the image prompt.
 - **Input Validation**: min 3 chars, max 500 chars, age 3-10, name max 30 chars
-- **Fallbacks**: Classification defaults to `girls_cant_do_math`; missing page fields auto-filled; DALL-E failures return null URL; QA failures return safe default (passed=true, score=7)
+- **Fallbacks**: Classification failures/unknown categories default to `girls_cant_do_math`; missing page fields auto-filled; image failures return null URL; QA failures return safe default (passed=true, score=7)
+- **Health**: `/api/health` reports `missing_api_keys` and the configured models — check it first when something breaks
 
 ### SSE Event Types (streaming endpoint)
 `status`, `classification`, `real_woman`, `story`, `qa_result`, `illustration`, `complete`, `error`
@@ -61,8 +69,9 @@ The backend runs QA verification and all 5 DALL-E illustrations concurrently usi
 ## Environment Variables
 
 In `.env` at project root:
-- `OPENROUTER_API_KEY` — starts with `sk-or-`
-- `OPENAI_API_KEY` — starts with `sk-proj-`, for DALL-E 3 only
+- `ANTHROPIC_API_KEY` — starts with `sk-ant-` (also set in the Render dashboard)
+- `OPENAI_API_KEY` — starts with `sk-proj-`, for illustrations only
+- Optional: `CLAUDE_STORY_MODEL`, `CLAUDE_FAST_MODEL`, `CLAUDE_STORY_EFFORT`, `IMAGE_MODEL`
 - `USE_GOOSE` — `true` for Goose orchestration, `false` (default) for direct MCP tool calls
 
 ## Development Commands
@@ -140,7 +149,7 @@ python scripts/qa_agent.py --json       # JSON output for CI
 ## Important Gotchas
 
 - Port is **5001** not 5000 (macOS AirPlay Receiver uses 5000)
-- OpenRouter model IDs use dots not dashes: `anthropic/claude-opus-4.6` not `claude-opus-4-6`
+- Anthropic model IDs use dashes and no date suffix: `claude-opus-5-5`, `claude-haiku-5-5`
 - FastMCP requires Python 3.10+
-- DALL-E image URLs expire after ~1 hour
+- Images are returned as base64 data URLs (gpt-image models don't return hosted URLs)
 - The `onComplete` callback in TypewriterText uses `useRef` to avoid infinite re-renders
